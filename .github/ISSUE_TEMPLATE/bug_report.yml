@@ -1,0 +1,33 @@
+name: 🐛 Bug Report
+description: File a bug report to help improve VIP Reaction & AI Chatbot
+title: "[BUG]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report!
+  - type: input
+    id: environment
+    attributes:
+      label: Deployment Environment
+      description: Where are you running the bot? (e.g. Koyeb, VPS, Termux, Local PC)
+      placeholder: Koyeb Free Tier
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: Bug Description
+      description: A clear and concise description of what the bug is.
+      placeholder: What happened?
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Error Logs / Terminal Output
+      description: Please copy and paste any relevant logs from Koyeb or Termux.
+      render: shell
+    validations:
+      required: false

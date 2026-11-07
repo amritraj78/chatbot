@@ -1,0 +1,39 @@
+name: Continuous Integration & Automated Tests
+
+on:
+  push:
+    branches: [ master, main ]
+  pull_request:
+    branches: [ master, main ]
+
+jobs:
+  test:
+    name: Run Python Tests
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.11", "3.12"]
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Discover and run unit tests
+        env:
+          BOT_TOKEN: "123456789:ABCdefGhIJKlmNoPQRsTUVwxyZ"
+          OWNER_ID: "5423666218"
+          API_ID: "1234567"
+          API_HASH: "0123456789abcdef0123456789abcdef"
+        run: |
+          python -m unittest discover tests -v

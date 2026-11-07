@@ -1,0 +1,72 @@
+{
+  "name": "VIP-REACTION-CHATBOT",
+  "description": "A high-speed Telegram auto-reaction and AI chatbot with custom emojis, group/channel support, and bot cloning by Amrit Raj (@Villanns).",
+  "logo": "https://envs.sh/IL_.jpg",
+  "keywords": [
+    "ReactionBot",
+    "ChatBot",
+    "Telegram",
+    "mongodb",
+    "python",
+    "pyrogram",
+    "koyeb"
+  ],
+  "repository": "https://github.com/amritraj78/BRANDED-REACTION-BOT",
+  "env": {
+    "BOT_TOKEN": {
+      "description": "Telegram Bot Token from @BotFather",
+      "required": true,
+      "value": ""
+    },
+    "OWNER_ID": {
+      "description": "Your Telegram user ID",
+      "required": true,
+      "value": "5423666218"
+    },
+    "OWNER_USERNAME": {
+      "description": "Your Telegram username without @",
+      "required": false,
+      "value": "Villanns"
+    },
+    "SUPPORT_GRP": {
+      "description": "Your support group username without @",
+      "required": false,
+      "value": "amrit_feel"
+    },
+    "UPDATE_CHNL": {
+      "description": "Your updates channel username without @",
+      "required": false,
+      "value": "privatethink"
+    },
+    "MONGO_URL": {
+      "description": "Optional MongoDB connection URL (leave empty for in-memory DB)",
+      "required": false,
+      "value": ""
+    },
+    "GROQ_API_KEY": {
+      "description": "Free Groq API key for ultra-fast (0.3s) Angle AI chatbot",
+      "required": false,
+      "value": ""
+    },
+    "GEMINI_API_KEY": {
+      "description": "Optional Google Gemini API key for smart AI answers",
+      "required": false,
+      "value": ""
+    },
+    "PORT": {
+      "description": "Port for web health check on Koyeb",
+      "required": false,
+      "value": "8000"
+    },
+    "KOYEB_PUBLIC_URL": {
+      "description": "Public URL of your Koyeb service for 24/7 automated keep-alive",
+      "required": false,
+      "value": ""
+    },
+    "STORAGE_THRESHOLD": {
+      "description": "Disk storage percentage threshold to trigger Telegram owner alert (default: 90)",
+      "required": false,
+      "value": "90"
+    }
+  }
+}

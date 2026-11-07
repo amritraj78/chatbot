@@ -1,0 +1,12 @@
+pyrogram
+tgcrypto
+pymongo[srv]
+motor
+requests
+dnspython
+python-dotenv
+Flask
+psutil
+speedtest-cli
+uvloop
+Abg==2.3.1

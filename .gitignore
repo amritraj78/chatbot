@@ -1,0 +1,33 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C caches & local media cache
+cache/*
+!cache/.gitkeep
+
+# Environments & sensitive configs
+.venv/
+env/
+venv/
+ENV/
+
+# Pyrogram session files
+*.session
+*.session-journal
+*.session*
+
+# Logs & temp dumps
+*.log
+log.txt*
+*.tmp
+group_info_*.txt
+db_backup_*.json
+clone_db_backup_*.json
+
+# OS & IDE artifacts
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
