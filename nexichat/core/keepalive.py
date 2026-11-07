@@ -27,8 +27,10 @@ import random
 import asyncio
 import logging
 import threading
+import json
 import urllib.request
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request, Response
+from nexichat.core.webapp_html import WEBAPP_HTML
 
 logger = logging.getLogger(__name__)
 
@@ -39,7 +41,14 @@ logging.getLogger("werkzeug").setLevel(logging.WARNING)
 
 
 @app.route("/")
-def home():
+@app.route("/webapp")
+def webapp():
+    """Serve modern interactive Telegram Mini App."""
+    return Response(WEBAPP_HTML, mimetype="text/html; charset=utf-8")
+
+
+@app.route("/api/info")
+def info():
     return jsonify({
         "service": "VIP Reaction & AI Chatbot",
         "status": "online",
@@ -48,12 +57,87 @@ def home():
     })
 
 
+@app.route("/api/chat", methods=["POST", "OPTIONS"])
+def api_chat():
+    """Live AI Chat endpoint for the Telegram WebApp."""
+    if request.method == "OPTIONS":
+        resp = jsonify({"status": "ok"})
+        resp.headers["Access-Control-Allow-Origin"] = "*"
+        resp.headers["Access-Control-Allow-Headers"] = "Content-Type"
+        resp.headers["Access-Control-Allow-Methods"] = "POST, OPTIONS"
+        return resp
+
+    data = request.get_json(silent=True) or {}
+    msg = data.get("message", "").strip()
+    user_name = data.get("user_name") or "Friend"
+    user_id = data.get("user_id")
+
+    if not msg:
+        resp = jsonify({"error": "Empty message"})
+        resp.headers["Access-Control-Allow-Origin"] = "*"
+        return resp, 400
+
+    try:
+        from nexichat.modules.helpers.ai import generate_conversational_response
+        import concurrent.futures
+
+        def _get_reply():
+            new_loop = asyncio.new_event_loop()
+            try:
+                asyncio.set_event_loop(new_loop)
+                return new_loop.run_until_complete(
+                    generate_conversational_response(msg, user_name=user_name, user_id=user_id)
+                )
+            finally:
+                new_loop.close()
+
+        with concurrent.futures.ThreadPoolExecutor(max_workers=1) as executor:
+            future = executor.submit(_get_reply)
+            reply = future.result(timeout=12)
+
+        resp = jsonify({"reply": reply})
+        resp.headers["Access-Control-Allow-Origin"] = "*"
+        return resp
+    except Exception as e:
+        logger.error(f"Mini App /api/chat error: {e}")
+        resp = jsonify({"reply": "Hii! Main thoda padhai mein busy thi, aap batao kaise ho? 😊🌸"})
+        resp.headers["Access-Control-Allow-Origin"] = "*"
+        return resp
+
+
 @app.route("/health")
 def health():
     return jsonify({
         "status": "healthy",
         "timestamp": os.environ.get("HOSTNAME", "localhost")
     })
+
+
+def configure_telegram_menu_button(bot_token: str, public_url: str, text: str = "🌸 Anshika AI"):
+    """Configures the Telegram Chat Menu Button to open the Web App."""
+    if not bot_token or not public_url:
+        return
+    try:
+        clean_url = public_url.rstrip("/") + "/webapp"
+        api_url = f"https://api.telegram.org/bot{bot_token}/setChatMenuButton"
+        payload = {
+            "menu_button": {
+                "type": "web_app",
+                "text": text,
+                "web_app": {
+                    "url": clean_url
+                }
+            }
+        }
+        req = urllib.request.Request(
+            api_url,
+            headers={"Content-Type": "application/json", "User-Agent": "Mozilla/5.0"},
+            data=json.dumps(payload).encode()
+        )
+        with urllib.request.urlopen(req, timeout=10) as r:
+            logger.info(f"Telegram Menu Button configured ({text} -> {clean_url}): {r.read().decode()}")
+    except Exception as e:
+        logger.debug(f"Failed to set Telegram menu button: {e}")
 
 
 def start_flask_server(port: int = 8000):
@@ -80,6 +164,11 @@ async def run_koyeb_keepalive(port: int, public_url: str = None):
             or os.environ.get("PING_URL")
             or (f"https://{os.environ.get('KOYEB_APP_NAME')}.koyeb.app" if os.environ.get("KOYEB_APP_NAME") else None)
         )
+
+    # Automatically set Telegram Menu Button to open Anshika Mini App
+    bot_token = os.environ.get("BOT_TOKEN")
+    if bot_token and public_url:
+        configure_telegram_menu_button(bot_token, public_url, text="🌸 Anshika AI")
 
     while True:
         try:
