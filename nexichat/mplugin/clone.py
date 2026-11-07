@@ -55,6 +55,8 @@ async def clone_txt(client, message):
             if cloned_bot:
                 await mi.edit_text("**🤖 Your bot is already cloned ✅**")
                 return
+            await mi.edit_text(f"⚠️ **Error starting bot:**\n\n`{e}`\n\n**Forward this message to @Villanns for assistance**")
+            return
 
         await mi.edit_text("**Cloning process started. Please wait for the bot to start.**")
         try:

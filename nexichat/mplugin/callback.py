@@ -1,6 +1,6 @@
 from pyrogram import Client
 from pyrogram.enums import ChatType, ChatMemberStatus
-from pyrogram.types import CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton, LinkPreviewOptions
+from pyrogram.types import CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton
 
 from config import OWNER_ID
 from nexichat import SUDOERS
@@ -31,12 +31,12 @@ from nexichat.mplugin.helpers import (
 
 
 async def _safe_edit(query: CallbackQuery, text: str, reply_markup: InlineKeyboardMarkup = None):
-    """Safely edits the message using LinkPreviewOptions and avoids unhandled errors."""
+    """Safely edits the message using disable_web_page_preview and avoids unhandled errors."""
     try:
         await query.message.edit_text(
             text=text,
             reply_markup=reply_markup,
-            link_preview_options=LinkPreviewOptions(is_disabled=True),
+            disable_web_page_preview=True,
         )
     except Exception as e:
         if "MESSAGE_NOT_MODIFIED" in str(e).upper():
@@ -45,7 +45,7 @@ async def _safe_edit(query: CallbackQuery, text: str, reply_markup: InlineKeyboa
             await query.message.reply_text(
                 text=text,
                 reply_markup=reply_markup,
-                link_preview_options=LinkPreviewOptions(is_disabled=True),
+                disable_web_page_preview=True,
             )
         except Exception:
             pass

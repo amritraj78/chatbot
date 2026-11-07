@@ -17,7 +17,7 @@ Is file ka kya kaam hai?
 """
 
 from pyrogram import Client, filters
-from pyrogram.types import Message, InlineKeyboardMarkup, LinkPreviewOptions
+from pyrogram.types import Message, InlineKeyboardMarkup
 from pyrogram.enums import ChatType
 from nexichat import nexichat
 from nexichat.database.users import add_served_user
@@ -55,7 +55,7 @@ async def start_message(client: Client, message: Message):
     await message.reply_text(
         text=text,
         reply_markup=InlineKeyboardMarkup(DEV_OP),
-        link_preview_options=LinkPreviewOptions(is_disabled=True),
+        disable_web_page_preview=True,
     )
 
 
@@ -67,6 +67,6 @@ async def help_command(client: Client, message: Message):
     await message.reply_text(
         text=HELP_READ,
         reply_markup=InlineKeyboardMarkup(HELP_BTN),
-        link_preview_options=LinkPreviewOptions(is_disabled=True),
+        disable_web_page_preview=True,
     )
 

@@ -1,8 +1,7 @@
 import time
 import logging
 from pyrogram import Client, filters
-from pyrogram.enums import ParseMode
-from pyrogram.types import Message, InlineKeyboardButton, InlineKeyboardMarkup, LinkPreviewOptions
+from pyrogram.types import Message, InlineKeyboardButton, InlineKeyboardMarkup
 
 from config import OWNER_ID, SUPPORT_GRP
 from nexichat import _boot_, get_readable_time, SUDOERS
@@ -90,8 +89,7 @@ async def getid(client: Client, message: Message):
 
     await message.reply_text(
         text,
-        link_preview_options=LinkPreviewOptions(is_disabled=True),
-        parse_mode=ParseMode.DEFAULT,
+        disable_web_page_preview=True,
     )
 
 
@@ -133,4 +131,4 @@ Here is your official VIP profile card.
             InlineKeyboardButton("⦿ Close ⦿", callback_data="CLOSE"),
         ]
     ])
-    await message.reply_text(text, reply_markup=btn, link_preview_options=LinkPreviewOptions(is_disabled=True))
+    await message.reply_text(text, reply_markup=btn, disable_web_page_preview=True)
