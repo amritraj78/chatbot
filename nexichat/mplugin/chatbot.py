@@ -347,7 +347,7 @@ async def ask_ai_command(client: Client, message: Message):
         await client.send_chat_action(message.chat.id, ChatAction.TYPING)
     except Exception:
         pass
-    status_msg = await message.reply_text("✍️ **ᴛʏᴘɪɴɢ...** 🌸")
+    status_msg = await message.reply_text("✍️ **ᴛʏᴘɪɴɢ...** 🌸", quote=True)
 
     response = await generate_conversational_response(query, user_name, is_question_mode=True, client=client)
 
@@ -360,7 +360,7 @@ async def ask_ai_command(client: Client, message: Message):
         try:
             await status_msg.edit_text(response)
         except Exception:
-            await message.reply_text(response)
+            await message.reply_text(response, quote=True)
 
 
 @Client.on_message(filters.command(["love", "crush"]))
@@ -369,7 +369,8 @@ async def love_command(client: Client, message: Message):
     if len(message.command) < 3:
         return await message.reply_text(
             "❤️ **Usage:** `/love <Name1> <Name2>`\n\n"
-            "**Example:** `/love Rahul Anshika`"
+            "**Example:** `/love Rahul Anshika`",
+            quote=True
         )
 
     name1 = message.command[1]
@@ -379,13 +380,13 @@ async def love_command(client: Client, message: Message):
         await client.send_chat_action(message.chat.id, ChatAction.TYPING)
     except Exception:
         pass
-    status_msg = await message.reply_text("❤️ **ᴄᴀʟᴄᴜʟᴀᴛɪɴɢ ʟᴏᴠᴇ...** 🔮")
+    status_msg = await message.reply_text("❤️ **ᴄᴀʟᴄᴜʟᴀᴛɪɴɢ ʟᴏᴠᴇ...** 🔮", quote=True)
     await asyncio.sleep(0.7)
     result = calculate_love(name1, name2)
     try:
         await status_msg.edit_text(result)
     except Exception:
-        await message.reply_text(result)
+        await message.reply_text(result, quote=True)
 
 
 @Client.on_message(filters.command(["shayri", "shayari"]))
@@ -395,13 +396,13 @@ async def shayari_command(client: Client, message: Message):
         await client.send_chat_action(message.chat.id, ChatAction.TYPING)
     except Exception:
         pass
-    status_msg = await message.reply_text("✍️ **ᴛʏᴘɪɴɢ sʜᴀʏᴀʀɪ...** 🌸")
+    status_msg = await message.reply_text("✍️ **ᴛʏᴘɪɴɢ sʜᴀʏᴀʀɪ...** 🌸", quote=True)
     await asyncio.sleep(0.6)
     shayari = get_random_shayari()
     try:
         await status_msg.edit_text(shayari)
     except Exception:
-        await message.reply_text(shayari)
+        await message.reply_text(shayari, quote=True)
 
 
 @Client.on_message(filters.command(["joke", "jokes"]))
@@ -411,13 +412,13 @@ async def joke_command(client: Client, message: Message):
         await client.send_chat_action(message.chat.id, ChatAction.TYPING)
     except Exception:
         pass
-    status_msg = await message.reply_text("✍️ **ᴛʏᴘɪɴɢ ᴊᴏᴋᴇ...** 😂")
+    status_msg = await message.reply_text("✍️ **ᴛʏᴘɪɴɢ ᴊᴏᴋᴇ...** 😂", quote=True)
     await asyncio.sleep(0.6)
     joke = get_random_joke()
     try:
         await status_msg.edit_text(joke)
     except Exception:
-        await message.reply_text(joke)
+        await message.reply_text(joke, quote=True)
 
 
 
@@ -504,7 +505,7 @@ async def send_natural_chat_reply(client: Client, message: Message, response_tex
             await asyncio.sleep(chunk)
             elapsed += chunk
 
-        await message.reply_text(response_text)
+        await message.reply_text(response_text, quote=True)
     except Exception as e:
         logger.debug(f"Cloned bot failed to send natural chatbot reply: {e}")
 
@@ -568,7 +569,8 @@ async def auto_chatbot_listener(client: Client, message: Message):
             _message_counts.pop(user_id, None)
             await message.reply_text(
                 f"⚠️ Arey {message.from_user.mention}! Thoda sa aaram se na please! 🙈\n"
-                "Anshika thak jayegi! Thoda ruk ke baat karo na! 🌸✨"
+                "Anshika thak jayegi! Thoda ruk ke baat karo na! 🌸✨",
+                quote=True
             )
             return
 
@@ -589,11 +591,11 @@ async def auto_chatbot_listener(client: Client, message: Message):
             try:
                 await client.send_chat_action(chat_id, ChatAction.CHOOSE_STICKER)
                 await asyncio.sleep(1.0)
-                await message.reply_sticker(reply_stk)
+                await message.reply_sticker(reply_stk, quote=True)
                 return
             except Exception:
                 try:
-                    await message.copy(chat_id)
+                    await message.copy(chat_id, reply_to_message_id=message.id)
                     return
                 except Exception:
                     pass

@@ -715,18 +715,18 @@ async def query_groq_api(
     if not keys:
         return None
 
-    models = ["qwen/qwen3.8-27b", "openai/gpt-oss-20b"]
+    models = ["qwen/qwen3.8-27b", "openai/gpt-oss-120b", "openai/gpt-oss-20b"]
     system_prompt = ANSHIKA_CHARACTER_PROMPT
     if vivid_context:
         system_prompt += f"\n{vivid_context}"
 
     messages = [{"role": "system", "content": system_prompt}]
     if context_history:
-        for turn in context_history[-6:]:
+        for turn in context_history[-10:]:
             role = "user" if turn.get("role") == "user" else "assistant"
             t = turn.get("text", "").strip()
             if t:
-                messages.append({"role": role, "content": t[:120]})
+                messages.append({"role": role, "content": t[:250]})
 
     messages.append({"role": "user", "content": prompt.strip()})
 
@@ -745,7 +745,7 @@ async def query_groq_api(
                 "model": model,
                 "messages": messages,
                 "temperature": 0.75,
-                "max_tokens": 30
+                "max_tokens": 70
             }
             def _fetch(m_payload=dict(payload), m_headers=headers):
                 return _ai_session.post(
@@ -760,7 +760,11 @@ async def query_groq_api(
                     data = resp.json()
                     choices = data.get("choices", [])
                     if choices:
-                        content = choices[0].get("message", {}).get("content", "").strip()
+                        msg_obj = choices[0].get("message", {})
+                        content = msg_obj.get("content", "")
+                        if not content and msg_obj.get("reasoning"):
+                            content = msg_obj.get("reasoning", "")
+                        content = content.strip()
                         if content and len(content) > 1 and not is_abusive(content):
                             cleaned = clean_modern_girl_reply(content)
                             if cleaned:
@@ -819,15 +823,18 @@ async def query_gemini_api(
     contents = []
     if context_history:
         last_role = None
-        for turn in context_history[-6:]:
+        for turn in context_history[-10:]:
             role = "user" if turn.get("role") == "user" else "model"
             t = turn.get("text", "").strip()
             if t:
                 if role == last_role and contents:
-                    contents[-1]["parts"][0]["text"] += f"\n{t[:120]}"
+                    contents[-1]["parts"][0]["text"] += f"\n{t[:250]}"
                 else:
-                    contents.append({"role": role, "parts": [{"text": t[:120]}]})
+                    contents.append({"role": role, "parts": [{"text": t[:250]}]})
                     last_role = role
+
+    while contents and contents[0]["role"] != "user":
+        contents.pop(0)
 
     if contents and contents[-1]["role"] == "user":
         contents[-1]["parts"][0]["text"] += f"\n{prompt.strip()}"
@@ -841,7 +848,7 @@ async def query_gemini_api(
         "contents": contents,
         "generationConfig": {
             "temperature": 0.75,
-            "maxOutputTokens": 30,
+            "maxOutputTokens": 60,
             "topP": 0.9
         }
     }
@@ -912,11 +919,11 @@ async def query_nvidia_api(
 
     messages = [{"role": "system", "content": system_prompt}]
     if context_history:
-        for turn in context_history[-6:]:
+        for turn in context_history[-10:]:
             role = "user" if turn.get("role") == "user" else "assistant"
             t = turn.get("text", "").strip()
             if t:
-                messages.append({"role": role, "content": t[:120]})
+                messages.append({"role": role, "content": t[:250]})
 
     messages.append({"role": "user", "content": prompt.strip()})
 
@@ -936,7 +943,7 @@ async def query_nvidia_api(
             "model": model,
             "messages": messages,
             "temperature": 0.75,
-            "max_tokens": 45
+            "max_tokens": 60
         }
         def _fetch(m_payload=dict(payload)):
             return _ai_session.post(
@@ -1266,13 +1273,7 @@ async def generate_conversational_response(
             ]
             return await _finalize(random.choice(userbot_social_replies))
 
-    # 4. Core Anshika Character Identity & Greetings check (prevents search engine false positives)
-    for pattern, responses in GIRL_KNOWLEDGE_BASE:
-        if re.search(pattern, cleaned, re.IGNORECASE):
-            reply = random.choice(responses)
-            return await _finalize(reply.format(user=user_name))
-
-    # 5. Fetch vivid memory context & persistent DM dialogue history
+    # 4. Fetch vivid memory context & persistent DM dialogue history
     vivid_context = await format_vivid_user_context(user_id, user_name) if user_id else ""
     user_context = await get_dm_history(user_id, limit=12) if user_id else []
 
