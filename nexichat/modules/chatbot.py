@@ -217,16 +217,17 @@ async def chatbot_callback_handler(client: Client, query: CallbackQuery):
 async def api_usage_cmd(client: Client, message: Message):
     """
     VIP AI API Usage & Daily Quota Dashboard for Creator / Sudoers.
-    Displays live percentage used & remaining for Groq and Gemini daily limits.
+    Performs real-time live ping & quota diagnostics across all AI providers.
     """
     user_id = message.from_user.id if message.from_user else 0
     if user_id not in SUDOERS and user_id != int(OWNER_ID):
         return await message.reply_text("❌ **This API Quota Dashboard is reserved for the Bot Creator/Sudoers.**")
 
-    dashboard_text = await format_api_usage_dashboard()
+    status_msg = await message.reply_text("🔍 **ʟɪᴠᴇ ᴀɪ ᴀᴘɪ & sᴇʀᴠᴇʀ ǫᴜᴏᴛᴀ ᴄʜᴇᴄᴋ...**")
+    dashboard_text = await format_api_usage_dashboard(live_check=True)
     btn = InlineKeyboardMarkup([
         [
-            InlineKeyboardButton("🔄 ʀᴇғʀᴇsʜ ᴅᴀsʜʙᴏᴀʀᴅ", callback_data="cb_refresh_api_usage"),
+            InlineKeyboardButton("🔄 ʟɪᴠᴇ ʀᴇ-ᴛᴇsᴛ & ʀᴇғʀᴇsʜ", callback_data="cb_refresh_api_usage"),
         ],
         [
             InlineKeyboardButton("🤖 ᴀᴜᴛᴏ ᴍᴏᴅᴇ", callback_data="cb_mode_auto"),
@@ -237,7 +238,7 @@ async def api_usage_cmd(client: Client, message: Message):
             InlineKeyboardButton("⦿ ᴄʟᴏsᴇ ⦿", callback_data="CLOSE")
         ]
     ])
-    await message.reply_text(dashboard_text, reply_markup=btn)
+    await status_msg.edit_text(dashboard_text, reply_markup=btn)
 
 
 @nexichat.on_callback_query(filters.regex(r"^cb_refresh_api_usage$"))
@@ -247,10 +248,11 @@ async def api_usage_callback_handler(client: Client, query: CallbackQuery):
     if user_id not in SUDOERS and user_id != int(OWNER_ID):
         return await query.answer("❌ Only the Creator/Sudoers can view this dashboard!", show_alert=True)
 
-    dashboard_text = await format_api_usage_dashboard()
+    await query.answer("🔄 Live re-testing all AI APIs...", show_alert=False)
+    dashboard_text = await format_api_usage_dashboard(live_check=True)
     btn = InlineKeyboardMarkup([
         [
-            InlineKeyboardButton("🔄 ʀᴇғʀᴇsʜ ᴅᴀsʜʙᴏᴀʀᴅ", callback_data="cb_refresh_api_usage"),
+            InlineKeyboardButton("🔄 ʟɪᴠᴇ ʀᴇ-ᴛᴇsᴛ & ʀᴇғʀᴇsʜ", callback_data="cb_refresh_api_usage"),
         ],
         [
             InlineKeyboardButton("🤖 ᴀᴜᴛᴏ ᴍᴏᴅᴇ", callback_data="cb_mode_auto"),
@@ -263,9 +265,8 @@ async def api_usage_callback_handler(client: Client, query: CallbackQuery):
     ])
     try:
         await query.message.edit_text(dashboard_text, reply_markup=btn)
-        await query.answer("✅ API Quota Dashboard refreshed!", show_alert=False)
     except Exception:
-        await query.answer("✅ Dashboard is up to date!")
+        pass
 
 
 @nexichat.on_message(filters.command(["mode", "dbmode", "databasemode"]))

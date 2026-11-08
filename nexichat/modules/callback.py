@@ -198,18 +198,25 @@ async def cb_handler(client: Client, query: CallbackQuery):
         user_id = query.from_user.id
         if user_id not in SUDOERS and user_id != int(OWNER_ID):
             return await query.answer("❌ Only Creator/Sudoers can view this dashboard!", show_alert=True)
-        dashboard_text = await format_api_usage_dashboard()
+        await query.answer("🔄 Live re-testing all AI APIs...", show_alert=False)
+        dashboard_text = await format_api_usage_dashboard(live_check=True)
         btn = InlineKeyboardMarkup([
             [
-                InlineKeyboardButton("🔄 ʀᴇғʀᴇsʜ ᴅᴀsʜʙᴏᴀʀᴅ", callback_data="cb_refresh_api_usage"),
+                InlineKeyboardButton("🔄 ʟɪᴠᴇ ʀᴇ-ᴛᴇsᴛ & ʀᴇғʀᴇsʜ", callback_data="cb_refresh_api_usage"),
+            ],
+            [
+                InlineKeyboardButton("🤖 ᴀᴜᴛᴏ ᴍᴏᴅᴇ", callback_data="cb_mode_auto"),
+                InlineKeyboardButton("🗄️ ᴅᴀᴛᴀʙᴀsᴇ ᴏɴʟʏ", callback_data="cb_mode_database"),
+                InlineKeyboardButton("⚡ sᴛʀɪᴄᴛ ᴀᴘɪ", callback_data="cb_mode_api"),
+            ],
+            [
                 InlineKeyboardButton("⦿ ᴄʟᴏsᴇ ⦿", callback_data="CLOSE")
             ]
         ])
         try:
             await query.message.edit_text(dashboard_text, reply_markup=btn)
-            await query.answer("✅ API Quota Dashboard refreshed!", show_alert=False)
         except Exception:
-            await query.answer("✅ Dashboard is up to date!")
+            pass
 
     elif data == "soon":
         await query.answer("🚀 This feature is coming soon in the next update! Stay tuned! 🌸", show_alert=True)
