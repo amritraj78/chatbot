@@ -352,6 +352,29 @@ class TestChatbotFeatures(unittest.IsolatedAsyncioTestCase):
         self.assertNotIn("Priya", ans)
         self.assertNotIn("sahayata", ans)
 
+        # Test prompt constraint / reasoning leakage filtering
+        leak_input = "We need to obey strict length rule: max 3 to 12 words per reply."
+        ans_leak = clean_modern_girl_reply(leak_input)
+        self.assertNotIn("obey", ans_leak.lower())
+        self.assertNotIn("length rule", ans_leak.lower())
+
+        # Test unclosed <think> tag stripping
+        think_input = "<think>\nThinking about what to say\nWe need to follow constraints\nHii kaise ho aap?"
+        ans_think = clean_modern_girl_reply(think_input)
+        self.assertNotIn("think", ans_think.lower())
+        self.assertNotIn("constraints", ans_think.lower())
+
+    async def test_prompt_leak_blocked_in_canned_check(self):
+        from nexichat.database.chatbot import is_toxic_or_canned_reply, set_chatbot_mode, get_chatbot_mode
+        self.assertTrue(is_toxic_or_canned_reply("We need to obey constraints: max 3-12 words per reply"))
+        self.assertTrue(is_toxic_or_canned_reply("strict length rule: 3-12 words"))
+
+        # Test mode persistence
+        await set_chatbot_mode("api")
+        self.assertEqual(await get_chatbot_mode(), "api")
+        await set_chatbot_mode("auto")
+        self.assertEqual(await get_chatbot_mode(), "auto")
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -21,6 +21,7 @@ Isme kya-kya save hota hai?
 ================================================================================
 """
 
+import os
 import random
 import asyncio
 import logging
@@ -60,6 +61,27 @@ _last_switch_alert_time: Dict[str, float] = {}
 _cache_loaded = False
 
 
+MODE_PERSIST_FILE = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "cache", "chatbot_mode.txt")
+
+def _read_persistent_mode() -> Optional[str]:
+    try:
+        if os.path.exists(MODE_PERSIST_FILE):
+            with open(MODE_PERSIST_FILE, "r") as f:
+                val = f.read().strip().lower()
+                if val in ["auto", "database", "api"]:
+                    return val
+    except Exception:
+        pass
+    return None
+
+def _write_persistent_mode(mode: str) -> None:
+    try:
+        os.makedirs(os.path.dirname(MODE_PERSIST_FILE), exist_ok=True)
+        with open(MODE_PERSIST_FILE, "w") as f:
+            f.write(mode.strip().lower())
+    except Exception:
+        pass
+
 async def get_chatbot_mode() -> str:
     """
     Get current chatbot reply mode:
@@ -73,8 +95,14 @@ async def get_chatbot_mode() -> str:
         doc = await chatbot_status_db.find_one({"setting": "chatbot_mode"})
         if doc and "mode" in doc:
             _chatbot_mode = doc["mode"]
+            _write_persistent_mode(_chatbot_mode)
+            return _chatbot_mode
     except Exception:
         pass
+
+    persisted = _read_persistent_mode()
+    if persisted:
+        _chatbot_mode = persisted
     return _chatbot_mode
 
 
@@ -84,6 +112,7 @@ async def set_chatbot_mode(mode: str):
     if mode not in ["auto", "database", "api"]:
         mode = "auto"
     _chatbot_mode = mode
+    _write_persistent_mode(mode)
     try:
         await chatbot_status_db.update_one(
             {"setting": "chatbot_mode"},
@@ -166,7 +195,11 @@ def is_toxic_or_canned_reply(text: str) -> bool:
         "rahul", "farzii", "mannat", "jxtttvibes", "kanhaiya", "krrish", "dia",
         "vinxvine", "maahi", "bus aur hell", "rhyme scheme", "what are u finding for",
         "kidnap kiya", "call kyu kiya", "in the group", "local game ranking",
-        "guessed the word in record time", "climb the mini-game leaderboard"
+        "guessed the word in record time", "climb the mini-game leaderboard",
+        "we need to obey", "we must obey", "strict length rule", "constraints:",
+        "words per reply", "75% to 80%", "plain text with zero emojis", "emoji rule",
+        "character prompt", "internal thought", "thinking process", "anshika_character_prompt",
+        "maximum 3 to 12"
     ]
     return any(marker in lower for marker in toxic_markers)
 
@@ -1004,8 +1037,9 @@ async def notify_owner_api_switch(from_api: str, to_api: str, reason: str = "Rat
             f"✦ **Reason:** {reason}\n"
             f"🔄 **Switched To:** `{to_api}`\n\n"
             f"✦ **Active Mode:** {mode_display}\n\n"
-            f"✦ **Owner Reply Source Control:**\n"
-            f"Aap neeche diye gaye buttons se reply mode turant change kar sakte hain:\n"
+            f"ℹ️ **Auto-Continuity:** System automatically aapke set kiye huye **{mode_display}** par continue kar raha hai. Agar aap offline ya busy hain toh aapko koi button click karne ki zaroorat nahi hai.\n\n"
+            f"✦ **Manual Control (Optional):**\n"
+            f"Aap chahein toh neeche diye gaye buttons se reply mode manually change kar sakte hain:\n"
             f"────────────────────────────"
         )
         await bot_client.send_message(chat_id=int(owner_id), text=msg, reply_markup=btn)

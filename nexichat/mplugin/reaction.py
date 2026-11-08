@@ -197,6 +197,16 @@ async def clone_auto_react_handler(client: Client, message: Message):
         if message.empty or getattr(message, "service", False):
             return
 
+        # 1. Userbot Check: Userbots (ID Clones) MUST NEVER react to messages
+        if client.me and not client.me.is_bot:
+            return
+
+        # 2. Never react to other bots or via_bot messages
+        if message.from_user and message.from_user.is_bot:
+            return
+        if getattr(message, "via_bot", None):
+            return
+
         # Ignore own messages (critical for userbot ID clones)
         if client.me and message.from_user and message.from_user.id == client.me.id:
             return

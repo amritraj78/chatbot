@@ -543,6 +543,37 @@ async def auto_chatbot_listener(client: Client, message: Message):
     if not message.from_user:
         return
 
+    # 1. Strictly ignore any bot messages
+    if message.from_user.is_bot:
+        return
+
+    # 2. Ignore messages sent via inline bots
+    if getattr(message, "via_bot", None):
+        return
+
+    # 3. Ignore own messages
+    if client.me and message.from_user.id == client.me.id:
+        return
+
+    # 4. Ignore cloned bots or userbots running on this system
+    try:
+        from nexichat.modules.clone import CLONES, USER_CLONES
+        if message.from_user.id in CLONES or message.from_user.id in USER_CLONES:
+            return
+    except Exception:
+        pass
+
+    # 5. In groups: if message was a reply to another bot (and not to our bot), do not reply
+    if message.chat.type in [ChatType.GROUP, ChatType.SUPERGROUP]:
+        if (
+            message.reply_to_message
+            and message.reply_to_message.from_user
+            and message.reply_to_message.from_user.is_bot
+            and client.me
+            and message.reply_to_message.from_user.id != client.me.id
+        ):
+            return
+
     # Ignore animated dice and game triggers so games module processes them
     if message.dice:
         return

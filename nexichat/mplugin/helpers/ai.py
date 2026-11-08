@@ -643,8 +643,28 @@ def clean_modern_girl_reply(text: str) -> str:
     """Sanitize AI output to guarantee ultra-short modern Indian girl tone, no Priya, no bot disclaimers."""
     if not text:
         return "Hii! Aur sunao kya chal raha hai?"
-    t = re.sub(r"<think>.*?</think>", "", text, flags=re.DOTALL).strip()
-    t = re.sub(r"<thought>.*?</thought>", "", t, flags=re.DOTALL).strip()
+    t = re.sub(r"<think>.*?(?:</think>|$)", "", text, flags=re.DOTALL).strip()
+    t = re.sub(r"<thought>.*?(?:</thought>|$)", "", t, flags=re.DOTALL).strip()
+
+    # Block prompt rule / constraint / reasoning leakage
+    prompt_leak_patterns = [
+        r"(?i)\bwe\s+(?:need|must)\s+to\s+obey\b",
+        r"(?i)\b(?:strict\s+)?length\s+rule\b",
+        r"(?i)\bconstraints?:\b",
+        r"(?i)\bmax(?:imum)?\s+3\s*(?:-|to)\s*12\s+words\b",
+        r"(?i)\bwords?\s+per\s+reply\b",
+        r"(?i)\b75%?\s*to\s*80%?\b",
+        r"(?i)\bplain\s+text\s+(?:with\s+zero\s+emojis|75|80)\b",
+        r"(?i)\bemoji\s+rule\b",
+        r"(?i)\bcharacter\s+prompt\b",
+        r"(?i)\bthinking\s+process\b",
+        r"(?i)\binternal\s+thought\b",
+        r"(?i)\banshika_character_prompt\b",
+    ]
+    for pattern in prompt_leak_patterns:
+        if re.search(pattern, t):
+            return random.choice(GIRL_FALLBACK_REPLIES)
+
     # Intercept any Priya or AI / Amrit creation claims
     if re.search(r"(?i)\b(ai assistant|created by amrit|safone|as a language model|as an ai|i am an ai|i'm an ai|i am a bot)\b", t):
         return "Mera naam Anshika hai baba! Class 12 mein padhti hu Chamoli se"
@@ -668,6 +688,8 @@ def clean_modern_girl_reply(text: str) -> str:
             t = sentences[0]
         else:
             t = " ".join(words[:13]) + "..."
+    if not t.strip():
+        return random.choice(GIRL_FALLBACK_REPLIES)
     return moderate_emojis(t.strip())
 
 
@@ -715,7 +737,7 @@ async def query_groq_api(
     if not keys:
         return None
 
-    models = ["qwen/qwen3.8-27b", "openai/gpt-oss-120b", "openai/gpt-oss-20b"]
+    models = ["llama-3.3-70b-versatile", "llama-3.1-8b-instant"]
     system_prompt = ANSHIKA_CHARACTER_PROMPT
     if vivid_context:
         system_prompt += f"\n{vivid_context}"
@@ -745,7 +767,7 @@ async def query_groq_api(
                 "model": model,
                 "messages": messages,
                 "temperature": 0.75,
-                "max_tokens": 70
+                "max_tokens": 100
             }
             def _fetch(m_payload=dict(payload), m_headers=headers):
                 return _ai_session.post(
@@ -761,10 +783,7 @@ async def query_groq_api(
                     choices = data.get("choices", [])
                     if choices:
                         msg_obj = choices[0].get("message", {})
-                        content = msg_obj.get("content", "")
-                        if not content and msg_obj.get("reasoning"):
-                            content = msg_obj.get("reasoning", "")
-                        content = content.strip()
+                        content = (msg_obj.get("content") or "").strip()
                         if content and len(content) > 1 and not is_abusive(content):
                             cleaned = clean_modern_girl_reply(content)
                             if cleaned:
@@ -928,8 +947,9 @@ async def query_nvidia_api(
     messages.append({"role": "user", "content": prompt.strip()})
 
     models = [
-        "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning",
-        "nvidia/nemotron-3.5-lightning-30b-a3b"
+        "meta/llama-3.3-70b-instruct",
+        "meta/llama-3.1-8b-instruct",
+        "mistralai/mistral-7b-instruct-v0.3"
     ]
 
     loop = asyncio.get_running_loop()
@@ -943,7 +963,7 @@ async def query_nvidia_api(
             "model": model,
             "messages": messages,
             "temperature": 0.75,
-            "max_tokens": 60
+            "max_tokens": 100
         }
         def _fetch(m_payload=dict(payload)):
             return _ai_session.post(
@@ -959,7 +979,7 @@ async def query_nvidia_api(
                 choices = data.get("choices", [])
                 if choices:
                     msg = choices[0].get("message", {})
-                    content = msg.get("content") or msg.get("reasoning_content")
+                    content = msg.get("content")
                     if content and len(str(content).strip()) > 1 and not is_abusive(str(content)):
                         cleaned = clean_modern_girl_reply(str(content))
                         if cleaned:
