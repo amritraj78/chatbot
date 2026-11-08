@@ -481,27 +481,40 @@ async def setname_command(client: Client, message: Message):
     await message.reply_text(f"🌸 **Maine yaad kar liya ji!** 🥰\nAb se main aapko **{new_name}** bulaungi! ✨")
 
 
+async def mark_as_read(client: Client, message: Message):
+    """Mark incoming message as read so the sender sees double tick (seen ✓✓)."""
+    try:
+        if client.me and not getattr(client.me, "is_bot", False):
+            await client.read_chat_history(message.chat.id, max_id=message.id)
+    except Exception as e:
+        logger.debug(f"read_chat_history notice: {e}")
+
+
 async def send_natural_chat_reply(client: Client, message: Message, response_text: str):
     """
     Sends conversational reply with natural human girl timing for cloned bots:
-    - 1.2s to 2.2s human reading pause
-    - 2.2s to 5.5s active typing indicator ('typing...')
+    - 2.0s to 3.5s realistic reading pause
+    - Marks message as read (Seen -> Double Tick ✓✓)
+    - 4.0s to 8.5s active typing indicator ('typing...')
     - Eliminates robotic instantaneous machine-speed replies!
     """
     chat_id = message.chat.id
     try:
-        # 1. Realistic human reading pause
-        await asyncio.sleep(random.uniform(1.5, 2.5))
+        # 1. Realistic human reading pause before opening message
+        await asyncio.sleep(random.uniform(2.0, 3.5))
 
-        # 2. Dynamic typing indicator scaled by length (2.5s to 4.5s)
-        typing_duration = min(max(len(response_text) * 0.12, 2.5), 4.5)
+        # 2. Mark as read (Seen -> Double Tick ✓✓) so sender sees it was opened
+        await mark_as_read(client, message)
+
+        # 3. Dynamic typing indicator scaled by length (4.0s to 8.5s)
+        typing_duration = min(max(len(response_text) * 0.18, 4.0), 8.5)
         elapsed = 0.0
         while elapsed < typing_duration:
             try:
                 await client.send_chat_action(chat_id, ChatAction.TYPING)
             except Exception:
                 pass
-            chunk = min(2.0, typing_duration - elapsed)
+            chunk = min(2.5, typing_duration - elapsed)
             await asyncio.sleep(chunk)
             elapsed += chunk
 
@@ -613,11 +626,12 @@ async def auto_chatbot_listener(client: Client, message: Message):
         # Learn sticker in RAM, MongoDB, and Telegram DB!
         await save_sticker(message.sticker.file_id, client=client)
         reply_stk = get_random_sticker(fallback=message.sticker.file_id)
-        await asyncio.sleep(random.uniform(1.2, 2.0))
+        await asyncio.sleep(random.uniform(2.0, 3.5))
+        await mark_as_read(client, message)
         if reply_stk:
             try:
                 await client.send_chat_action(chat_id, ChatAction.CHOOSE_STICKER)
-                await asyncio.sleep(1.0)
+                await asyncio.sleep(random.uniform(2.0, 3.5))
                 await message.reply_sticker(reply_stk, quote=True)
                 return
             except Exception:
@@ -631,13 +645,15 @@ async def auto_chatbot_listener(client: Client, message: Message):
 
     # 2. Voice / Audio (Reply with Text Message)
     if message.voice or message.audio:
-        await asyncio.sleep(random.uniform(2.2, 3.5))
+        await asyncio.sleep(random.uniform(2.5, 4.0))
+        await mark_as_read(client, message)
         await send_natural_chat_reply(client, message, get_voice_reply())
         return
 
     # 3. Photos
     if message.photo:
-        await asyncio.sleep(random.uniform(2.0, 3.2))
+        await asyncio.sleep(random.uniform(2.5, 4.0))
+        await mark_as_read(client, message)
         if message.caption and len(message.caption.strip()) > 1:
             caption_reply = await generate_conversational_response(message.caption.strip(), user_name, is_question_mode=True, client=client, user_id=user_id)
             await send_natural_chat_reply(client, message, caption_reply)
@@ -647,13 +663,15 @@ async def auto_chatbot_listener(client: Client, message: Message):
 
     # 4. Videos
     if message.video:
-        await asyncio.sleep(random.uniform(2.5, 4.0))
+        await asyncio.sleep(random.uniform(3.0, 4.5))
+        await mark_as_read(client, message)
         await send_natural_chat_reply(client, message, get_video_reply())
         return
 
     # 5. Animations / GIFs
     if message.animation:
-        await asyncio.sleep(random.uniform(1.5, 2.5))
+        await asyncio.sleep(random.uniform(2.0, 3.5))
+        await mark_as_read(client, message)
         await send_natural_chat_reply(client, message, get_animation_reply())
         return
 

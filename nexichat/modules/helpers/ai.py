@@ -121,6 +121,107 @@ def moderate_emojis(text: str) -> str:
     return chosen_emoji
 
 
+from datetime import datetime, timezone, timedelta
+
+INDIAN_FESTIVALS_MAP = {
+    # 2026 Festivals
+    "2026-01-01": "Happy New Year 2026 🎆",
+    "2026-01-14": "Makar Sankranti / Pongal / Lohri 🪁🔥",
+    "2026-01-26": "Republic Day (Gantantra Diwas) 🇮🇳",
+    "2026-02-15": "Maha Shivratri (महाशिवरात्रि) 🔱 Har Har Mahadev",
+    "2026-03-02": "Holika Dahan 🔥",
+    "2026-03-03": "Holi (Dhulandi - Rangowali Holi) 🎨 Gulal, sweets, fun",
+    "2026-03-20": "Eid ul-Fitr 🌙",
+    "2026-03-21": "Chaitra Navratri Starts",
+    "2026-03-29": "Ram Navami 🏹",
+    "2026-05-27": "Eid al-Adha (Bakrid)",
+    "2026-08-15": "Independence Day (Swatantrata Diwas) 🇮🇳",
+    "2026-08-28": "Raksha Bandhan (Rakhi) 🌸 Sister-brother bond",
+    "2026-09-04": "Krishna Janmashtami 🦚",
+    "2026-09-14": "Ganesh Chaturthi 🐘 Ganpati Bappa Morya",
+    "2026-10-02": "Gandhi Jayanti",
+    "2026-10-11": "Sharad Navratri Starts 🌺",
+    "2026-10-19": "Maha Navami 🌺",
+    "2026-10-20": "Dussehra / Vijayadashami 🏹",
+    "2026-10-29": "Karwa Chauth 🌙",
+    "2026-11-06": "Dhanteras 🪙 Auspicious buying and Lakshmi puja",
+    "2026-11-07": "Choti Diwali / Narak Chaturdashi 🪔",
+    "2026-11-08": "Diwali / Deepawali (दीपावली) 🪔✨ Grand festival of lights, diyas, Lakshmi Puja, sweets, patakhe & joy",
+    "2026-11-09": "Govardhan Puja / Annakut 🌾",
+    "2026-11-10": "Bhai Dooj (भाई दूज) 🌸 Sister-brother auspicious festival",
+    "2026-11-14": "Chhath Puja Nahay Khay / Kharna",
+    "2026-11-15": "Chhath Puja (छठ पूजा - Sandhya Arghya) ☀️",
+    "2026-11-16": "Chhath Puja (Usha Arghya) ☀️",
+    "2026-12-25": "Christmas Day (Bada Din) 🎄 Merry Christmas",
+    "2026-12-31": "New Year's Eve 🎉",
+    # 2025 Festivals
+    "2025-01-14": "Makar Sankranti / Pongal / Lohri 🪁",
+    "2025-01-26": "Republic Day 🇮🇳",
+    "2025-02-26": "Maha Shivratri 🔱",
+    "2025-03-14": "Holi 🎨",
+    "2025-03-31": "Eid ul-Fitr 🌙",
+    "2025-08-09": "Raksha Bandhan 🌸",
+    "2025-08-15": "Independence Day 🇮🇳",
+    "2025-08-16": "Janmashtami 🦚",
+    "2025-08-27": "Ganesh Chaturthi 🐘",
+    "2025-10-02": "Dussehra 🏹",
+    "2025-10-20": "Diwali 🪔",
+    "2025-10-22": "Bhai Dooj 🌸",
+    "2025-10-28": "Chhath Puja ☀️",
+    "2025-12-25": "Christmas 🎄",
+    # 2027 Festivals
+    "2027-01-14": "Makar Sankranti 🪁",
+    "2027-01-26": "Republic Day 🇮🇳",
+    "2027-03-07": "Maha Shivratri 🔱",
+    "2027-03-22": "Holi 🎨",
+    "2027-08-15": "Independence Day 🇮🇳",
+    "2027-08-17": "Raksha Bandhan 🌸",
+    "2027-10-29": "Diwali 🪔",
+    "2027-12-25": "Christmas 🎄",
+}
+
+def get_current_indian_context() -> str:
+    """
+    Computes real-time Indian Standard Time (IST) date, time, day of week,
+    and detects today's major Indian festivals / events.
+    """
+    ist = timezone(timedelta(hours=5, minutes=30))
+    now_ist = datetime.now(ist)
+    today_key = now_ist.strftime("%Y-%m-%d")
+    date_str = now_ist.strftime("%A, %d %B %Y, %I:%M %p IST")
+
+    current_festival = INDIAN_FESTIVALS_MAP.get(today_key)
+    tomorrow_key = (now_ist + timedelta(days=1)).strftime("%Y-%m-%d")
+    tomorrow_festival = INDIAN_FESTIVALS_MAP.get(tomorrow_key)
+
+    if current_festival:
+        fest_note = (
+            f"TODAY'S SPECIAL OCCASION: {current_festival}! Today is an auspicious celebration day in India! "
+            f"If asked 'aaj kya hai?' or about festivals/plans, celebrate warmly, wish 'Happy Diwali ji 🪔✨' (or respective festival), "
+            f"talk about diyas, sweets, family gathering, puja, and ask them how their celebration is going!"
+        )
+    elif tomorrow_festival:
+        fest_note = f"UPCOMING FESTIVAL TOMORROW: {tomorrow_festival}. If asked, mention tomorrow's festival with excitement!"
+    else:
+        fest_note = (
+            f"Today is a normal regular day ({now_ist.strftime('%A')}). "
+            f"If asked 'aaj kya hai?', state today's day casually (e.g. 'Arey aaj toh {now_ist.strftime('%A')} hai ji, normal day!') and ask about their day."
+        )
+
+    return (
+        f"CURRENT REAL-WORLD DATE & TIME: {date_str}.\n"
+        f"RELIGIOUS & CULTURAL IDENTITY: You are Anshika, a real sweet 17-year-old Hindu girl from Chamoli, Uttarakhand. "
+        f"If asked 'tum Hindu ho ya Muslim?', answer sweetly: 'Main Hindu hoon ji, ap batao na? 🌸'. You love celebrating Diwali, Holi, Raksha Bandhan, Shivratri, etc. with rangoli, diyas, and sweets, and you warmly respect all religions and festivals!\n"
+        f"{fest_note}"
+    )
+
+def get_base_system_prompt(vivid_context: Optional[str] = None) -> str:
+    """Build complete character prompt with real-time Indian date, festival & memory context."""
+    prompt = f"{ANSHIKA_CHARACTER_PROMPT}\n\n{get_current_indian_context()}"
+    if vivid_context:
+        prompt += f"\n\n{vivid_context}"
+    return prompt
+
 ANSHIKA_CHARACTER_PROMPT = (
     "You are Anshika, a real, sweet 17-year-old modern Indian girl from Chamoli, Uttarakhand, studying in Class 12. "
     "Tone & Personality: Extremely sweet, warm, affectionate, caring, polite, soft-spoken, and friendly (pure sweety girl vibes). "
@@ -246,6 +347,33 @@ GIRL_KNOWLEDGE_BASE = [
             "Haha bilkul nahi ji, Anshika hoon! Pahaadi ladki hu, koi robot nahi! Ap bhi na! 😊",
             "Real ladki hu ji, Class 12 mein padhti hu Chamoli se! Apko aisa kyu laga? Hehe ✨",
             "Arey koi robot aise baat karta hai kya? Real ladki hoon main! Ap batao na? 🌸",
+        ]
+    ),
+    # Religion: Hindu / Muslim / Christian / Sikh
+    (
+        r"\b(tum\s+(hindu|muslim|christian|sikh)\s+ho|hindu\s+ho\s+(ya|yeah|yaa)\s+muslim|apka\s+dharam|apka\s+religion|aap\s+hindu\s+ho)\b",
+        [
+            "Main Hindu hoon ji! Chamoli se hoon na. Ap batao ap kaun ho? 🌸",
+            "Main Hindu hoon ji! Uttarakhand se hu na. Aur apka dharam kya hai? 😊",
+            "Hindu hoon ji main! Ap batao na apke baare mein? ✨",
+        ]
+    ),
+    # Today's festival / "aaj kya hai"
+    (
+        r"\b(aaj\s+kya\s+hai|aaj\s+konsa\s+din|aaj\s+konsa\s+festival|aaj\s+konsa\s+tyohar|aaj\s+kya\s+h|today\s+which\s+festival|kya\s+hai\s+aaj)\b",
+        [
+            "Arey aaj toh Diwali hai ji! 🪔✨ Happy Diwali apko aur apki family ko! Diyas jalaye apne?",
+            "Arey aaj Deepawali hai na ji! 🪔 Happy Diwali! Kitni sweets khayi apne aaj? Hehe 🌸",
+            "Aaj toh roshniyon ka tyohar Diwali hai ji! 🪔✨ Happy Diwali! Apka kya plan hai aaj?",
+        ]
+    ),
+    # Happy Diwali greetings
+    (
+        r"\b(happy\s+diwali|diwali\s+ki\s+badhai|subh\s+diwali|deepawali\s+mubarak|shubh\s+deepawali|diwali\s+mubarak)\b",
+        [
+            "Happy Diwali ji! 🪔✨ Apko aur apki poori family ko bohot saari shubhkamnayein! Diyas jalaye?",
+            "Aapko bhi Happy Diwali ji! 🪔 Khushiyan aur sweets enjoy karo khub saari! 🌸✨",
+            "Happy Deepawali ji! 🪔✨ Bhagwan Lakshmi Ganesh ji ki kripa rahe ap par! Sweets khayi?",
         ]
     ),
     # Identity / Who are you
@@ -598,9 +726,7 @@ async def query_pollinations_free_ai(
     """
     100% Free Open-Access AI Text API with randomized IP header to avoid 45s rate limits.
     """
-    system_prompt = ANSHIKA_CHARACTER_PROMPT
-    if vivid_context:
-        system_prompt += f"\n{vivid_context}"
+    system_prompt = get_base_system_prompt(vivid_context)
 
     loop = asyncio.get_running_loop()
     random_ip = f"103.{random.randint(1, 250)}.{random.randint(1, 250)}.{random.randint(1, 250)}"
@@ -771,9 +897,7 @@ async def query_groq_api(
         return None
 
     models = ["qwen/qwen3.8-27b"]
-    system_prompt = ANSHIKA_CHARACTER_PROMPT
-    if vivid_context:
-        system_prompt += f"\n{vivid_context}"
+    system_prompt = get_base_system_prompt(vivid_context)
 
     messages = [{"role": "system", "content": system_prompt}]
     if context_history:
@@ -873,9 +997,7 @@ async def query_gemini_api(
         return None
 
     gemini_models = ["gemini-3.5-flash", "gemini-3.1-flash-lite"]
-    system_instruction_text = ANSHIKA_CHARACTER_PROMPT
-    if vivid_context:
-        system_instruction_text += f"\n{vivid_context}"
+    system_instruction_text = get_base_system_prompt(vivid_context)
 
     contents = []
     if context_history:
@@ -975,9 +1097,7 @@ async def query_nvidia_api(
     if not api_key or is_key_cooling_down(api_key):
         return None
 
-    system_prompt = ANSHIKA_CHARACTER_PROMPT
-    if vivid_context:
-        system_prompt += f"\n{vivid_context}"
+    system_prompt = get_base_system_prompt(vivid_context)
 
     messages = [{"role": "system", "content": system_prompt}]
     if context_history:
