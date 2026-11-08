@@ -53,7 +53,8 @@ from nexichat.database.chatbot import (
     get_chatbot_mode,
     set_chatbot_mode,
     notify_owner_api_switch,
-    is_toxic_or_canned_reply
+    is_toxic_or_canned_reply,
+    get_api_usage_stats
 )
 import config
 from requests.adapters import HTTPAdapter
@@ -1358,9 +1359,12 @@ async def generate_conversational_response(
     # If mode is 'auto' or 'api', query live external APIs with SMART DYNAMIC QUOTA ROUTING
     if mode != "database":
         # Check remaining quotas dynamically
-        stats = await get_api_usage_stats()
-        groq_left = stats.get("groq_left_pct", 0.0)
-        gemini_left = stats.get("gemini_left_pct", 0.0)
+        try:
+            stats = await get_api_usage_stats()
+            groq_left = stats.get("groq_left_pct", 0.0)
+            gemini_left = stats.get("gemini_left_pct", 0.0)
+        except Exception:
+            groq_left, gemini_left = 50.0, 50.0
 
         has_groq = bool(getattr(config, "GROQ_API_KEYS", None) or getattr(config, "GROQ_API_KEY", None))
         has_gemini = bool(getattr(config, "GEMINI_API_KEYS", None) or getattr(config, "GEMINI_API_KEY", None))

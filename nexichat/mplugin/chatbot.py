@@ -680,7 +680,15 @@ async def auto_chatbot_listener(client: Client, message: Message):
         return
 
     # Generate girl-style AI conversational response with vivid user memory
-    response_text = await generate_conversational_response(clean_text, user_name, client=client, user_id=user_id)
-
-    # Pure text reply only with realistic human timing
-    await send_natural_chat_reply(client, message, response_text)
+    try:
+        response_text = await generate_conversational_response(clean_text, user_name, client=client, user_id=user_id)
+        if response_text:
+            await send_natural_chat_reply(client, message, response_text)
+        else:
+            await send_natural_chat_reply(client, message, "Hii! Kahiye kya chal raha hai apka? 🌸")
+    except Exception as e:
+        logger.error(f"Error generating conversational reply: {e}", exc_info=True)
+        try:
+            await send_natural_chat_reply(client, message, "Hii! Aur sunao kaise ho ap? 🌸")
+        except Exception:
+            pass
