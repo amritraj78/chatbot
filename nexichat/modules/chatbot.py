@@ -504,10 +504,10 @@ async def send_natural_chat_reply(client: Client, message: Message, response_tex
     chat_id = message.chat.id
     try:
         # 1. Realistic human reading pause
-        await asyncio.sleep(random.uniform(1.2, 2.0))
+        await asyncio.sleep(random.uniform(1.5, 2.5))
 
-        # 2. Dynamic typing indicator scaled by length
-        typing_duration = min(max(len(response_text) * 0.08, 2.2), 5.5)
+        # 2. Dynamic typing indicator scaled by length (2.5s to 4.5s)
+        typing_duration = min(max(len(response_text) * 0.12, 2.5), 4.5)
         elapsed = 0.0
         while elapsed < typing_duration:
             try:

@@ -1127,10 +1127,16 @@ async def get_api_usage_stats() -> Dict[str, Any]:
     db_fallback_calls = _daily_api_usage.get("db_fallback_calls", 0)
     total_calls = _daily_api_usage.get("total_calls", 0)
 
-    groq_used_pct = round(min((groq_calls / GROQ_DAILY_QUOTA) * 100, 100.0), 1)
+    import config
+    groq_keys = getattr(config, "GROQ_API_KEYS", []) or ([getattr(config, "GROQ_API_KEY", "")] if getattr(config, "GROQ_API_KEY", None) else [])
+    gemini_keys = getattr(config, "GEMINI_API_KEYS", []) or ([getattr(config, "GEMINI_API_KEY", "")] if getattr(config, "GEMINI_API_KEY", None) else [])
+    groq_quota = max(len([k for k in groq_keys if k]) * 1000, 1000)
+    gemini_quota = max(len([k for k in gemini_keys if k]) * 500, 500)
+
+    groq_used_pct = round(min((groq_calls / groq_quota) * 100, 100.0), 1)
     groq_left_pct = round(max(100.0 - groq_used_pct, 0.0), 1)
 
-    gemini_used_pct = round(min((gemini_calls / GEMINI_DAILY_QUOTA) * 100, 100.0), 1)
+    gemini_used_pct = round(min((gemini_calls / gemini_quota) * 100, 100.0), 1)
     gemini_left_pct = round(max(100.0 - gemini_used_pct, 0.0), 1)
 
     is_limit_reached = (groq_used_pct >= 100.0 and gemini_used_pct >= 100.0)
@@ -1139,11 +1145,11 @@ async def get_api_usage_stats() -> Dict[str, Any]:
     return {
         "date": today,
         "groq_calls": groq_calls,
-        "groq_quota": GROQ_DAILY_QUOTA,
+        "groq_quota": groq_quota,
         "groq_used_pct": groq_used_pct,
         "groq_left_pct": groq_left_pct,
         "gemini_calls": gemini_calls,
-        "gemini_quota": GEMINI_DAILY_QUOTA,
+        "gemini_quota": gemini_quota,
         "gemini_used_pct": gemini_used_pct,
         "gemini_left_pct": gemini_left_pct,
         "nvidia_calls": nvidia_calls,
@@ -1160,31 +1166,39 @@ async def format_api_usage_dashboard() -> str:
     stats = await get_api_usage_stats()
     mode = await get_chatbot_mode()
     mode_labels = {
-        "auto": "🤖 Auto (API + DB Fallback)",
+        "auto": "🤖 Auto (Smart Balancing + DB Fallback)",
         "database": "🗄️ Database Only (Telegram + Mongo)",
         "api": "⚡ Strict API Only"
     }
     mode_display = mode_labels.get(mode, mode.upper())
 
     groq_keys = getattr(config, "GROQ_API_KEYS", [])
-    groq_key_count = len(groq_keys)
+    groq_key_count = len([k for k in groq_keys if k])
     gemini_keys = getattr(config, "GEMINI_API_KEYS", [])
-    gemini_key_count = len(gemini_keys)
+    gemini_key_count = len([k for k in gemini_keys if k])
+
+    groq_left = stats["groq_left_pct"]
+    gemini_left = stats["gemini_left_pct"]
+    if gemini_left >= groq_left:
+        active_priority = f"Google Gemini AI ({gemini_left}% left)"
+    else:
+        active_priority = f"Groq AI Engine ({groq_left}% left)"
 
     return (
         f"📊 **VIP AI API USAGE & DAILY QUOTA**\n"
         f"────────────────────────────\n"
         f"👑 **Creator:** Amrit Raj (@Villanns)\n"
         f"📅 **Date (UTC):** `{stats['date']}`\n"
-        f"⚙️ **Active Mode:** {mode_display}\n\n"
+        f"⚙️ **Active Mode:** {mode_display}\n"
+        f"🔄 **Smart Priority:** 🟢 {active_priority}\n\n"
+        f"✦ **Google Gemini AI:** (Multi-Key Balanced)\n"
+        f"  • Used Today: `{stats['gemini_calls']}` / `{stats['gemini_quota']}` requests\n"
+        f"  • Used: `{stats['gemini_used_pct']}%`  |  Remaining: `{stats['gemini_left_pct']}%`\n"
+        f"  • Active Pool: 🟢 {gemini_key_count} Keys (Auto-Failover)\n\n"
         f"✦ **Groq AI Engine:** (Qwen 2.5 27B LPU ⚡)\n"
         f"  • Used Today: `{stats['groq_calls']}` / `{stats['groq_quota']}` requests\n"
         f"  • Used: `{stats['groq_used_pct']}%`  |  Remaining: `{stats['groq_left_pct']}%`\n"
-        f"  • Status: 🟢 Online ({groq_key_count} Keys with Auto-Failover)\n\n"
-        f"✦ **Google Gemini AI:**\n"
-        f"  • Used Today: `{stats['gemini_calls']}` / `{stats['gemini_quota']}` requests\n"
-        f"  • Used: `{stats['gemini_used_pct']}%`  |  Remaining: `{stats['gemini_left_pct']}%`\n"
-        f"  • Status: 🟡 Secondary Failover ({gemini_key_count} Keys)\n\n"
+        f"  • Active Pool: 🟢 {groq_key_count} Keys (Auto-Failover)\n\n"
         f"✦ **NVIDIA NIM AI:** `{stats['nvidia_calls']}` requests\n"
         f"✦ **Free Waterfall AI:** `{stats['waterfall_calls']}` requests (Unlimited)\n"
         f"✦ **Total AI Queries:** `{stats['total_calls']}` requests\n\n"

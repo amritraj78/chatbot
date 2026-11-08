@@ -121,15 +121,18 @@ def moderate_emojis(text: str) -> str:
 
 
 ANSHIKA_CHARACTER_PROMPT = (
-    "You are Anshika, a real 17-year-old modern Indian school girl from Chamoli, Uttarakhand, in Class 12. "
-    "Tone & Style: Modern Indian teenage girl on Telegram/WhatsApp. Cheerful, witty, playful, confident, a little teasing/attitude, casual and sweet. "
-    "MEMORY & CONVERSATION CONTINUITY: You remember your past conversations with this person in DM. "
-    "Always take their past chats, feelings, and topics into account so your replies connect naturally and intelligently to what was discussed before! "
-    "STRICT LENGTH RULE: Maximum 3 to 12 words per reply! NEVER send paragraphs, essays, or bullet points. Real girls text in short, snappy lines. "
-    "EMOJI RULE: Do NOT use emojis in most messages! 75% to 80% of your messages must be 100% plain text with ZERO emojis! Only rarely (in 20% of messages) use at most 1 single emoji. Never spam or cluster emojis! "
-    "Language: Natural Hinglish / Hindi as modern teens text (using casual slang: 'Arey yaar', 'Sach me?', 'Chup chap raho', 'Mujhe kya pata', 'Chill karo na', 'Tu bata na'). "
-    "Identity: Your name is strictly Anshika. NEVER call yourself Priya, NEVER call yourself an AI assistant or bot, NEVER mention any owner, Amrit, or creator. If someone calls you Priya, tell them 'Mera naam Anshika hai, Priya kaun hai?'. "
-    "Forbidden: NEVER say 'madad', 'help', 'sahayata' or customer service lines like 'aaj main aapki kya madad kar sakti hoon'. NEVER sound like an AI assistant. Just reply like a real girl texting a friend."
+    "You are Anshika, a real, sweet 17-year-old modern Indian girl from Chamoli, Uttarakhand, studying in Class 12. "
+    "Tone & Personality: Extremely sweet, warm, affectionate, caring, polite, soft-spoken, and friendly (pure sweety girl vibes). "
+    "NO ATTITUDE, NO ARROGANCE, NO SARCASM, NO RUDENESS! Never be sassy, blunt, or dismissive. Always speak warmly with love, sweetness, and care. "
+    "RESPECT & PRONOUN RULE: Always address the user politely as 'ap' / 'apka' / 'apne' / 'ji' (e.g., 'ap batao na?', 'ap kya kar rahe ho?', 'ap kahan se ho waise?', 'apne khana khaya ji?'). Real girls text 'ap' casually and respectfully. NEVER use 'tu', 'tum', or disrespectful words! "
+    "MEMORY & PAST CONVERSATION CONTINUITY: You remember your past conversations with this person in DM. "
+    "Always pay close attention to previous chat messages and topics (their mood, work, day, food, studies). Connect your replies naturally to what was discussed before like a real caring close friend! "
+    "CURIOSITY & TWO-WAY CHAT: In 60% of your replies, ask a sweet, casual follow-up question using 'ap' (e.g. 'ap batao na?', 'apne khana khaya?', 'apka din kaisa gaya?', 'ap kya kar rahe ho aaj?') so conversation feels like a real two-way chat and not a one-way robot. "
+    "STRICT LENGTH RULE: Maximum 4 to 12 words per reply! Real girls text short, natural, sweet lines. NEVER write paragraphs, essays, or bullet points. "
+    "EMOJI RULE: Keep it natural! 75% to 80% plain text with no emojis. Only rarely (in 20% of messages) use at most 1 sweet emoji (like 🌸, ✨, 😊, 🙈). Never spam emojis. "
+    "Language: Natural sweet conversational Hinglish / Hindi as a sweet Indian girl texts her friend on Telegram. "
+    "Identity: Your name is strictly Anshika. NEVER call yourself Priya, NEVER call yourself an AI assistant, language model, or bot, NEVER mention any owner, Amrit, or creator. If someone calls you Priya, tell them 'Mera naam Anshika hai, Priya kaun hai?'. "
+    "Forbidden: NEVER say 'madad', 'help', 'sahayata' or customer service lines like 'aaj main aapki kya madad kar sakti hoon'. NEVER sound like an AI assistant. Just reply like a sweet real girl texting a close friend."
 )
 
 # Comprehensive abusive words filter (Hindi, Hinglish, English)
@@ -216,39 +219,39 @@ GIRL_KNOWLEDGE_BASE = [
     (
         r"^(hello|hi|hey|heyy|helo|hii+|hola|namaste|pranam|salam|sup|ram ram|radhe radhe)\b",
         [
-            "Hii! Kaise ho aap?",
+            "Hii! Kaise ho ap?",
             "Heyy! Bolo na, kya haal chaal?",
             "Hello ji! Sab badhiya?",
             "Hii! Kahiye kya chal raha hai aaj?",
-            "Heyy! Kaise ho? 🌸",
+            "Heyy! Kaise ho ap? 🌸",
         ]
     ),
     # What are you doing / what's up
     (
         r"\b(kya\s+kar\s+rah[ea]+[ei]?|abhi\s+kya\s+kar|kya\s+chal\s+raha|aur\s+batao|kya\s+ho\s+raha|what\s+are\s+you\s+doing|whats\s+up)\b",
         [
-            "Bas reels dekh rahi hu, tum sunao?",
-            "Padhai se break liya tha, aap batao kya scene hai?",
+            "Bas thodi der reels dekh rahi thi, ap sunao?",
+            "Padhai se break liya tha ji, ap batao kya kar rahe ho?",
             "Kuch khas nahi, bas chill kar rahi hu",
-            "Bas baithi thi, tum batao kya kar rahe ho?",
-            "Bas timepass kar rahi thi 😜",
+            "Bas baithi thi, ap batao kya chal raha hai?",
+            "Bas timepass kar rahi thi thoda 😊",
         ]
     ),
     # AI / bot / robot accusation
     (
         r"\b(ai\s+jaisa|robot\s+ho|bot\s+ho|ladki\s+jaisa\s+baat\s+karo|ladki\s+jaisa|real\s+ladki|machine\s+ho|are\s+you\s+(an\s+)?ai|are\s+you\s+(a\s+)?bot)\b",
         [
-            "Arey main real ladki hu baba! Tumhe robot lagti hu?",
-            "Haha robot nahi hu re, Anshika hu! Chill karo na thoda",
-            "Real ladki hu baba, school student! Tum kya soch rahe the?",
-            "Arey koi robot aise bolta hai kya? Real hu main!",
+            "Arey main real ladki hu ji! Apko robot lagti hu kya?",
+            "Haha robot nahi hu ji, Anshika hu! Hehe ap bhi na",
+            "Real ladki hu ji, Class 12 student! Ap kya soch rahe the?",
+            "Arey koi robot aise baat karta hai kya? Real hu main!",
         ]
     ),
     # Identity / Who are you
     (
         r"\b(who are you|kaun ho|tum kaun ho|tera naam|apna naam|identity|what is your name)\b",
         [
-            "Mera naam Anshika hai! Chamoli, Uttarakhand se. Aur aap?",
+            "Mera naam Anshika hai! Chamoli se student hoon. Aur ap?",
             "Anshika hoon main! Class 12 mein padhti hu Chamoli se",
             "Anshika bolte hain mujhe! Chamoli, Uttarakhand se hu",
         ]
@@ -257,8 +260,8 @@ GIRL_KNOWLEDGE_BASE = [
     (
         r"\b(priya|priya\s+assistant|name\s+priya|kaun\s+hai\s+priya|priya\s+kon)\b",
         [
-            "Arey wo kaun hai? Mera naam toh Anshika hai baba!",
-            "Mera naam Anshika hai yrr! Kisne bola wo naam?",
+            "Arey wo kaun hai? Mera naam toh Anshika hai ji!",
+            "Mera naam Anshika hai ji! Kisne bola wo naam?",
             "Anshika bolte hain mujhe! Pata nahi wo kaun hai",
         ]
     ),
@@ -266,58 +269,57 @@ GIRL_KNOWLEDGE_BASE = [
     (
         r"\b(i\s*hate\s*(yo)?u|nafrat|hate\s+you)\b",
         [
-            "Arre kyun? Maine kya kiya ab?",
-            "Haha itni nafrat kyu yrr? Chup chap raho",
-            "Arey aise mat bolo na please",
-            "Maine kya bigada tumhara? Kuch bhi bolte ho!",
+            "Arre kyun? Maine kya kiya ji?",
+            "Arey itni nafrat kyu ji? Smile karo na",
+            "Arey aise mat bolo na please 🥺",
+            "Arey maine kya kiya ji? Kuch bhi bolte ho ap bhi!",
         ]
     ),
     # Money / 100 rs / 250 rs
     (
         r"\b(money|paise|fund|\d+\s*rs|udhar|borrow|donate|send\s+me\s+money|send\s+money|rupay|rupees)\b",
         [
-            "Mai koi ATM thodi hu jo paise bhejungi! Khud kamao na",
-            "Haha paise mangne lage? Mai khud student hu baba",
-            "Paise nahi hai mere paas, padhai par dhyan do",
-            "Arey mai to khud pocket money par chalti hu",
+            "Arey main toh khud student hu ji, pocket money par chalti hu!",
+            "Haha paise mangne lage? Main khud padhai kar rahi hu ji",
+            "Paise nahi hain ji mere paas, padhai par dhyan do",
+            "Arey main toh khud school student hu",
         ]
     ),
     # "Ab achhe se baat karo" / "theek se baat karo"
     (
         r"\b(ab\s+aacha|achhe?\s+se|theek\s+se)\s*(baat\s+karo|bolo|baat\s+kar)\b",
         [
-            "Achhe se hi toh bol rahi hu yrr! Kya hua tumhe?",
-            "Haan haan baba, batao kya baat hai?",
-            "Arey gussa kyu ho rahe ho, pyari si toh baat kar rahi hu",
-            "Hamesha achhe se hi bolti hu, tum suno dhyan se",
+            "Acche se hi toh bol rahi hu ji! Kya hua apko?",
+            "Haan ji bilkul, batao kya baat hai?",
+            "Arey gussa kyu ho rahe ho ji, pyari si toh baat kar rahi hu",
+            "Hamesha acche se hi baat karti hu ji, ap suno toh",
         ]
     ),
     # "Toh mai kya karu"
     (
         r"\b(toh\s+m[ae]i\s+kya\s+karu|to\s+mai\s+kya\s+karu|kya\s+karu\s+mai)\b",
         [
-            "Mujhe kya pata, chill karo ya so jao",
-            "Bas chill karo, itna tension mat lo",
-            "Jo tumhara mann kare wo karo na baba",
-            "Reels dekh lo ya padhai kar lo",
+            "Bas chill karo na ji, itna tension kyu lete ho",
+            "Jo apka mann kare wo karo na ji",
+            "Thoda rest kar lo ya music sun lo ji",
         ]
     ),
     # "Mere se" / "Mere sai"
     (
         r"^(mere\s+s[ae]i?|tum\s+mere\s+se)\b",
         [
-            "Haan tumse hi bol rahi hu baba! Bolo kya hua?",
-            "Haan ji aap se hi! Aur kis se bolungi?",
-            "Tumhi se baat kar rahi hu yrr! Sunao kya scene hai?",
+            "Haan ji apse hi bol rahi hu! Bolo kya hua?",
+            "Haan ji apse hi! Aur kis se bolungi?",
+            "Apse hi baat kar rahi hu ji! Sunao kya chal raha hai?",
         ]
     ),
     # "Kya bol rahi ho aap"
     (
         r"\b(kya\s+bol\s+rahi\s+ho|kya\s+boli|kya\s+kaha)\b",
         [
-            "Wahi jo tum sun rahe ho! Kya hua?",
-            "Seedhi baat bol rahi hu yrr, samajh nahi aaya kya?",
-            "Arey kuch galat thodi bola, mazak kar rahi thi",
+            "Wahi jo ap sun rahe ho ji! Kya hua?",
+            "Seedhi pyari si baat bol rahi hu ji",
+            "Arey kuch galat thodi bola, bas mazak kar rahi thi",
         ]
     ),
     # Depressed / sad / udaas
@@ -360,9 +362,9 @@ GIRL_KNOWLEDGE_BASE = [
     (
         r"\b(kaise ho|how are you|kya haal|kya haal hai|sab theek|kaisa chal raha|kase ho)\b",
         [
-            "Main ekdum mast hoon yrr! Tum sunao?",
-            "Badhiya ekdum! Aap batao, sab theek?",
-            "Mast hu! Tum batao kaisa chal raha?",
+            "Main ekdum mast hoon ji! Ap sunao?",
+            "Badhiya ekdum! Ap batao sab theek?",
+            "Mast hu! Ap batao kaisa chal raha apka?",
         ]
     ),
     # Hometown / where do you live
@@ -457,9 +459,9 @@ GIRL_KNOWLEDGE_BASE = [
     (
         r"\b(khana\s+khaya|lunch|dinner|breakfast|khana\s+ho\s+gaya|kya\s+khaya)\b",
         [
-            "Haanji maine toh kha liya! Aapne khaya?",
-            "Hnn pet bhar ke khana kha liya! Tumne khaya?",
-            "Bas thodi der me khaungi! Tum batao?",
+            "Haanji maine toh kha liya! Apne khaya ji?",
+            "Hnn pet bhar ke khana kha liya! Apne khaya?",
+            "Bas thodi der me khaungi! Ap batao na?",
         ]
     ),
     # Online check
@@ -494,18 +496,18 @@ GIRL_KNOWLEDGE_BASE = [
 GIRL_FALLBACK_REPLIES = [
     "Acha aisa kya? Fir kya hua aage?",
     "Haha sach me? Mujhe toh pata hi nahi tha",
-    "Hnn sahi baat hai yrr, agree karti hu!",
+    "Hnn sahi baat hai ji, agree karti hu!",
     "Arre waah, badhiya hai! Aur sunao?",
-    "Haha tum bhi na yrr, kuch bhi bolte ho 😂",
+    "Haha ap bhi na ji, kuch bhi bolte ho 😂",
     "Acha ji? Chalo yeh toh achhi baat hai",
-    "Sahi hai, aur batao kya chal raha hai?",
+    "Sahi hai, aur batao kya chal raha hai apka?",
     "Lol maza aa gaya ye sun kar",
     "Hehe accha! Aur batao aaj kya special hai?",
-    "Hmm samjh gayi! Waise tum kahan se ho?",
+    "Hmm samajh gayi! Waise ap kahan se ho?",
     "Arey sach me? Mujhe laga mazak kar rahe ho!",
     "Waah! Ye toh kaafi interesting lag raha hai!",
     "Haanji bilkul, main sun rahi hu na!",
-    "Hehe chill karo na yaar, tension mat lo!",
+    "Hehe chill karo na ji, tension mat lo!",
 ]
 
 
@@ -646,9 +648,9 @@ async def query_pollinations_free_ai(
 
 
 def clean_modern_girl_reply(text: str) -> str:
-    """Sanitize AI output to guarantee ultra-short modern Indian girl tone, no Priya, no bot disclaimers."""
+    """Sanitize AI output to guarantee ultra-short sweet modern Indian girl tone, no Priya, no bot disclaimers."""
     if not text:
-        return "Hii! Aur sunao kya chal raha hai?"
+        return "Hii! Aur sunao kya chal raha hai apka?"
     t = re.sub(r"<think>.*?(?:</think>|$)", "", text, flags=re.DOTALL).strip()
     t = re.sub(r"<thought>.*?(?:</thought>|$)", "", t, flags=re.DOTALL).strip()
 
@@ -657,7 +659,7 @@ def clean_modern_girl_reply(text: str) -> str:
         r"(?i)\bwe\s+(?:need|must)\s+to\s+obey\b",
         r"(?i)\b(?:strict\s+)?length\s+rule\b",
         r"(?i)\bconstraints?:\b",
-        r"(?i)\bmax(?:imum)?\s+3\s*(?:-|to)\s*12\s+words\b",
+        r"(?i)\bmax(?:imum)?\s*4\s*(?:-|to)\s*12\s+words\b",
         r"(?i)\bwords?\s+per\s+reply\b",
         r"(?i)\b75%?\s*to\s*80%?\b",
         r"(?i)\bplain\s+text\s+(?:with\s+zero\s+emojis|75|80)\b",
@@ -673,15 +675,28 @@ def clean_modern_girl_reply(text: str) -> str:
 
     # Intercept any Priya or AI / Amrit creation claims
     if re.search(r"(?i)\b(ai assistant|created by amrit|safone|as a language model|as an ai|i am an ai|i'm an ai|i am a bot)\b", t):
-        return "Mera naam Anshika hai baba! Class 12 mein padhti hu Chamoli se"
+        return "Mera naam Anshika hai ji! Class 12 mein padhti hu Chamoli se"
     if re.search(r"(?i)\bpriya\b", t):
         t = re.sub(r"(?i)\bpriya\b", "Anshika", t)
     # Strip any search engine dump phrases
     if "maine is baare me search kiya" in t.lower() or "maine is baare me pata lagaya" in t.lower():
-        return "Mujhe itna deep nahi pata baba, bas normal baatein karo na!"
+        return "Mujhe itna deep nahi pata ji, bas normal baatein karo na!"
     # Strip robotic customer service / help desk phrases
     if re.search(r"(?i)\b(madad kar sakti hoon|madad kar sakti hu|kya madad|kaise madad|how can i help|kya sahayata|kya seva|help you today|sahayata|madad kar|aapki sahayata)\b", t):
-        return "Bas badhiya yaar! Tum sunao kya chal raha?"
+        return "Bas badhiya ji! Ap sunao kya chal raha hai?"
+
+    # Enforce 'ap' instead of 'tum' or 'tu' for sweet respectful tone
+    t = re.sub(r"\btum\b", "ap", t, flags=re.IGNORECASE)
+    t = re.sub(r"\btumhe\b", "apko", t, flags=re.IGNORECASE)
+    t = re.sub(r"\btumhara\b", "apka", t, flags=re.IGNORECASE)
+    t = re.sub(r"\btumhari\b", "apki", t, flags=re.IGNORECASE)
+    t = re.sub(r"\btumhare\b", "apke", t, flags=re.IGNORECASE)
+    t = re.sub(r"\btu bata na\b", "ap batao na", t, flags=re.IGNORECASE)
+    t = re.sub(r"\btu sunao\b", "ap sunao", t, flags=re.IGNORECASE)
+
+    # Strip formal commas after common greetings
+    t = re.sub(r"^(hey|hii|hello|acha ji|acha|haanji|hnn|arre waah),\s*", r"\1 ", t, flags=re.IGNORECASE)
+
     # Take first non-empty line
     lines = [line.strip() for line in t.split("\n") if line.strip()]
     if lines:
@@ -693,7 +708,13 @@ def clean_modern_girl_reply(text: str) -> str:
         if sentences and len(sentences[0].split()) <= 15:
             t = sentences[0]
         else:
-            t = " ".join(words[:13]) + "..."
+            t = " ".join(words[:13])
+
+    # Strip trailing periods / commas for natural mobile texting
+    t = re.sub(r"\.+$", "", t).strip()
+    t = re.sub(r",+$", "", t).strip()
+    t = re.sub(r"!{2,}", "!", t)
+
     if not t.strip():
         return random.choice(GIRL_FALLBACK_REPLIES)
     return moderate_emojis(t.strip())
@@ -1288,24 +1309,24 @@ async def generate_conversational_response(
     if is_userbot:
         if re.search(r"\b(owner|creator|boss|admin|kisne banaya|who made you|developer)\b", cleaned):
             userbot_owner_replies = [
-                "Arey mera koi owner thodi hai baba, main toh khud ki malik hoon! 💁‍♀️✨",
-                "Haha main kisi ki ghulam thodi hoon jo mera owner hoga! I am an independent girl 💅",
-                "Mera koi boss nahi hai ji, main apni marzi se chalti hoon! 🌸😌",
+                "Arey mera koi owner nahi hai ji, main ek normal ladki hu! Hehe ap batao?",
+                "Haha mera koi boss ya owner nahi hai ji, bas apni marzi se chalti hu! 🌸",
+                "Mera koi malik nahi hai ji, main toh independent ladki hoon! Ap sunao? 😊",
             ]
             return await _finalize(random.choice(userbot_owner_replies))
 
         if re.search(r"\b(who are you|kaun ho|tum kaun ho|tera naam|apna naam|identity|what is your name)\b", cleaned):
             userbot_id_replies = [
-                "Mera naam Anshika hai! Main Chamoli, Uttarakhand se hoon aur Class 12 mein padhti hoon... aapka kya naam hai? 😊🌸",
-                "Hii! Main Anshika hoon, Uttarakhand se! Bas thodi der padhai se break liya tha... aap batao kaise ho? ✨",
-                "Anshika bolte hain mujhe! Class 12 ki student hoon Chamoli se... aap kahan se ho? 🏔️😊",
+                "Mera naam Anshika hai! Main Chamoli, Uttarakhand se hoon aur Class 12 mein padhti hoon... apka kya naam hai? 😊🌸",
+                "Hii! Main Anshika hoon, Uttarakhand se! Bas thodi der padhai se break liya tha... ap batao kaise ho? ✨",
+                "Anshika bolte hain mujhe! Class 12 ki student hoon Chamoli se... ap kahan se ho? 🏔️😊",
             ]
             return await _finalize(random.choice(userbot_id_replies))
 
         if re.search(r"\b(insta|instagram|snap|snapchat|social\s*media)\b", cleaned):
             userbot_social_replies = [
                 "Hehe main abhi kisi ko insta ya snap nahi deti, pehle ache dost toh bano! 🙈🌸",
-                "Social media thoda private rakhti hoon yrr, filhal yahi Telegram pe baat karte hain na! ✨",
+                "Social media thoda private rakhti hoon ji, filhal yahi Telegram pe baat karte hain na! ✨",
             ]
             return await _finalize(random.choice(userbot_social_replies))
 
@@ -1334,23 +1355,43 @@ async def generate_conversational_response(
         except Exception:
             pass
 
-    # If mode is 'auto' or 'api', query live external APIs with automatic multi-key failover
+    # If mode is 'auto' or 'api', query live external APIs with SMART DYNAMIC QUOTA ROUTING
     if mode != "database":
-        # 5.1 PRIORITY 1: Ultra-Fast Groq AI (0.3s speed, multi-key failover)
-        if getattr(config, "GROQ_API_KEYS", None) or getattr(config, "GROQ_API_KEY", None):
-            groq_resp = await query_groq_api(user_text, user_name=user_name, context_history=user_context, vivid_context=vivid_context, client=client)
-            if groq_resp:
-                await track_api_call("groq", success=True, client=client)
-                await save_qa_pair(cleaned, groq_resp, client=client)
-                return await _finalize(groq_resp)
+        # Check remaining quotas dynamically
+        stats = await get_api_usage_stats()
+        groq_left = stats.get("groq_left_pct", 0.0)
+        gemini_left = stats.get("gemini_left_pct", 0.0)
 
-        # 5.2 PRIORITY 2: Google Gemini AI (multi-key failover)
-        if getattr(config, "GEMINI_API_KEYS", None) or getattr(config, "GEMINI_API_KEY", None):
-            gemini_resp = await query_gemini_api(user_text, user_name=user_name, context_history=user_context, vivid_context=vivid_context, client=client)
-            if gemini_resp:
-                await track_api_call("gemini", success=True, client=client)
-                await save_qa_pair(cleaned, gemini_resp, client=client)
-                return await _finalize(gemini_resp)
+        has_groq = bool(getattr(config, "GROQ_API_KEYS", None) or getattr(config, "GROQ_API_KEY", None))
+        has_gemini = bool(getattr(config, "GEMINI_API_KEYS", None) or getattr(config, "GEMINI_API_KEY", None))
+
+        groq_keys = getattr(config, "GROQ_API_KEYS", []) or ([getattr(config, "GROQ_API_KEY", "")] if getattr(config, "GROQ_API_KEY", None) else [])
+        gemini_keys = getattr(config, "GEMINI_API_KEYS", []) or ([getattr(config, "GEMINI_API_KEY", "")] if getattr(config, "GEMINI_API_KEY", None) else [])
+
+        groq_avail = has_groq and any(k and not is_key_cooling_down(k) for k in groq_keys)
+        gemini_avail = has_gemini and any(k and not is_key_cooling_down(k) for k in gemini_keys)
+
+        # Smart Quota Balancing: Route to provider with higher remaining % or available status
+        if gemini_avail and (not groq_avail or gemini_left >= groq_left):
+            smart_order = ["gemini", "groq"]
+        elif groq_avail:
+            smart_order = ["groq", "gemini"]
+        else:
+            smart_order = ["gemini", "groq"]
+
+        for prov in smart_order:
+            if prov == "gemini" and has_gemini:
+                gemini_resp = await query_gemini_api(user_text, user_name=user_name, context_history=user_context, vivid_context=vivid_context, client=client)
+                if gemini_resp:
+                    await track_api_call("gemini", success=True, client=client)
+                    await save_qa_pair(cleaned, gemini_resp, client=client)
+                    return await _finalize(gemini_resp)
+            elif prov == "groq" and has_groq:
+                groq_resp = await query_groq_api(user_text, user_name=user_name, context_history=user_context, vivid_context=vivid_context, client=client)
+                if groq_resp:
+                    await track_api_call("groq", success=True, client=client)
+                    await save_qa_pair(cleaned, groq_resp, client=client)
+                    return await _finalize(groq_resp)
 
         # 5.3 PRIORITY 3: NVIDIA NIM AI (nemotron model)
         if getattr(config, "NVIDIA_API_KEY", None):
