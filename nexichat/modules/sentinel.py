@@ -31,7 +31,7 @@ import shutil
 import time
 import asyncio
 import logging
-from typing import Dict, Tuple, Set
+from typing import Dict, Tuple, Set, Any, Optional
 from pyrogram import Client, filters
 from pyrogram.types import Message, CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton
 import config
