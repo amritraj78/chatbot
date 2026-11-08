@@ -18,7 +18,7 @@ Is file ka kya kaam hai?
 
 from pyrogram.types import InlineKeyboardButton
 
-from config import SUPPORT_GRP, UPDATE_CHNL
+from config import SUPPORT_GRP, UPDATE_CHNL, OWNER_USERNAME
 from nexichat import nexichat
 
 START_BOT = [
@@ -35,12 +35,15 @@ DEV_OP = [
         ),
     ],
     [
-        InlineKeyboardButton(text="📚 ʜᴇʟᴘ & ᴄᴏᴍᴍᴀɴᴅs", callback_data="HELP"),
-        InlineKeyboardButton(text="☁️ ᴀʙᴏᴜᴛ ᴍᴇ", callback_data="ABOUT"),
+        InlineKeyboardButton(text="📖 ʜᴇʟᴘ & ᴄᴏᴍᴍᴀɴᴅs", callback_data="HELP"),
+        InlineKeyboardButton(text="ℹ️ ᴀʙᴏᴜᴛ ᴍᴇ", callback_data="ABOUT"),
     ],
     [
-        InlineKeyboardButton(text="👥 sᴜᴘᴘᴏʀᴛ", url=f"https://t.me/{SUPPORT_GRP}"),
-        InlineKeyboardButton(text="📢 ᴜᴘᴅᴀᴛᴇs", url=f"https://t.me/{UPDATE_CHNL}"),
+        InlineKeyboardButton(text="👑 ᴏᴡɴᴇʀ", url=f"https://t.me/{OWNER_USERNAME}"),
+        InlineKeyboardButton(text="💬 sᴜᴘᴘᴏʀᴛ", url=f"https://t.me/{SUPPORT_GRP}"),
+    ],
+    [
+        InlineKeyboardButton(text="📢 ᴜᴘᴅᴀᴛᴇs ᴄʜᴀɴɴᴇʟ", url=f"https://t.me/{UPDATE_CHNL}"),
     ],
 ]
 

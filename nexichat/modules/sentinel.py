@@ -231,6 +231,9 @@ def get_sentinel_keyboard() -> InlineKeyboardMarkup:
             [
                 InlineKeyboardButton("ℹ️ ᴡʜᴀᴛ ɢᴇᴛs ᴄʟᴇᴀɴᴇᴅ & ᴡʜʏ?", callback_data="sentinel_info_clean"),
             ],
+            [
+                InlineKeyboardButton("⦿ ᴄʟᴏsᴇ ⦿", callback_data="CLOSE"),
+            ],
         ]
     )
 
@@ -379,32 +382,29 @@ async def storage_command(client: Client, message: Message):
     cache_files, cache_mb = get_cache_size()
     mongo_stats = await get_mongodb_stats()
 
-    status_icon = "🔴 Critical" if (disk["percent"] >= 90 or ram["percent"] >= 90) else ("🟡 Warning" if (disk["percent"] >= 70 or ram["percent"] >= 70) else "🟢 Optimal")
+    status_text = "🔴 ᴄʀɪᴛɪᴄᴀʟ" if (disk["percent"] >= 90 or ram["percent"] >= 90) else ("🟡 ᴡᴀʀɴɪɴɢ" if (disk["percent"] >= 70 or ram["percent"] >= 70) else "🟢 ᴏᴘᴛɪᴍᴀʟ")
 
-    mongo_line = f"• **MongoDB Atlas:** `{mongo_stats['docs']} docs` ({mongo_stats['size_mb']} MB / 512 MB)\n" if mongo_stats["docs"] > 0 else "• **MongoDB Atlas:** Connected (512 MB Free Tier)\n"
+    mongo_line = f"• **ᴍᴏɴɢᴏᴅʙ ᴀᴛʟᴀs:** `{mongo_stats['docs']} docs` ({mongo_stats['size_mb']} ᴍʙ / 512 ᴍʙ)\n" if mongo_stats["docs"] > 0 else "• **ᴍᴏɴɢᴏᴅʙ ᴀᴛʟᴀs:** ᴄᴏɴɴᴇᴄᴛᴇᴅ (512 ᴍʙ ғʀᴇᴇ ᴛɪᴇʀ)\n"
 
-    text = f"""**
-💾 Server Health & Storage 💾
-────────────────────────────
-🌸 **Real Server Storage & Health Monitor**
-*Continuous 10% - 90% milestone reporting active!*
+    text = f"""💾 **sᴇʀᴠᴇʀ ʜᴇᴀʟᴛʜ & sᴛᴏʀᴀɢᴇ**
+ᴠ2.0
 
-────────────────────────────
-📦 **Koyeb Container (Eco-Micro Tier):**
-• **Container RAM:** `{ram['used_mb']} MB` / `{ram['total_mb']} MB` ({ram['percent']}%)
-• **Process RAM:** `{proc_ram} MB` (Bot Engine)
-• **Container Disk:** `{disk['used_gb']} GB` / `{disk['total_gb']} GB` ({disk['percent']}%)
-• **Disk Free:** `{disk['free_gb']} GB`
-• **Cache Dir:** `{cache_files} files` ({cache_mb} MB)
+🌸 **ᴀɴsʜɪᴋᴀ sᴇʀᴠᴇʀ sᴇɴᴛɪɴᴇʟ ᴍᴏɴɪᴛᴏʀ**
+ᴍɪʟᴇsᴛᴏɴᴇ ʀᴇᴘᴏʀᴛɪɴɢ: 10% – 90% ᴀᴄᴛɪᴠᴇ
 
-☁️ **Permanent Cloud Storage:**
-{mongo_line}• **Telegram Cloud:** Unlimited (>1000GB) ☁️
-• **Health Status:** {status_icon}
-• **Auto-Alert:** Every 10% Step Milestone
-────────────────────────────
-📡 **Hosted on:** Koyeb Free Tier Cloud ☁️
-👑 **Owner:** [Amrit Raj](https://t.me/Villanns) 💖**
-"""
+📦 **ᴋᴏʏᴇʙ ᴄᴏɴᴛᴀɪɴᴇʀ (ᴇᴄᴏ-ᴍɪᴄʀᴏ)**
+• **ᴄᴏɴᴛᴀɪɴᴇʀ ʀᴀᴍ:** `{ram['used_mb']} MB` / `{ram['total_mb']} MB` ({ram['percent']}%)
+• **ᴘʀᴏᴄᴇss ʀᴀᴍ:** `{proc_ram} MB` (ʙᴏᴛ ᴇɴɢɪɴᴇ)
+• **ᴄᴏɴᴛᴀɪɴᴇʀ ᴅɪsᴋ:** `{disk['used_gb']} GB` / `{disk['total_gb']} GB` ({disk['percent']}%)
+• **ᴅɪsᴋ ғʀᴇᴇ:** `{disk['free_gb']} GB`
+• **ᴄᴀᴄʜᴇ ғɪʟᴇs:** `{cache_files} files` ({cache_mb} MB)
+
+☁️ **ᴘᴇʀᴍᴀɴᴇɴᴛ ᴄʟᴏᴜᴅ sᴛᴏʀᴀɢᴇ**
+{mongo_line}• **ᴛᴇʟᴇɢʀᴀᴍ ᴄʟᴏᴜᴅ:** ᴜɴʟɪᴍɪᴛᴇᴅ (>1000ɢʙ) ☁️
+• **ʜᴇᴀʟᴛʜ sᴛᴀᴛᴜs:** {status_text}
+• **ᴀᴜᴛᴏ-ᴀʟᴇʀᴛ:** ᴇᴠᴇʀʏ 10% sᴛᴇᴘ ᴍɪʟᴇsᴛᴏɴᴇ
+
+👑 **ᴄʀᴇᴀᴛᴏʀ:** [ᴀᴍʀɪᴛ ʀᴀᴊ](https://t.me/Villanns) 💖"""
     await message.reply_text(text, reply_markup=get_sentinel_keyboard())
 
 
@@ -442,33 +442,30 @@ async def sentinel_callback_handler(client: Client, query: CallbackQuery):
     cache_files, cache_mb = get_cache_size()
     mongo_stats = await get_mongodb_stats()
 
-    status_icon = "🔴 Critical" if (disk["percent"] >= 90 or ram["percent"] >= 90) else ("🟡 Warning" if (disk["percent"] >= 70 or ram["percent"] >= 70) else "🟢 Optimal")
+    status_text = "🔴 ᴄʀɪᴛɪᴄᴀʟ" if (disk["percent"] >= 90 or ram["percent"] >= 90) else ("🟡 ᴡᴀʀɴɪɴɢ" if (disk["percent"] >= 70 or ram["percent"] >= 70) else "🟢 ᴏᴘᴛɪᴍᴀʟ")
 
-    mongo_line = f"• **MongoDB Atlas:** `{mongo_stats['docs']} docs` ({mongo_stats['size_mb']} MB / 512 MB)\n" if mongo_stats["docs"] > 0 else "• **MongoDB Atlas:** Connected (512 MB Free Tier)\n"
+    mongo_line = f"• **ᴍᴏɴɢᴏᴅʙ ᴀᴛʟᴀs:** `{mongo_stats['docs']} docs` ({mongo_stats['size_mb']} ᴍʙ / 512 ᴍʙ)\n" if mongo_stats["docs"] > 0 else "• **ᴍᴏɴɢᴏᴅʙ ᴀᴛʟᴀs:** ᴄᴏɴɴᴇᴄᴛᴇᴅ (512 ᴍʙ ғʀᴇᴇ ᴛɪᴇʀ)\n"
 
-    action_line = f"✨ *{action_text}*\n" if action_text else ""
-    text = f"""**
-💾 Server Health & Storage 💾
-────────────────────────────
-🌸 **Real Server Storage & Health Monitor**
-*Continuous 10% - 90% milestone reporting active!*
+    action_line = f"✨ *{action_text}*\n\n" if action_text else ""
+    text = f"""💾 **sᴇʀᴠᴇʀ ʜᴇᴀʟᴛʜ & sᴛᴏʀᴀɢᴇ**
+ᴠ2.0
 
-────────────────────────────
-📦 **Koyeb Container (Eco-Micro Tier):**
-• **Container RAM:** `{ram['used_mb']} MB` / `{ram['total_mb']} MB` ({ram['percent']}%)
-• **Process RAM:** `{proc_ram} MB` (Bot Engine)
-• **Container Disk:** `{disk['used_gb']} GB` / `{disk['total_gb']} GB` ({disk['percent']}%)
-• **Disk Free:** `{disk['free_gb']} GB`
-• **Cache Dir:** `{cache_files} files` ({cache_mb} MB)
+{action_line}🌸 **ᴀɴsʜɪᴋᴀ sᴇʀᴠᴇʀ sᴇɴᴛɪɴᴇʟ ᴍᴏɴɪᴛᴏʀ**
+ᴍɪʟᴇsᴛᴏɴᴇ ʀᴇᴘᴏʀᴛɪɴɢ: 10% – 90% ᴀᴄᴛɪᴠᴇ
 
-☁️ **Permanent Cloud Storage:**
-{mongo_line}• **Telegram Cloud:** Unlimited (>1000GB) ☁️
-• **Health Status:** {status_icon}
-• **Auto-Alert:** Every 10% Step Milestone
-────────────────────────────
-{action_line}📡 **Hosted on:** Koyeb Free Tier Cloud ☁️
-👑 **Owner:** [Amrit Raj](https://t.me/Villanns) 💖**
-"""
+📦 **ᴋᴏʏᴇʙ ᴄᴏɴᴛᴀɪɴᴇʀ (ᴇᴄᴏ-ᴍɪᴄʀᴏ)**
+• **ᴄᴏɴᴛᴀɪɴᴇʀ ʀᴀᴍ:** `{ram['used_mb']} MB` / `{ram['total_mb']} MB` ({ram['percent']}%)
+• **ᴘʀᴏᴄᴇss ʀᴀᴍ:** `{proc_ram} MB` (ʙᴏᴛ ᴇɴɢɪɴᴇ)
+• **ᴄᴏɴᴛᴀɪɴᴇʀ ᴅɪsᴋ:** `{disk['used_gb']} GB` / `{disk['total_gb']} GB` ({disk['percent']}%)
+• **ᴅɪsᴋ ғʀᴇᴇ:** `{disk['free_gb']} GB`
+• **ᴄᴀᴄʜᴇ ғɪʟᴇs:** `{cache_files} files` ({cache_mb} MB)
+
+☁️ **ᴘᴇʀᴍᴀɴᴇɴᴛ ᴄʟᴏᴜᴅ sᴛᴏʀᴀɢᴇ**
+{mongo_line}• **ᴛᴇʟᴇɢʀᴀᴍ ᴄʟᴏᴜᴅ:** ᴜɴʟɪᴍɪᴛᴇᴅ (>1000ɢʙ) ☁️
+• **ʜᴇᴀʟᴛʜ sᴛᴀᴛᴜs:** {status_text}
+• **ᴀᴜᴛᴏ-ᴀʟᴇʀᴛ:** ᴇᴠᴇʀʏ 10% sᴛᴇᴘ ᴍɪʟᴇsᴛᴏɴᴇ
+
+👑 **ᴄʀᴇᴀᴛᴏʀ:** [ᴀᴍʀɪᴛ ʀᴀᴊ](https://t.me/Villanns) 💖"""
     try:
         await query.message.edit_text(text, reply_markup=get_sentinel_keyboard())
     except Exception:

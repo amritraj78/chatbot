@@ -87,23 +87,17 @@ async def cb_handler(client: Client, query: CallbackQuery):
             pass
     elif data in ["BACK", "SBACK"]:
         first_name = query.from_user.first_name if query.from_user else "Friend"
-        bot_info = await client.get_me()
-        bot_title = (bot_info.first_name or "VIP REACTION").upper()
         back_text = (
-            f"╭────────────────────────────╮\n"
-            f"│    ❖ {bot_title} ❖   │\n"
-            f"╰────────────────────────────╯\n"
-            f"🌸 **ʜᴇʏ {first_name}! ᴡᴇʟᴄᴏᴍᴇ** 💖\n\n"
-            f"ᴍᴀɪɴ ᴀᴀᴘᴋɪ ᴘʏᴀʀɪ **ᴀɴsʜɪᴋᴀ** ʜᴏᴏɴ! ✨\n"
-            f"ɪ ᴄʜᴀᴛ ᴡɪᴛʜ ʏᴏᴜ ʟɪᴋᴇ ᴀ ʀᴇᴀʟ ғʀɪᴇɴᴅ, ʀᴇᴘʟʏ ᴛᴏ sᴛɪᴄᴋᴇʀs, ᴘʜᴏᴛᴏs, ᴠɪᴅᴇᴏs ᴀɴᴅ ʀᴇᴀᴄᴛ ᴛᴏ ᴍᴇssᴀɢᴇs! ⚡\n\n"
-            f"╭────────────────────────────╮\n"
-            f"│ ✦ **ᴘᴇʀsᴏɴᴀ:** sᴡᴇᴇᴛ ɪɴᴅɪᴀɴ ɢɪʀʟ 🌸\n"
-            f"│ ✦ **ᴀᴜᴛᴏ-ʀᴇᴀᴄᴛ:** ɢʀᴏᴜᴘs & ᴄʜᴀɴɴᴇʟs ⚡\n"
-            f"│ ✦ **sᴍᴀʀᴛ ᴄʜᴀᴛ:** ᴛᴇxᴛ, sᴛɪᴄᴋᴇʀ, ᴍᴇᴅɪᴀ 💬\n"
-            f"│ ✦ **ᴍᴇᴍᴏʀʏ:** ᴘᴇʀsɪsᴛᴇɴᴛ ᴅᴍ ʀᴇᴄᴀʟʟ 🧠\n"
-            f"│ ✦ **ᴄʀᴇᴀᴛᴏʀ:** [ᴀᴍʀɪᴛ ʀᴀᴊ](https://t.me/Villanns) 👑\n"
-            f"╰────────────────────────────╯\n\n"
-            f"👇 **ᴛᴀᴘ ᴛʜᴇ ʙᴜᴛᴛᴏɴs ʙᴇʟᴏᴡ ᴛᴏ ᴇxᴘʟᴏʀᴇ ᴍᴏʀᴇ!**"
+            f"🌸 **ᴀɴsʜɪᴋᴀ ᴀɪ ᴄʜᴀᴛʙᴏᴛ**\n"
+            f"ᴠ2.0\n\n"
+            f"ʜᴇʏ {first_name} 👋\n\n"
+            f"ɪ ᴀᴍ ᴀɴsʜɪᴋᴀ, ᴀ ʜɪɢʜ-ᴘᴇʀғᴏʀᴍᴀɴᴄᴇ ᴀɪ ᴄʜᴀᴛʙᴏᴛ ᴅᴇsɪɢɴᴇᴅ ᴛᴏ ᴄʜᴀᴛ, ʀᴇᴀᴄᴛ ᴀɴᴅ ᴇɴᴛᴇʀᴛᴀɪɴ ʏᴏᴜʀ ɢʀᴏᴜᴘs:\n\n"
+            f"• 🌸 **sᴡᴇᴇᴛ ɪɴᴅɪᴀɴ ɢɪʀʟ ᴄʜᴀᴛ** (ᴛᴇxᴛ, sᴛɪᴄᴋᴇʀs, ᴍᴇᴅɪᴀ)\n"
+            f"• ⚡ **ᴀᴜᴛᴏ-ʀᴇᴀᴄᴛɪᴏɴs** (ɢʀᴏᴜᴘs & ᴄʜᴀɴɴᴇʟs)\n"
+            f"• 🧠 **ᴘᴇʀsɪsᴛᴇɴᴛ ᴅᴍ ᴍᴇᴍᴏʀʏ ʀᴇᴄᴀʟʟ**\n"
+            f"• 🎮 **ғᴜɴ ɢᴀᴍᴇs, ʟᴏᴠᴇ ᴛᴇsᴛs & sʜᴀʏᴀʀɪs**\n"
+            f"• 👑 **ᴄʀᴇᴀᴛᴏʀ:** [ᴀᴍʀɪᴛ ʀᴀᴊ](https://t.me/Villanns)\n\n"
+            f"ᴊᴜsᴛ ᴀᴅᴅ ᴍᴇ ᴛᴏ ʏᴏᴜʀ ɢʀᴏᴜᴘ ᴀɴᴅ ɢʀᴀɴᴛ ᴀᴅᴍɪɴ ᴘᴇʀᴍɪssɪᴏɴs!"
         )
         await _safe_edit(query, text=back_text, reply_markup=InlineKeyboardMarkup(DEV_OP))
     elif data == "ABOUT":
@@ -136,30 +130,29 @@ async def cb_handler(client: Client, query: CallbackQuery):
         await set_chatbot_enabled(chat_id, is_en)
         await query.answer("Chatbot enabled! 🌸" if is_en else "Chatbot disabled! 😴", show_alert=False)
 
-        status_icon = "🟢 **ENABLED**" if is_en else "🔴 **DISABLED**"
+        status_icon = "🟢 **ᴇɴᴀʙʟᴇᴅ**" if is_en else "🔴 **ᴅɪsᴀʙʟᴇᴅ**"
         btn = InlineKeyboardMarkup([
             [
-                InlineKeyboardButton("🟢 Enable", callback_data="cb_enable_chatbot"),
-                InlineKeyboardButton("🔴 Disable", callback_data="cb_disable_chatbot"),
+                InlineKeyboardButton("🟢 ᴇɴᴀʙʟᴇ", callback_data="cb_enable_chatbot"),
+                InlineKeyboardButton("🔴 ᴅɪsᴀʙʟᴇ", callback_data="cb_disable_chatbot"),
             ],
             [
-                InlineKeyboardButton("⦿ Close ⦿", callback_data="CLOSE")
+                InlineKeyboardButton("⦿ ᴄʟᴏsᴇ ⦿", callback_data="CLOSE")
             ]
         ])
         text = (
-            f"🤖 **AI CHATBOT SETTINGS**\n"
-            f"────────────────────────────\n"
-            f"✦ **Chat:** {query.message.chat.title or query.message.chat.first_name or 'This Chat'}\n"
-            f"✦ **Status:** {status_icon}\n"
-            f"✦ **Persona:** Sweet Indian Girl (Anshika) 🌸\n\n"
-            f"When enabled, I will reply to messages, questions, stickers and media!\n\n"
-            f"**Quick Commands:**\n"
-            f"• `/chatbot on` - Turn Chatbot ON\n"
-            f"• `/chatbot off` - Turn Chatbot OFF\n"
-            f"• `/ask <query>` - Ask any AI question\n"
-            f"• `/love <name1> <name2>` - Love calculator\n"
-            f"• `/shayri` - Poetic shayaris\n"
-            f"• `/joke` - Funny jokes"
+            f"🤖 **ᴀɪ ᴄʜᴀᴛʙᴏᴛ sᴇᴛᴛɪɴɢs**\n\n"
+            f"✦ **ᴄʜᴀᴛ:** {query.message.chat.title or query.message.chat.first_name or 'This Chat'}\n"
+            f"✦ **sᴛᴀᴛᴜs:** {status_icon}\n"
+            f"✦ **ᴘᴇʀsᴏɴᴀ:** sᴡᴇᴇᴛ ɪɴᴅɪᴀɴ ɢɪʀʟ (ᴀɴsʜɪᴋᴀ) 🌸\n\n"
+            f"ᴡʜᴇɴ ᴇɴᴀʙʟᴇᴅ, ɪ ᴡɪʟʟ ʀᴇᴘʟʏ ᴛᴏ ᴍᴇssᴀɢᴇs, ǫᴜᴇsᴛɪᴏɴs, sᴛɪᴄᴋᴇʀs ᴀɴᴅ ᴍᴇᴅɪᴀ!\n\n"
+            f"**ǫᴜɪᴄᴋ ᴄᴏᴍᴍᴀɴᴅs:**\n"
+            f"• `/chatbot on` - ᴛᴜʀɴ ᴄʜᴀᴛʙᴏᴛ ᴏɴ\n"
+            f"• `/chatbot off` - ᴛᴜʀɴ ᴄʜᴀᴛʙᴏᴛ ᴏғғ\n"
+            f"• `/ask <query>` - ᴀsᴋ ᴀɴʏ ᴀɪ ǫᴜᴇsᴛɪᴏɴ\n"
+            f"• `/love <name1> <name2>` - ʟᴏᴠᴇ ᴄᴀʟᴄᴜʟᴀᴛᴏʀ\n"
+            f"• `/shayri` - ᴘᴏᴇᴛɪᴄ sʜᴀʏᴀʀɪs\n"
+            f"• `/joke` - ғᴜɴɴʏ ᴊᴏᴋᴇs"
         )
         try:
             await query.message.edit_text(text, reply_markup=btn)
