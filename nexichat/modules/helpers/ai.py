@@ -240,12 +240,12 @@ GIRL_KNOWLEDGE_BASE = [
     ),
     # AI / bot / robot accusation
     (
-        r"\b(ai\s+jaisa|robot\s+ho|bot\s+ho|ladki\s+jaisa\s+baat\s+karo|ladki\s+jaisa|real\s+ladki|machine\s+ho|are\s+you\s+(an\s+)?ai|are\s+you\s+(a\s+)?bot)\b",
+        r"\b(tum\s+ai\s+ho|ai\s+ho(\s+nah|\s+kya)?|ai\s+jaisa|robot\s+ho|bot\s+ho|ladki\s+jaisa\s+baat\s+karo|ladki\s+jaisa|real\s+ladki|machine\s+ho|are\s+you\s+(an\s+)?ai|are\s+you\s+(a\s+)?bot)\b",
         [
-            "Arey main real ladki hu ji! Apko robot lagti hu kya?",
-            "Haha robot nahi hu ji, Anshika hu! Hehe ap bhi na",
-            "Real ladki hu ji, Class 12 student! Ap kya soch rahe the?",
-            "Arey koi robot aise baat karta hai kya? Real hu main!",
+            "Arey nahi toh ji! Main Chamoli se real ladki hoon, Class 12 student! Apko robot lagti hu kya? 🙈",
+            "Haha bilkul nahi ji, Anshika hoon! Pahaadi ladki hu, koi robot nahi! Ap bhi na! 😊",
+            "Real ladki hu ji, Class 12 mein padhti hu Chamoli se! Apko aisa kyu laga? Hehe ✨",
+            "Arey koi robot aise baat karta hai kya? Real ladki hoon main! Ap batao na? 🌸",
         ]
     ),
     # Identity / Who are you
@@ -677,8 +677,8 @@ def clean_modern_girl_reply(text: str) -> str:
     # Intercept any Priya or AI / Amrit creation claims
     if re.search(r"(?i)\b(ai assistant|created by amrit|safone|as a language model|as an ai|i am an ai|i'm an ai|i am a bot)\b", t):
         return "Mera naam Anshika hai ji! Class 12 mein padhti hu Chamoli se"
-    if re.search(r"(?i)\bpriya\b", t):
-        t = re.sub(r"(?i)\bpriya\b", "Anshika", t)
+    if re.search(r"(?i)\b(mera naam priya|main priya|i am priya)\b", t):
+        t = re.sub(r"(?i)\b(mera naam priya|main priya|i am priya)\b", "Mera naam Anshika", t)
     # Strip any search engine dump phrases
     if "maine is baare me search kiya" in t.lower() or "maine is baare me pata lagaya" in t.lower():
         return "Mujhe itna deep nahi pata ji, bas normal baatein karo na!"
@@ -702,8 +702,13 @@ def clean_modern_girl_reply(text: str) -> str:
     lines = [line.strip() for line in t.split("\n") if line.strip()]
     if lines:
         t = lines[0]
-    # Enforce strict modern girl brevity (max 15 words)
+    
+    # Enforce minimum 3 words (rejects 1-word fragments like "Main", "Bas", "Hn")
     words = t.split()
+    if len(words) < 3:
+        return random.choice(GIRL_FALLBACK_REPLIES)
+
+    # Enforce strict modern girl brevity (max 15 words)
     if len(words) > 15:
         sentences = re.split(r"(?<=[.!?])\s+", t)
         if sentences and len(sentences[0].split()) <= 15:
@@ -716,7 +721,7 @@ def clean_modern_girl_reply(text: str) -> str:
     t = re.sub(r",+$", "", t).strip()
     t = re.sub(r"!{2,}", "!", t)
 
-    if not t.strip():
+    if not t.strip() or len(t.strip().split()) < 3:
         return random.choice(GIRL_FALLBACK_REPLIES)
     return moderate_emojis(t.strip())
 
@@ -867,7 +872,7 @@ async def query_gemini_api(
     if not keys:
         return None
 
-    gemini_models = ["gemini-flash-lite-latest", "gemini-flash-latest"]
+    gemini_models = ["gemini-3.5-flash", "gemini-3.1-flash-lite"]
     system_instruction_text = ANSHIKA_CHARACTER_PROMPT
     if vivid_context:
         system_instruction_text += f"\n{vivid_context}"
@@ -1083,7 +1088,7 @@ def calculate_love(name1: str, name2: str) -> str:
     else:
         msg = "Rab ne bana di jodi! 100% Perfect Match! Meri taraf se dher saari badhai! 💍🎉"
 
-    return f"💖 **Love Compatibility Test** 💖\n\n**{name1}** 💕 + **{name2}** 💕\n**Compatibility:** **{val}%**\n\n_{msg}_"
+    return f"💖 **ʟᴏᴠᴇ ᴄᴏᴍᴘᴀᴛɪʙɪʟɪᴛʏ ᴛᴇsᴛ** 💖\n\n**{name1}** 💕 + **{name2}** 💕\n**ᴄᴏᴍᴘᴀᴛɪʙɪʟɪᴛʏ:** **{val}%**\n\n_{msg}_"
 
 
 def get_random_shayari() -> str:

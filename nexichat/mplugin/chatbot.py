@@ -117,32 +117,32 @@ async def chatbot_toggle_cmd(client: Client, message: Message):
             return await message.reply_text("ℹ️ **Usage:** `/chatbot on` or `/chatbot off`")
 
     enabled = await is_chatbot_enabled(chat_id)
-    status_icon = "🟢 **ENABLED**" if enabled else "🔴 **DISABLED**"
+    status_icon = "🟢 **ᴇɴᴀʙʟᴇᴅ**" if enabled else "🔴 **ᴅɪsᴀʙʟᴇᴅ**"
 
     btn = InlineKeyboardMarkup([
         [
-            InlineKeyboardButton("🟢 Enable", callback_data="cb_enable_chatbot"),
-            InlineKeyboardButton("🔴 Disable", callback_data="cb_disable_chatbot"),
+            InlineKeyboardButton("🟢 ᴇɴᴀʙʟᴇ", callback_data="cb_enable_chatbot"),
+            InlineKeyboardButton("🔴 ᴅɪsᴀʙʟᴇ", callback_data="cb_disable_chatbot"),
         ],
         [
-            InlineKeyboardButton("⦿ Close ⦿", callback_data="CLOSE")
+            InlineKeyboardButton("⦿ ᴄʟᴏsᴇ ⦿", callback_data="CLOSE")
         ]
     ])
 
     text = (
-        f"🤖 **AI CHATBOT SETTINGS**\n"
+        f"🤖 **ᴀɪ ᴄʜᴀᴛʙᴏᴛ sᴇᴛᴛɪɴɢs**\n"
         f"────────────────────────────\n"
-        f"✦ **Chat:** {message.chat.title or message.chat.first_name or 'This Chat'}\n"
-        f"✦ **Status:** {status_icon}\n"
-        f"✦ **Persona:** Sweet Indian Girl (Anshika) 🌸\n\n"
+        f"✦ **ᴄʜᴀᴛ:** {message.chat.title or message.chat.first_name or 'This Chat'}\n"
+        f"✦ **sᴛᴀᴛᴜs:** {status_icon}\n"
+        f"✦ **ᴘᴇʀsᴏɴᴀ:** sᴡᴇᴇᴛ ɪɴᴅɪᴀɴ ɢɪʀʟ (ᴀɴsʜɪᴋᴀ) 🌸\n\n"
         f"When enabled, I will reply to messages, questions, stickers and media!\n\n"
-        f"**Quick Commands:**\n"
-        f"• `/chatbot on` - Turn Chatbot ON\n"
-        f"• `/chatbot off` - Turn Chatbot OFF\n"
-        f"• `/ask <query>` - Ask any AI question\n"
-        f"• `/love <name1> <name2>` - Love calculator\n"
-        f"• `/shayri` - Poetic shayaris\n"
-        f"• `/joke` - Funny jokes"
+        f"**ǫᴜɪᴄᴋ ᴄᴏᴍᴍᴀɴᴅs:**\n"
+        f"• `/chatbot on` - ᴛᴜʀɴ ᴄʜᴀᴛʙᴏᴛ ᴏɴ\n"
+        f"• `/chatbot off` - ᴛᴜʀɴ ᴄʜᴀᴛʙᴏᴛ ᴏғғ\n"
+        f"• `/ask <query>` - ᴀsᴋ ᴀɴʏ ᴀɪ ǫᴜᴇsᴛɪᴏɴ\n"
+        f"• `/love <name1> <name2>` - ʟᴏᴠᴇ ᴄᴀʟᴄᴜʟᴀᴛᴏʀ %\n"
+        f"• `/shayri` - ᴘᴏᴇᴛɪᴄ sʜᴀʏᴀʀɪs\n"
+        f"• `/joke` - ғᴜɴɴʏ ᴊᴏᴋᴇs"
     )
     await message.reply_text(text, reply_markup=btn)
 
@@ -173,28 +173,28 @@ async def chatbot_callback_handler(client: Client, query: CallbackQuery):
 
     btn = InlineKeyboardMarkup([
         [
-            InlineKeyboardButton("🟢 Enable", callback_data="cb_enable_chatbot"),
-            InlineKeyboardButton("🔴 Disable", callback_data="cb_disable_chatbot"),
+            InlineKeyboardButton("🟢 ᴇɴᴀʙʟᴇ", callback_data="cb_enable_chatbot"),
+            InlineKeyboardButton("🔴 ᴅɪsᴀʙʟᴇ", callback_data="cb_disable_chatbot"),
         ],
         [
-            InlineKeyboardButton("⦿ Close ⦿", callback_data="CLOSE")
+            InlineKeyboardButton("⦿ ᴄʟᴏsᴇ ⦿", callback_data="CLOSE")
         ]
     ])
 
     text = (
-        f"🤖 **AI CHATBOT SETTINGS**\n"
+        f"🤖 **ᴀɪ ᴄʜᴀᴛʙᴏᴛ sᴇᴛᴛɪɴɢs**\n"
         f"────────────────────────────\n"
-        f"✦ **Chat:** {query.message.chat.title or query.message.chat.first_name or 'This Chat'}\n"
-        f"✦ **Status:** {status_icon}\n"
-        f"✦ **Persona:** Sweet Indian Girl (Anshika) 🌸\n\n"
+        f"✦ **ᴄʜᴀᴛ:** {query.message.chat.title or query.message.chat.first_name or 'This Chat'}\n"
+        f"✦ **sᴛᴀᴛᴜs:** {status_icon}\n"
+        f"✦ **ᴘᴇʀsᴏɴᴀ:** sᴡᴇᴇᴛ ɪɴᴅɪᴀɴ ɢɪʀʟ (ᴀɴsʜɪᴋᴀ) 🌸\n\n"
         f"When enabled, I will reply to messages, questions, stickers and media!\n\n"
-        f"**Quick Commands:**\n"
-        f"• `/chatbot on` - Turn Chatbot ON\n"
-        f"• `/chatbot off` - Turn Chatbot OFF\n"
-        f"• `/ask <query>` - Ask any AI question\n"
-        f"• `/love <name1> <name2>` - Love calculator\n"
-        f"• `/shayri` - Poetic shayaris\n"
-        f"• `/joke` - Funny jokes"
+        f"**ǫᴜɪᴄᴋ ᴄᴏᴍᴍᴀɴᴅs:**\n"
+        f"• `/chatbot on` - ᴛᴜʀɴ ᴄʜᴀᴛʙᴏᴛ ᴏɴ\n"
+        f"• `/chatbot off` - ᴛᴜʀɴ ᴄʜᴀᴛʙᴏᴛ ᴏғғ\n"
+        f"• `/ask <query>` - ᴀsᴋ ᴀɴʏ ᴀɪ ǫᴜᴇsᴛɪᴏɴ\n"
+        f"• `/love <name1> <name2>` - ʟᴏᴠᴇ ᴄᴀʟᴄᴜʟᴀᴛᴏʀ %\n"
+        f"• `/shayri` - ᴘᴏᴇᴛɪᴄ sʜᴀʏᴀʀɪs\n"
+        f"• `/joke` - ғᴜɴɴʏ ᴊᴏᴋᴇs"
     )
     try:
         await query.message.edit_text(text, reply_markup=btn)
@@ -215,15 +215,15 @@ async def api_usage_cmd(client: Client, message: Message):
     dashboard_text = await format_api_usage_dashboard()
     btn = InlineKeyboardMarkup([
         [
-            InlineKeyboardButton("🔄 Refresh Dashboard", callback_data="cb_refresh_api_usage"),
+            InlineKeyboardButton("🔄 ʀᴇғʀᴇsʜ ᴅᴀsʜʙᴏᴀʀᴅ", callback_data="cb_refresh_api_usage"),
         ],
         [
-            InlineKeyboardButton("🤖 Auto Mode", callback_data="cb_mode_auto"),
-            InlineKeyboardButton("🗄️ Database Only", callback_data="cb_mode_database"),
-            InlineKeyboardButton("⚡ Strict API", callback_data="cb_mode_api"),
+            InlineKeyboardButton("🤖 ᴀᴜᴛᴏ ᴍᴏᴅᴇ", callback_data="cb_mode_auto"),
+            InlineKeyboardButton("🗄️ ᴅᴀᴛᴀʙᴀsᴇ ᴏɴʟʏ", callback_data="cb_mode_database"),
+            InlineKeyboardButton("⚡ sᴛʀɪᴄᴛ ᴀᴘɪ", callback_data="cb_mode_api"),
         ],
         [
-            InlineKeyboardButton("⦿ Close ⦿", callback_data="CLOSE")
+            InlineKeyboardButton("⦿ ᴄʟᴏsᴇ ⦿", callback_data="CLOSE")
         ]
     ])
     await message.reply_text(dashboard_text, reply_markup=btn)
@@ -239,15 +239,15 @@ async def api_usage_callback_handler(client: Client, query: CallbackQuery):
     dashboard_text = await format_api_usage_dashboard()
     btn = InlineKeyboardMarkup([
         [
-            InlineKeyboardButton("🔄 Refresh Dashboard", callback_data="cb_refresh_api_usage"),
+            InlineKeyboardButton("🔄 ʀᴇғʀᴇsʜ ᴅᴀsʜʙᴏᴀʀᴅ", callback_data="cb_refresh_api_usage"),
         ],
         [
-            InlineKeyboardButton("🤖 Auto Mode", callback_data="cb_mode_auto"),
-            InlineKeyboardButton("🗄️ Database Only", callback_data="cb_mode_database"),
-            InlineKeyboardButton("⚡ Strict API", callback_data="cb_mode_api"),
+            InlineKeyboardButton("🤖 ᴀᴜᴛᴏ ᴍᴏᴅᴇ", callback_data="cb_mode_auto"),
+            InlineKeyboardButton("🗄️ ᴅᴀᴛᴀʙᴀsᴇ ᴏɴʟʏ", callback_data="cb_mode_database"),
+            InlineKeyboardButton("⚡ sᴛʀɪᴄᴛ ᴀᴘɪ", callback_data="cb_mode_api"),
         ],
         [
-            InlineKeyboardButton("⦿ Close ⦿", callback_data="CLOSE")
+            InlineKeyboardButton("⦿ ᴄʟᴏsᴇ ⦿", callback_data="CLOSE")
         ]
     ])
     try:

@@ -179,12 +179,8 @@ def is_toxic_or_canned_reply(text: str) -> bool:
     if not text:
         return True
     cleaned = text.strip()
-    if len(cleaned) <= 1:
-        return True
-
-    # Meaningless single words / particles (e.g. 'में', 'से', 'को', etc.)
-    single_word_junk = {"में", "से", "को", "का", "की", "के", "पर", "तक", "ने", "है", "था", "थी", "थे", "म", "न"}
-    if cleaned in single_word_junk:
+    # Reject empty, 1-word or 2-word fragments (e.g. 'Main', 'Bas', 'Hn')
+    if len(cleaned.split()) < 3:
         return True
 
     lower = cleaned.lower()
@@ -1185,24 +1181,24 @@ async def format_api_usage_dashboard() -> str:
         active_priority = f"Groq AI Engine ({groq_left}% left)"
 
     return (
-        f"📊 **VIP AI API USAGE & DAILY QUOTA**\n"
+        f"📊 **ᴠɪᴘ ᴀɪ ᴀᴘɪ ᴜsᴀɢᴇ & ᴅᴀɪʟʏ ǫᴜᴏᴛᴀ**\n"
         f"────────────────────────────\n"
-        f"👑 **Creator:** Amrit Raj (@Villanns)\n"
-        f"📅 **Date (UTC):** `{stats['date']}`\n"
-        f"⚙️ **Active Mode:** {mode_display}\n"
-        f"🔄 **Smart Priority:** 🟢 {active_priority}\n\n"
-        f"✦ **Google Gemini AI:** (Multi-Key Balanced)\n"
+        f"👑 **ᴄʀᴇᴀᴛᴏʀ:** ᴀᴍʀɪᴛ ʀᴀᴊ (@Villanns)\n"
+        f"📅 **ᴅᴀᴛᴇ (ᴜᴛᴄ):** `{stats['date']}`\n"
+        f"⚙️ **ᴀᴄᴛɪᴠᴇ ᴍᴏᴅᴇ:** {mode_display}\n"
+        f"🔄 **sᴍᴀʀᴛ ᴘʀɪᴏʀɪᴛʏ:** 🟢 {active_priority}\n\n"
+        f"✦ **ɢᴏᴏɢʟᴇ ɢᴇᴍɪɴɪ ᴀɪ:** (ᴍᴜʟᴛɪ-ᴋᴇʏ ʙᴀʟᴀɴᴄᴇᴅ)\n"
         f"  • Used Today: `{stats['gemini_calls']}` / `{stats['gemini_quota']}` requests\n"
         f"  • Used: `{stats['gemini_used_pct']}%`  |  Remaining: `{stats['gemini_left_pct']}%`\n"
         f"  • Active Pool: 🟢 {gemini_key_count} Keys (Auto-Failover)\n\n"
-        f"✦ **Groq AI Engine:** (Qwen 2.5 27B LPU ⚡)\n"
+        f"✦ **ɢʀᴏǫ ᴀɪ ᴇɴɢɪɴᴇ:** (ǫᴡᴇɴ 2.5 27ʙ ʟᴘᴜ ⚡)\n"
         f"  • Used Today: `{stats['groq_calls']}` / `{stats['groq_quota']}` requests\n"
         f"  • Used: `{stats['groq_used_pct']}%`  |  Remaining: `{stats['groq_left_pct']}%`\n"
         f"  • Active Pool: 🟢 {groq_key_count} Keys (Auto-Failover)\n\n"
-        f"✦ **NVIDIA NIM AI:** `{stats['nvidia_calls']}` requests\n"
-        f"✦ **Free Waterfall AI:** `{stats['waterfall_calls']}` requests (Unlimited)\n"
-        f"✦ **Total AI Queries:** `{stats['total_calls']}` requests\n\n"
-        f"✦ **Database Fallback Status:**\n"
+        f"✦ **ɴᴠɪᴅɪᴀ ɴɪᴍ ᴀɪ:** `{stats['nvidia_calls']}` requests\n"
+        f"✦ **ғʀᴇᴇ ᴡᴀᴛᴇʀғᴀʟʟ ᴀɪ:** `{stats['waterfall_calls']}` requests (Unlimited)\n"
+        f"✦ **ᴛᴏᴛᴀʟ ᴀɪ ǫᴜᴇʀɪᴇs:** `{stats['total_calls']}` requests\n\n"
+        f"✦ **ᴅᴀᴛᴀʙᴀsᴇ ғᴀʟʟʙᴀᴄᴋ sᴛᴀᴛᴜs:**\n"
         f"  • Status: {stats['status']}\n"
         f"  • DB Fallback Triggers: `{stats['db_fallback_calls']}`\n"
         f"────────────────────────────"
@@ -1220,16 +1216,16 @@ async def format_mode_dashboard():
 
     btn = InlineKeyboardMarkup([
         [
-            InlineKeyboardButton(f"🤖 Auto Mode (API + DB){auto_check}", callback_data="cb_mode_auto"),
+            InlineKeyboardButton(f"🤖 ᴀᴜᴛᴏ ᴍᴏᴅᴇ (ᴀᴘɪ + ᴅʙ){auto_check}", callback_data="cb_mode_auto"),
         ],
         [
-            InlineKeyboardButton(f"🗄️ Database Only (Telegram + Mongo){db_check}", callback_data="cb_mode_database"),
+            InlineKeyboardButton(f"🗄️ ᴅᴀᴛᴀʙᴀsᴇ ᴏɴʟʏ (ᴛᴇʟᴇɢʀᴀᴍ + ᴍᴏɴɢᴏ){db_check}", callback_data="cb_mode_database"),
         ],
         [
-            InlineKeyboardButton(f"⚡ Strict API Only{api_check}", callback_data="cb_mode_api"),
+            InlineKeyboardButton(f"⚡ sᴛʀɪᴄᴛ ᴀᴘɪ ᴏɴʟʏ{api_check}", callback_data="cb_mode_api"),
         ],
         [
-            InlineKeyboardButton("⦿ Close ⦿", callback_data="CLOSE")
+            InlineKeyboardButton("⦿ ᴄʟᴏsᴇ ⦿", callback_data="CLOSE")
         ]
     ])
 
