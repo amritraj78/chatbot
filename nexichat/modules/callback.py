@@ -201,8 +201,8 @@ async def cb_handler(client: Client, query: CallbackQuery):
         dashboard_text = await format_api_usage_dashboard()
         btn = InlineKeyboardMarkup([
             [
-                InlineKeyboardButton("🔄 Refresh Dashboard", callback_data="cb_refresh_api_usage"),
-                InlineKeyboardButton("⦿ Close ⦿", callback_data="CLOSE")
+                InlineKeyboardButton("🔄 ʀᴇғʀᴇsʜ ᴅᴀsʜʙᴏᴀʀᴅ", callback_data="cb_refresh_api_usage"),
+                InlineKeyboardButton("⦿ ᴄʟᴏsᴇ ⦿", callback_data="CLOSE")
             ]
         ])
         try:

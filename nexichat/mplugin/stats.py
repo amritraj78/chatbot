@@ -25,12 +25,10 @@ async def stats(cli: Client, message: Message):
             from nexichat.database.chatbot import get_api_usage_stats
             st = await get_api_usage_stats()
             api_info = (
-                f"\n\n📊 **VIP AI API USAGE**\n"
-                f"────────────────────────────\n"
-                f"✦ **Groq AI:** `{st['groq_calls']}`/`{st['groq_quota']}` ({st['groq_used_pct']}% used | {st['groq_left_pct']}% left)\n"
-                f"✦ **Gemini AI:** `{st['gemini_calls']}`/`{st['gemini_quota']}` ({st['gemini_used_pct']}% used | {st['gemini_left_pct']}% left)\n"
-                f"✦ **Total Queries:** `{st['total_calls']}` | **DB Fallback:** `{st['db_fallback_calls']}`\n"
-                f"────────────────────────────"
+                f"\n\n📊 **ᴠɪᴘ ᴀɪ ᴀᴘɪ ᴜsᴀɢᴇ**\n"
+                f"• **ɢʀᴏǫ ᴀɪ:** `{st['groq_calls']}`/`{st['groq_quota']}` ({st['groq_used_pct']}% ᴜsᴇᴅ | {st['groq_left_pct']}% ʟᴇғᴛ)\n"
+                f"• **ɢᴇᴍɪɴɪ ᴀɪ:** `{st['gemini_calls']}`/`{st['gemini_quota']}` ({st['gemini_used_pct']}% ᴜsᴇᴅ | {st['gemini_left_pct']}% ʟᴇғᴛ)\n"
+                f"• **ᴛᴏᴛᴀʟ ǫᴜᴇʀɪᴇs:** `{st['total_calls']}` | **ᴅʙ ғᴀʟʟʙᴀᴄᴋ:** `{st['db_fallback_calls']}`"
             )
         except Exception:
             pass

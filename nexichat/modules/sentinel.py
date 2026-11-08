@@ -271,17 +271,15 @@ async def check_and_alert_storage(client: Client):
         if current_ram_p >= m and m not in _reported_ram_milestones:
             _reported_ram_milestones.add(m)
             alert_msg = (
-                f"📊 **[KOYEB MEMORY MILESTONE : {m}%]** 📊\n"
-                f"────────────────────────────\n"
-                f"🔔 **RAM Usage has reached {m}%!**\n\n"
-                f"• **RAM Usage:** `{ram['used_mb']} MB` / `{ram['total_mb']} MB` ({ram['percent']}%)\n"
-                f"• **Disk Used:** `{disk['used_gb']} GB` / `{disk['total_gb']} GB` ({disk['percent']}%)\n"
-                f"• **Disk Free:** `{disk['free_gb']} GB`\n"
-                f"• **Cache Size:** `{cache_files} files` ({cache_mb} MB)\n"
-                f"• **Status:** {status_icon}\n"
-                f"────────────────────────────\n\n"
-                f"💡 **Clean Suggestion:** Click below to flush temporary cache files (.mp3, .jpg) & release RAM without affecting any learned memory!\n\n"
-                f"🛡️ **Safety Guarantee:** All learned Q&A & chats are 100% permanently stored in Telegram Cloud (>1000GB) & MongoDB."
+                f"📊 **ᴋᴏʏᴇʙ ᴍᴇᴍᴏʀʏ ᴍɪʟᴇsᴛᴏɴᴇ : {m}%** 📊\n\n"
+                f"🔔 **ʀᴀᴍ ᴜsᴀɢᴇ ʜᴀs ʀᴇᴀᴄʜᴇᴅ {m}%!**\n\n"
+                f"✦ **ʀᴀᴍ ᴜsᴀɢᴇ:** `{ram['used_mb']} MB` / `{ram['total_mb']} MB` ({ram['percent']}%)\n"
+                f"✦ **ᴅɪsᴋ ᴜsᴇᴅ:** `{disk['used_gb']} GB` / `{disk['total_gb']} GB` ({disk['percent']}%)\n"
+                f"✦ **ᴅɪsᴋ ғʀᴇᴇ:** `{disk['free_gb']} GB`\n"
+                f"✦ **ᴄᴀᴄʜᴇ sɪᴢᴇ:** `{cache_files} files` ({cache_mb} MB)\n"
+                f"✦ **sᴛᴀᴛᴜs:** {status_icon}\n\n"
+                f"💡 **ᴄʟᴇᴀɴ sᴜɢɢᴇsᴛɪᴏɴ:** ᴄʟɪᴄᴋ ʙᴇʟᴏᴡ ᴛᴏ ғʟᴜsʜ ᴛᴇᴍᴘᴏʀᴀʀʏ ᴄᴀᴄʜᴇ ғɪʟᴇs (.ᴍᴘ3, .ᴊᴘɢ) & ʀᴇʟᴇᴀsᴇ ʀᴀᴍ ᴡɪᴛʜᴏᴜᴛ ᴀғғᴇᴄᴛɪɴɢ ᴀɴʏ ʟᴇᴀʀɴᴇᴅ ᴍᴇᴍᴏʀʏ!\n\n"
+                f"🛡️ **sᴀғᴇᴛʏ ɢᴜᴀʀᴀɴᴛᴇᴇ:** ᴀʟʟ ʟᴇᴀʀɴᴇᴅ ǫ&ᴀ & ᴄʜᴀᴛs ᴀʀᴇ 100% ᴘᴇʀᴍᴀɴᴇɴᴛʟʏ sᴛᴏʀᴇᴅ ɪɴ ᴛᴇʟᴇɢʀᴀᴍ ᴄʟᴏᴜᴅ (>1000ɢʙ) & ᴍᴏɴɢᴏᴅʙ."
             )
             try:
                 await client.send_message(int(OWNER_ID), alert_msg, reply_markup=keyboard)
@@ -296,17 +294,15 @@ async def check_and_alert_storage(client: Client):
         if current_disk_p >= m and m not in _reported_disk_milestones:
             _reported_disk_milestones.add(m)
             alert_msg = (
-                f"💾 **[KOYEB STORAGE MILESTONE : {m}%]** 💾\n"
-                f"────────────────────────────\n"
-                f"🔔 **Disk Storage has reached {m}%!**\n\n"
-                f"• **Disk Used:** `{disk['used_gb']} GB` / `{disk['total_gb']} GB` ({disk['percent']}%)\n"
-                f"• **Disk Free:** `{disk['free_gb']} GB`\n"
-                f"• **RAM Usage:** `{ram['used_mb']} MB` / `{ram['total_mb']} MB` ({ram['percent']}%)\n"
-                f"• **Cache Size:** `{cache_files} files` ({cache_mb} MB)\n"
-                f"• **Status:** {status_icon}\n"
-                f"────────────────────────────\n\n"
-                f"💡 **Clean Suggestion:** Temporary media cache can be cleared now to protect Koyeb free tier disk.\n\n"
-                f"🛡️ **Safety Guarantee:** Your database on Telegram Cloud (>1000GB) & MongoDB is completely safe and unaffected!"
+                f"💾 **ᴋᴏʏᴇʙ sᴛᴏʀᴀɢᴇ ᴍɪʟᴇsᴛᴏɴᴇ : {m}%** 💾\n\n"
+                f"🔔 **ᴅɪsᴋ sᴛᴏʀᴀɢᴇ ʜᴀs ʀᴇᴀᴄʜᴇᴅ {m}%!**\n\n"
+                f"✦ **ᴅɪsᴋ ᴜsᴇᴅ:** `{disk['used_gb']} GB` / `{disk['total_gb']} GB` ({disk['percent']}%)\n"
+                f"✦ **ᴅɪsᴋ ғʀᴇᴇ:** `{disk['free_gb']} GB`\n"
+                f"✦ **ʀᴀᴍ ᴜsᴀɢᴇ:** `{ram['used_mb']} MB` / `{ram['total_mb']} MB` ({ram['percent']}%)\n"
+                f"✦ **ᴄᴀᴄʜᴇ sɪᴢᴇ:** `{cache_files} files` ({cache_mb} MB)\n"
+                f"✦ **sᴛᴀᴛᴜs:** {status_icon}\n\n"
+                f"💡 **ᴄʟᴇᴀɴ sᴜɢɢᴇsᴛɪᴏɴ:** ᴛᴇᴍᴘᴏʀᴀʀʏ ᴍᴇᴅɪᴀ ᴄᴀᴄʜᴇ ᴄᴀɴ ʙᴇ ᴄʟᴇᴀʀᴇᴅ ɴᴏᴡ ᴛᴏ ᴘʀᴏᴛᴇᴄᴛ ᴋᴏʏᴇʙ ғʀᴇᴇ ᴛɪᴇʀ ᴅɪsᴋ.\n\n"
+                f"🛡️ **sᴀғᴇᴛʏ ɢᴜᴀʀᴀɴᴛᴇᴇ:** ʏᴏᴜʀ ᴅᴀᴛᴀʙᴀsᴇ ᴏɴ ᴛᴇʟᴇɢʀᴀᴍ ᴄʟᴏᴜᴅ (>1000ɢʙ) & ᴍᴏɴɢᴏᴅʙ ɪs ᴄᴏᴍᴘʟᴇᴛᴇʟʏ sᴀғᴇ ᴀɴᴅ ᴜɴᴀғғᴇᴄᴛᴇᴅ!"
             )
             try:
                 await client.send_message(int(OWNER_ID), alert_msg, reply_markup=keyboard)
@@ -327,16 +323,14 @@ async def check_and_alert_storage(client: Client):
             if (now - _last_auto_clean_report_time) >= 7200:
                 _last_auto_clean_report_time = now
                 auto_report = (
-                    f"🤖 **[KOYEB AUTO-CLEAN EXECUTED]** 🤖\n"
-                    f"────────────────────────────\n"
-                    f"⚠️ **High usage detected ({max(disk['percent'], ram['percent'])}%)!**\n"
-                    f"Since owner action was pending, Sentinel automatically cleaned caches to protect your instance:\n\n"
-                    f"• **Files Cleaned:** `{deleted} temp cache files`\n"
-                    f"• **Space Freed:** `{freed} MB`\n"
-                    f"• **RAM Action:** `gc.collect() executed`\n"
-                    f"• **Learned Data:** `100% Safe in Telegram DB` ☁️\n"
-                    f"────────────────────────────\n\n"
-                    f"💡 System is running smoothly without lag or risk of crash! 🚀"
+                    f"🤖 **ᴋᴏʏᴇʙ ᴀᴜᴛᴏ-ᴄʟᴇᴀɴ ᴇxᴇᴄᴜᴛᴇᴅ** 🤖\n\n"
+                    f"⚠️ **ʜɪɢʜ ᴜsᴀɢᴇ ᴅᴇᴛᴇᴄᴛᴇᴅ ({max(disk['percent'], ram['percent'])}%)!**\n"
+                    f"sɪɴᴄᴇ ᴏᴡɴᴇʀ ᴀᴄᴛɪᴏɴ ᴡᴀs ᴘᴇɴᴅɪɴɢ, sᴇɴᴛɪɴᴇʟ ᴀᴜᴛᴏᴍᴀᴛɪᴄᴀʟʟʏ ᴄʟᴇᴀɴᴇᴅ ᴄᴀᴄʜᴇs ᴛᴏ ᴘʀᴏᴛᴇᴄᴛ ʏᴏᴜʀ ɪɴsᴛᴀɴᴄᴇ:\n\n"
+                    f"✦ **ғɪʟᴇs ᴄʟᴇᴀɴᴇᴅ:** `{deleted} temp cache files`\n"
+                    f"✦ **sᴘᴀᴄᴇ ғʀᴇᴇᴅ:** `{freed} MB`\n"
+                    f"✦ **ʀᴀᴍ ᴀᴄᴛɪᴏɴ:** `gc.collect() executed`\n"
+                    f"✦ **ʟᴇᴀʀɴᴇᴅ ᴅᴀᴛᴀ:** `100% Safe in Telegram DB` ☁️\n\n"
+                    f"💡 sʏsᴛᴇᴍ ɪs ʀᴜɴɴɪɴɢ sᴍᴏᴏᴛʜʟʏ ᴡɪᴛʜᴏᴜᴛ ʟᴀɢ ᴏʀ ʀɪsᴋ ᴏғ ᴄʀᴀsʜ! 🚀"
                 )
                 try:
                     await client.send_message(int(OWNER_ID), auto_report, reply_markup=keyboard)

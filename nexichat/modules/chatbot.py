@@ -143,13 +143,12 @@ async def chatbot_toggle_cmd(client: Client, message: Message):
     ])
 
     text = (
-        f"🤖 **ᴀɪ ᴄʜᴀᴛʙᴏᴛ sᴇᴛᴛɪɴɢs**\n"
-        f"────────────────────────────\n"
+        f"🤖 **ᴀɪ ᴄʜᴀᴛʙᴏᴛ sᴇᴛᴛɪɴɢs**\n\n"
         f"✦ **ᴄʜᴀᴛ:** {message.chat.title or message.chat.first_name or 'This Chat'}\n"
         f"✦ **sᴛᴀᴛᴜs:** {status_icon}\n"
         f"✦ **ᴘᴇʀsᴏɴᴀ:** sᴡᴇᴇᴛ ɪɴᴅɪᴀɴ ɢɪʀʟ (ᴀɴsʜɪᴋᴀ) 🌸\n\n"
-        f"When enabled, I will reply to messages, questions, stickers and media!\n\n"
-        f"**ǫᴜɪᴄᴋ ᴄᴏᴍᴍᴀɴᴅs:**\n"
+        f"ᴡʜᴇɴ ᴇɴᴀʙʟᴇᴅ, ɪ ᴡɪʟʟ ʀᴇᴘʟʏ ᴛᴏ ᴍᴇssᴀɢᴇs, ǫᴜᴇsᴛɪᴏɴs, sᴛɪᴄᴋᴇʀs ᴀɴᴅ ᴍᴇᴅɪᴀ!\n\n"
+        f"✦ **ǫᴜɪᴄᴋ ᴄᴏᴍᴍᴀɴᴅs:**\n"
         f"• `/chatbot on` - ᴛᴜʀɴ ᴄʜᴀᴛʙᴏᴛ ᴏɴ\n"
         f"• `/chatbot off` - ᴛᴜʀɴ ᴄʜᴀᴛʙᴏᴛ ᴏғғ\n"
         f"• `/ask <query>` - ᴀsᴋ ᴀɴʏ ᴀɪ ǫᴜᴇsᴛɪᴏɴ\n"
@@ -195,13 +194,12 @@ async def chatbot_callback_handler(client: Client, query: CallbackQuery):
     ])
 
     text = (
-        f"🤖 **ᴀɪ ᴄʜᴀᴛʙᴏᴛ sᴇᴛᴛɪɴɢs**\n"
-        f"────────────────────────────\n"
+        f"🤖 **ᴀɪ ᴄʜᴀᴛʙᴏᴛ sᴇᴛᴛɪɴɢs**\n\n"
         f"✦ **ᴄʜᴀᴛ:** {query.message.chat.title or query.message.chat.first_name or 'This Chat'}\n"
         f"✦ **sᴛᴀᴛᴜs:** {status_icon}\n"
         f"✦ **ᴘᴇʀsᴏɴᴀ:** sᴡᴇᴇᴛ ɪɴᴅɪᴀɴ ɢɪʀʟ (ᴀɴsʜɪᴋᴀ) 🌸\n\n"
-        f"When enabled, I will reply to messages, questions, stickers and media!\n\n"
-        f"**ǫᴜɪᴄᴋ ᴄᴏᴍᴍᴀɴᴅs:**\n"
+        f"ᴡʜᴇɴ ᴇɴᴀʙʟᴇᴅ, ɪ ᴡɪʟʟ ʀᴇᴘʟʏ ᴛᴏ ᴍᴇssᴀɢᴇs, ǫᴜᴇsᴛɪᴏɴs, sᴛɪᴄᴋᴇʀs ᴀɴᴅ ᴍᴇᴅɪᴀ!\n\n"
+        f"✦ **ǫᴜɪᴄᴋ ᴄᴏᴍᴍᴀɴᴅs:**\n"
         f"• `/chatbot on` - ᴛᴜʀɴ ᴄʜᴀᴛʙᴏᴛ ᴏɴ\n"
         f"• `/chatbot off` - ᴛᴜʀɴ ᴄʜᴀᴛʙᴏᴛ ᴏғғ\n"
         f"• `/ask <query>` - ᴀsᴋ ᴀɴʏ ᴀɪ ǫᴜᴇsᴛɪᴏɴ\n"

@@ -951,35 +951,33 @@ async def notify_owner_milestone(milestone: int, stats: Dict[str, Any], client: 
 
         mode = await get_chatbot_mode()
         mode_labels = {
-            "auto": "🤖 Auto (API + DB Fallback)",
-            "database": "🗄️ Database Only (Telegram + Mongo)",
-            "api": "⚡ Strict API Only"
+            "auto": "🤖 ᴀᴜᴛᴏ (ᴀᴘɪ + ᴅʙ ғᴀʟʟʙᴀᴄᴋ)",
+            "database": "🗄️ ᴅᴀᴛᴀʙᴀsᴇ ᴏɴʟʏ (ᴛᴇʟᴇɢʀᴀᴍ + ᴍᴏɴɢᴏ)",
+            "api": "⚡ sᴛʀɪᴄᴛ ᴀᴘɪ ᴏɴʟʏ"
         }
         mode_display = mode_labels.get(mode, mode.upper())
 
         btn = InlineKeyboardMarkup([
             [
-                InlineKeyboardButton("🤖 Auto (API + DB)", callback_data="cb_mode_auto"),
-                InlineKeyboardButton("🗄️ Database Only", callback_data="cb_mode_database"),
+                InlineKeyboardButton("🤖 ᴀᴜᴛᴏ (ᴀᴘɪ + ᴅʙ)", callback_data="cb_mode_auto"),
+                InlineKeyboardButton("🗄️ ᴅᴀᴛᴀʙᴀsᴇ ᴏɴʟʏ", callback_data="cb_mode_database"),
             ],
             [
-                InlineKeyboardButton("⚡ Strict API Only", callback_data="cb_mode_api"),
-                InlineKeyboardButton("⦿ Close ⦿", callback_data="CLOSE")
+                InlineKeyboardButton("⚡ sᴛʀɪᴄᴛ ᴀᴘɪ ᴏɴʟʏ", callback_data="cb_mode_api"),
+                InlineKeyboardButton("⦿ ᴄʟᴏsᴇ ⦿", callback_data="CLOSE")
             ]
         ])
 
         msg = (
-            f"📊 **[API USAGE MILESTONE ALERT - {milestone}%]**\n"
-            f"────────────────────────────\n"
-            f"Daily AI API quota usage has crossed **{milestone}%**!\n\n"
-            f"✦ **Live Quota Metrics:**\n"
-            f"  • **Groq AI:** `{stats['groq_calls']}` / `{stats['groq_quota']}` requests (`{stats['groq_used_pct']}%`)\n"
-            f"  • **Google Gemini:** `{stats['gemini_calls']}` / `{stats['gemini_quota']}` requests (`{stats['gemini_used_pct']}%`)\n"
-            f"  • **Total AI Queries:** `{stats['total_calls']}` requests\n"
-            f"  • **Active Mode:** {mode_display}\n\n"
-            f"✦ **Owner Reply Source Control:**\n"
-            f"Aap chahein toh neeche button click karke reply source turant switch kar sakte hain:\n"
-            f"────────────────────────────"
+            f"📊 **ᴀᴘɪ ᴜsᴀɢᴇ ᴍɪʟᴇsᴛᴏɴᴇ ᴀʟᴇʀᴛ - {milestone}%**\n\n"
+            f"ᴅᴀɪʟʏ ᴀɪ ᴀᴘɪ ǫᴜᴏᴛᴀ ᴜsᴀɢᴇ ʜᴀs ᴄʀᴏssᴇᴅ **{milestone}%**!\n\n"
+            f"✦ **ʟɪᴠᴇ ǫᴜᴏᴛᴀ ᴍᴇᴛʀɪᴄs:**\n"
+            f"  • **ɢʀᴏǫ ᴀɪ:** `{stats['groq_calls']}` / `{stats['groq_quota']}` requests (`{stats['groq_used_pct']}%`)\n"
+            f"  • **ɢᴏᴏɢʟᴇ ɢᴇᴍɪɴɪ:** `{stats['gemini_calls']}` / `{stats['gemini_quota']}` requests (`{stats['gemini_used_pct']}%`)\n"
+            f"  • **ᴛᴏᴛᴀʟ ᴀɪ ǫᴜᴇʀɪᴇs:** `{stats['total_calls']}` requests\n"
+            f"  • **ᴀᴄᴛɪᴠᴇ ᴍᴏᴅᴇ:** {mode_display}\n\n"
+            f"✦ **ᴏᴡɴᴇʀ ʀᴇᴘʟʏ sᴏᴜʀᴄᴇ ᴄᴏɴᴛʀᴏʟ:**\n"
+            f"ᴀᴀᴘ ᴄʜᴀʜᴇɪɴ ᴛᴏʜ ɴᴇᴇᴄʜᴇ ʙᴜᴛᴛᴏɴ ᴄʟɪᴄᴋ ᴋᴀʀᴋᴇ ʀᴇᴘʟʏ sᴏᴜʀᴄᴇ ᴛᴜʀᴀɴᴛ sᴡɪᴛᴄʜ ᴋᴀʀ sᴀᴋᴛᴇ ʜᴀɪɴ:"
         )
         await bot_client.send_message(chat_id=int(owner_id), text=msg, reply_markup=btn)
     except Exception:
@@ -1012,35 +1010,33 @@ async def notify_owner_api_switch(from_api: str, to_api: str, reason: str = "Rat
 
         mode = await get_chatbot_mode()
         mode_labels = {
-            "auto": "🤖 Auto (API + DB Fallback)",
-            "database": "🗄️ Database Only (Telegram + Mongo)",
-            "api": "⚡ Strict API Only"
+            "auto": "🤖 ᴀᴜᴛᴏ (ᴀᴘɪ + ᴅʙ ғᴀʟʟʙᴀᴄᴋ)",
+            "database": "🗄️ ᴅᴀᴛᴀʙᴀsᴇ ᴏɴʟʏ (ᴛᴇʟᴇɢʀᴀᴍ + ᴍᴏɴɢᴏ)",
+            "api": "⚡ sᴛʀɪᴄᴛ ᴀᴘɪ ᴏɴʟʏ"
         }
         mode_display = mode_labels.get(mode, mode.upper())
 
         btn = InlineKeyboardMarkup([
             [
-                InlineKeyboardButton("🤖 Auto (API + DB)", callback_data="cb_mode_auto"),
-                InlineKeyboardButton("🗄️ Database Only", callback_data="cb_mode_database"),
+                InlineKeyboardButton("🤖 ᴀᴜᴛᴏ (ᴀᴘɪ + ᴅʙ)", callback_data="cb_mode_auto"),
+                InlineKeyboardButton("🗄️ ᴅᴀᴛᴀʙᴀsᴇ ᴏɴʟʏ", callback_data="cb_mode_database"),
             ],
             [
-                InlineKeyboardButton("⚡ Strict API Only", callback_data="cb_mode_api"),
-                InlineKeyboardButton("⦿ Close ⦿", callback_data="CLOSE")
+                InlineKeyboardButton("⚡ sᴛʀɪᴄᴛ ᴀᴘɪ ᴏɴʟʏ", callback_data="cb_mode_api"),
+                InlineKeyboardButton("⦿ ᴄʟᴏsᴇ ⦿", callback_data="CLOSE")
             ]
         ])
 
         msg = (
-            f"⚠️ **[AI API SWITCH ALERT]**\n"
-            f"────────────────────────────\n"
-            f"An AI API limit was reached and the system automatically switched!\n\n"
-            f"✦ **Previous API:** `{from_api}`\n"
-            f"✦ **Reason:** {reason}\n"
-            f"🔄 **Switched To:** `{to_api}`\n\n"
-            f"✦ **Active Mode:** {mode_display}\n\n"
-            f"ℹ️ **Auto-Continuity:** System automatically aapke set kiye huye **{mode_display}** par continue kar raha hai. Agar aap offline ya busy hain toh aapko koi button click karne ki zaroorat nahi hai.\n\n"
-            f"✦ **Manual Control (Optional):**\n"
-            f"Aap chahein toh neeche diye gaye buttons se reply mode manually change kar sakte hain:\n"
-            f"────────────────────────────"
+            f"⚠️ **ᴀɪ ᴀᴘɪ sᴡɪᴛᴄʜ ᴀʟᴇʀᴛ**\n\n"
+            f"ᴀɴ ᴀɪ ᴀᴘɪ ʟɪᴍɪᴛ ᴡᴀs ʀᴇᴀᴄʜᴇᴅ ᴀɴᴅ ᴛʜᴇ sʏsᴛᴇᴍ ᴀᴜᴛᴏᴍᴀᴛɪᴄᴀʟʟʏ sᴡɪᴛᴄʜᴇᴅ!\n\n"
+            f"✦ **ᴘʀᴇᴠɪᴏᴜs ᴀᴘɪ:** `{from_api}`\n"
+            f"✦ **ʀᴇᴀsᴏɴ:** {reason}\n"
+            f"🔄 **sᴡɪᴛᴄʜᴇᴅ ᴛᴏ:** `{to_api}`\n\n"
+            f"✦ **ᴀᴄᴛɪᴠᴇ ᴍᴏᴅᴇ:** {mode_display}\n\n"
+            f"ℹ️ **ᴀᴜᴛᴏ-ᴄᴏɴᴛɪɴᴜɪᴛʏ:** sʏsᴛᴇᴍ ᴀᴜᴛᴏᴍᴀᴛɪᴄᴀʟʟʏ ᴀᴀᴘᴋᴇ sᴇᴛ ᴋɪʏᴇ ʜᴜʏᴇ **{mode_display}** ᴘᴀʀ ᴄᴏɴᴛɪɴᴜᴇ ᴋᴀʀ ʀᴀʜᴀ ʜᴀɪ. ᴀɢᴀʀ ᴀᴀᴘ ᴏғғʟɪɴᴇ ʏᴀ ʙᴜsʏ ʜᴀɪɴ ᴛᴏʜ ᴀᴀᴘᴋᴏ ᴋᴏɪ ʙᴜᴛᴛᴏɴ ᴄʟɪᴄᴋ ᴋᴀʀɴᴇ ᴋɪ ᴢᴀʀᴏᴏʀᴀᴛ ɴᴀʜɪ ʜᴀɪ.\n\n"
+            f"✦ **ᴍᴀɴᴜᴀʟ ᴄᴏɴᴛʀᴏʟ (ᴏᴘᴛɪᴏɴᴀʟ):**\n"
+            f"ᴀᴀᴘ ᴄʜᴀʜᴇɪɴ ᴛᴏʜ ɴᴇᴇᴄʜᴇ ᴅɪʏᴇ ɢᴀʏᴇ ʙᴜᴛᴛᴏɴs sᴇ ʀᴇᴘʟʏ ᴍᴏᴅᴇ ᴍᴀɴᴜᴀʟʟʏ ᴄʜᴀɴɢᴇ ᴋᴀʀ sᴀᴋᴛᴇ ʜᴀɪɴ:"
         )
         await bot_client.send_message(chat_id=int(owner_id), text=msg, reply_markup=btn)
     except Exception:
@@ -1181,8 +1177,7 @@ async def format_api_usage_dashboard() -> str:
         active_priority = f"Groq AI Engine ({groq_left}% left)"
 
     return (
-        f"📊 **ᴠɪᴘ ᴀɪ ᴀᴘɪ ᴜsᴀɢᴇ & ᴅᴀɪʟʏ ǫᴜᴏᴛᴀ**\n"
-        f"────────────────────────────\n"
+        f"📊 **ᴠɪᴘ ᴀɪ ᴀᴘɪ ᴜsᴀɢᴇ & ᴅᴀɪʟʏ ǫᴜᴏᴛᴀ**\n\n"
         f"👑 **ᴄʀᴇᴀᴛᴏʀ:** ᴀᴍʀɪᴛ ʀᴀᴊ (@Villanns)\n"
         f"📅 **ᴅᴀᴛᴇ (ᴜᴛᴄ):** `{stats['date']}`\n"
         f"⚙️ **ᴀᴄᴛɪᴠᴇ ᴍᴏᴅᴇ:** {mode_display}\n"
@@ -1200,8 +1195,7 @@ async def format_api_usage_dashboard() -> str:
         f"✦ **ᴛᴏᴛᴀʟ ᴀɪ ǫᴜᴇʀɪᴇs:** `{stats['total_calls']}` requests\n\n"
         f"✦ **ᴅᴀᴛᴀʙᴀsᴇ ғᴀʟʟʙᴀᴄᴋ sᴛᴀᴛᴜs:**\n"
         f"  • Status: {stats['status']}\n"
-        f"  • DB Fallback Triggers: `{stats['db_fallback_calls']}`\n"
-        f"────────────────────────────"
+        f"  • DB Fallback Triggers: `{stats['db_fallback_calls']}`"
     )
 
 
@@ -1230,21 +1224,20 @@ async def format_mode_dashboard():
     ])
 
     mode_descriptions = {
-        "auto": "🟢 **Auto Mode (Recommended)**: Live AI APIs (Groq -> Gemini -> NVIDIA NIM -> Free Waterfall) used first. When API quotas hit limit, automatically switches to Telegram Cloud & MongoDB Database!",
-        "database": "🗄️ **Database Only Mode**: Zero API credit usage. Strictly searches and replies from Telegram Cloud Channel and MongoDB database!",
-        "api": "⚡ **Strict API Only Mode**: Strictly replies from Live AI APIs. Never uses database fallback."
+        "auto": "🟢 **ᴀᴜᴛᴏ ᴍᴏᴅᴇ (ʀᴇᴄᴏᴍᴍᴇɴᴅᴇᴅ)**: ʟɪᴠᴇ ᴀɪ ᴀᴘɪs (ɢʀᴏǫ -> ɢᴇᴍɪɴɪ -> ɴᴠɪᴅɪᴀ ɴɪᴍ -> ғʀᴇᴇ ᴡᴀᴛᴇʀғᴀʟʟ) ᴜsᴇᴅ ғɪʀsᴛ. ᴡʜᴇɴ ᴀᴘɪ ǫᴜᴏᴛᴀs ʜɪᴛ ʟɪᴍɪᴛ, ᴀᴜᴛᴏᴍᴀᴛɪᴄᴀʟʟʏ sᴡɪᴛᴄʜᴇs ᴛᴏ ᴛᴇʟᴇɢʀᴀᴍ ᴄʟᴏᴜᴅ & ᴍᴏɴɢᴏᴅʙ ᴅᴀᴛᴀʙᴀsᴇ!",
+        "database": "🗄️ **ᴅᴀᴛᴀʙᴀsᴇ ᴏɴʟʏ ᴍᴏᴅᴇ**: ᴢᴇʀᴏ ᴀᴘɪ ᴄʀᴇᴅɪᴛ ᴜsᴀɢᴇ. sᴛʀɪᴄᴛʟʏ sᴇᴀʀᴄʜᴇs ᴀɴᴅ ʀᴇᴘʟɪᴇs ғʀᴏᴍ ᴛᴇʟᴇɢʀᴀᴍ ᴄʟᴏᴜᴅ ᴄʜᴀɴɴᴇʟ ᴀɴᴅ ᴍᴏɴɢᴏᴅʙ ᴅᴀᴛᴀʙᴀsᴇ!",
+        "api": "⚡ **sᴛʀɪᴄᴛ ᴀᴘɪ ᴏɴʟʏ ᴍᴏᴅᴇ**: sᴛʀɪᴄᴛʟʏ ʀᴇᴘʟɪᴇs ғʀᴏᴍ ʟɪᴠᴇ ᴀɪ ᴀᴘɪs. ɴᴇᴠᴇʀ ᴜsᴇs ᴅᴀᴛᴀʙᴀsᴇ ғᴀʟʟʙᴀᴄᴋ."
     }
 
     text = (
-        f"⚙️ **CHATBOT REPLY SOURCE CONTROL**\n"
-        f"────────────────────────────\n"
-        f"✦ **Current Active Mode:** `{mode.upper()}`\n\n"
+        f"⚙️ **ᴄʜᴀᴛʙᴏᴛ ʀᴇᴘʟʏ sᴏᴜʀᴄᴇ ᴄᴏɴᴛʀᴏʟ**\n\n"
+        f"✦ **ᴄᴜʀʀᴇɴᴛ ᴀᴄᴛɪᴠᴇ ᴍᴏᴅᴇ:** `{mode.upper()}`\n\n"
         f"{mode_descriptions.get(mode, '')}\n\n"
-        f"**Reply Options:**\n"
-        f"1. **Auto (API + DB Fallback)** - APIs first, auto DB fallback when quota ends\n"
-        f"2. **Database Only** - 100% free Telegram Cloud + MongoDB answers\n"
-        f"3. **Strict API Only** - External APIs only\n\n"
-        f"Tap any button below to change reply source instantly:"
+        f"✦ **ʀᴇᴘʟʏ ᴏᴘᴛɪᴏɴs:**\n"
+        f"• **ᴀᴜᴛᴏ (ᴀᴘɪ + ᴅʙ ғᴀʟʟʙᴀᴄᴋ)** - ᴀᴘɪs ғɪʀsᴛ, ᴀᴜᴛᴏ ᴅʙ ғᴀʟʟʙᴀᴄᴋ ᴡʜᴇɴ ǫᴜᴏᴛᴀ ᴇɴᴅs\n"
+        f"• **ᴅᴀᴛᴀʙᴀsᴇ ᴏɴʟʏ** - 100% ғʀᴇᴇ ᴛᴇʟᴇɢʀᴀᴍ ᴄʟᴏᴜᴅ + ᴍᴏɴɢᴏᴅʙ ᴀɴsᴡᴇʀs\n"
+        f"• **sᴛʀɪᴄᴛ ᴀᴘɪ ᴏɴʟʏ** - ᴇxᴛᴇʀɴᴀʟ ᴀᴘɪs ᴏɴʟʏ\n\n"
+        f"ᴛᴀᴘ ᴀɴʏ ʙᴜᴛᴛᴏɴ ʙᴇʟᴏᴡ ᴛᴏ ᴄʜᴀɴɢᴇ ʀᴇᴘʟʏ sᴏᴜʀᴄᴇ ɪɴsᴛᴀɴᴛʟʏ:"
     )
     return text, btn
 
