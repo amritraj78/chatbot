@@ -885,20 +885,24 @@ async def track_api_call(provider: str, success: bool = True, client: Optional[A
         _notified_milestones = set()
 
     provider_lower = provider.lower()
+    field = "waterfall_calls"
     if "groq" in provider_lower:
-        _daily_api_usage["groq_calls"] = _daily_api_usage.get("groq_calls", 0) + 1
+        field = "groq_calls"
     elif "gemini" in provider_lower:
-        _daily_api_usage["gemini_calls"] = _daily_api_usage.get("gemini_calls", 0) + 1
-    else:
-        _daily_api_usage["waterfall_calls"] = _daily_api_usage.get("waterfall_calls", 0) + 1
+        field = "gemini_calls"
+    elif "nvidia" in provider_lower:
+        field = "nvidia_calls"
+    elif "waterfall" in provider_lower:
+        field = "waterfall_calls"
 
+    _daily_api_usage[field] = _daily_api_usage.get(field, 0) + 1
     _daily_api_usage["total_calls"] = _daily_api_usage.get("total_calls", 0) + 1
 
     try:
         await api_usage_db.update_one(
             {"date": today},
             {"$inc": {
-                f"{provider_lower}_calls": 1,
+                field: 1,
                 "total_calls": 1
             }},
             upsert=True
@@ -1087,7 +1091,8 @@ async def get_api_usage_stats() -> Dict[str, Any]:
                     "date": today,
                     "groq_calls": doc.get("groq_calls", 0),
                     "gemini_calls": doc.get("gemini_calls", 0),
-                    "waterfall_calls": doc.get("waterfall_calls", 0),
+                    "nvidia_calls": doc.get("nvidia_calls", 0),
+                    "waterfall_calls": doc.get("waterfall_calls", doc.get("waterfall_free_calls", 0)),
                     "db_fallback_calls": doc.get("db_fallback_calls", 0),
                     "total_calls": doc.get("total_calls", 0)
                 }
@@ -1097,6 +1102,7 @@ async def get_api_usage_stats() -> Dict[str, Any]:
                     "date": today,
                     "groq_calls": 0,
                     "gemini_calls": 0,
+                    "nvidia_calls": 0,
                     "waterfall_calls": 0,
                     "db_fallback_calls": 0,
                     "total_calls": 0
@@ -1107,6 +1113,7 @@ async def get_api_usage_stats() -> Dict[str, Any]:
                 "date": today,
                 "groq_calls": 0,
                 "gemini_calls": 0,
+                "nvidia_calls": 0,
                 "waterfall_calls": 0,
                 "db_fallback_calls": 0,
                 "total_calls": 0
@@ -1115,6 +1122,7 @@ async def get_api_usage_stats() -> Dict[str, Any]:
 
     groq_calls = _daily_api_usage.get("groq_calls", 0)
     gemini_calls = _daily_api_usage.get("gemini_calls", 0)
+    nvidia_calls = _daily_api_usage.get("nvidia_calls", 0)
     waterfall_calls = _daily_api_usage.get("waterfall_calls", 0)
     db_fallback_calls = _daily_api_usage.get("db_fallback_calls", 0)
     total_calls = _daily_api_usage.get("total_calls", 0)
@@ -1138,6 +1146,7 @@ async def get_api_usage_stats() -> Dict[str, Any]:
         "gemini_quota": GEMINI_DAILY_QUOTA,
         "gemini_used_pct": gemini_used_pct,
         "gemini_left_pct": gemini_left_pct,
+        "nvidia_calls": nvidia_calls,
         "waterfall_calls": waterfall_calls,
         "db_fallback_calls": db_fallback_calls,
         "total_calls": total_calls,
@@ -1147,6 +1156,7 @@ async def get_api_usage_stats() -> Dict[str, Any]:
 
 async def format_api_usage_dashboard() -> str:
     """Format an interactive, clean markdown dashboard for bot creator."""
+    import config
     stats = await get_api_usage_stats()
     mode = await get_chatbot_mode()
     mode_labels = {
@@ -1156,19 +1166,26 @@ async def format_api_usage_dashboard() -> str:
     }
     mode_display = mode_labels.get(mode, mode.upper())
 
+    groq_keys = getattr(config, "GROQ_API_KEYS", [])
+    groq_key_count = len(groq_keys)
+    gemini_keys = getattr(config, "GEMINI_API_KEYS", [])
+    gemini_key_count = len(gemini_keys)
+
     return (
         f"📊 **VIP AI API USAGE & DAILY QUOTA**\n"
         f"────────────────────────────\n"
         f"👑 **Creator:** Amrit Raj (@Villanns)\n"
         f"📅 **Date (UTC):** `{stats['date']}`\n"
         f"⚙️ **Active Mode:** {mode_display}\n\n"
-        f"✦ **Groq AI Engine:**\n"
+        f"✦ **Groq AI Engine:** (Qwen 2.5 27B LPU ⚡)\n"
         f"  • Used Today: `{stats['groq_calls']}` / `{stats['groq_quota']}` requests\n"
-        f"  • Used: `{stats['groq_used_pct']}%`  |  Remaining: `{stats['groq_left_pct']}%`\n\n"
+        f"  • Used: `{stats['groq_used_pct']}%`  |  Remaining: `{stats['groq_left_pct']}%`\n"
+        f"  • Status: 🟢 Online ({groq_key_count} Keys with Auto-Failover)\n\n"
         f"✦ **Google Gemini AI:**\n"
         f"  • Used Today: `{stats['gemini_calls']}` / `{stats['gemini_quota']}` requests\n"
-        f"  • Used: `{stats['gemini_used_pct']}%`  |  Remaining: `{stats['gemini_left_pct']}%`\n\n"
-        f"✦ **NVIDIA NIM AI:** Multi-Key Active ⚡\n"
+        f"  • Used: `{stats['gemini_used_pct']}%`  |  Remaining: `{stats['gemini_left_pct']}%`\n"
+        f"  • Status: 🟡 Secondary Failover ({gemini_key_count} Keys)\n\n"
+        f"✦ **NVIDIA NIM AI:** `{stats['nvidia_calls']}` requests\n"
         f"✦ **Free Waterfall AI:** `{stats['waterfall_calls']}` requests (Unlimited)\n"
         f"✦ **Total AI Queries:** `{stats['total_calls']}` requests\n\n"
         f"✦ **Database Fallback Status:**\n"

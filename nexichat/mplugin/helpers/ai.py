@@ -500,6 +500,12 @@ GIRL_FALLBACK_REPLIES = [
     "Acha ji? Chalo yeh toh achhi baat hai",
     "Sahi hai, aur batao kya chal raha hai?",
     "Lol maza aa gaya ye sun kar",
+    "Hehe accha! Aur batao aaj kya special hai?",
+    "Hmm samjh gayi! Waise tum kahan se ho?",
+    "Arey sach me? Mujhe laga mazak kar rahe ho!",
+    "Waah! Ye toh kaafi interesting lag raha hai!",
+    "Haanji bilkul, main sun rahi hu na!",
+    "Hehe chill karo na yaar, tension mat lo!",
 ]
 
 
@@ -737,7 +743,7 @@ async def query_groq_api(
     if not keys:
         return None
 
-    models = ["llama-3.3-70b-versatile", "llama-3.1-8b-instant"]
+    models = ["qwen/qwen3.8-27b"]
     system_prompt = ANSHIKA_CHARACTER_PROMPT
     if vivid_context:
         system_prompt += f"\n{vivid_context}"
@@ -760,14 +766,14 @@ async def query_groq_api(
         headers = {
             "Authorization": f"Bearer {api_key}",
             "Content-Type": "application/json",
-            "User-Agent": "Mozilla/5.0"
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
         }
         for model in models:
             payload = {
                 "model": model,
                 "messages": messages,
                 "temperature": 0.75,
-                "max_tokens": 100
+                "max_tokens": 75
             }
             def _fetch(m_payload=dict(payload), m_headers=headers):
                 return _ai_session.post(
@@ -798,13 +804,18 @@ async def query_groq_api(
                         pass
                     set_key_cooldown(api_key, retry_after)
                     logger.warning(f"Groq API key #{idx + 1} quota reached (429), cooling down for {int(retry_after)}s...")
+                    next_target = f"Groq Key #{idx + 2}" if (idx + 1 < len(keys)) else "Google Gemini AI"
                     asyncio.create_task(notify_owner_api_switch(
                         f"Groq Key #{idx + 1}",
-                        "Next Groq Key / Google Gemini AI",
+                        next_target,
                         reason=f"Rate limit reached (HTTP 429, cooling down {int(retry_after)}s)",
                         client=client
                     ))
                     break  # Fail over to next key
+                elif resp.status_code in [401, 403]:
+                    set_key_cooldown(api_key, 86400.0)
+                    logger.warning(f"Groq API key #{idx + 1} unauthorized (HTTP {resp.status_code}), cooling down for 24h...")
+                    break
                 elif resp.status_code == 404:
                     continue
                 else:
@@ -901,13 +912,18 @@ async def query_gemini_api(
                 elif resp.status_code == 429:
                     set_key_cooldown(api_key, 60.0)
                     logger.warning(f"Gemini API key #{idx + 1} quota reached (429), cooling down for 60s...")
+                    next_target = f"Gemini Key #{idx + 2}" if (idx + 1 < len(keys)) else "Offline Learned Database"
                     asyncio.create_task(notify_owner_api_switch(
                         f"Gemini Key #{idx + 1}",
-                        "Next Gemini Key / NVIDIA NIM AI",
+                        next_target,
                         reason="Rate limit reached (HTTP 429, cooling down 60s)",
                         client=client
                     ))
                     break  # Fail over to next key
+                elif resp.status_code in [401, 403]:
+                    set_key_cooldown(api_key, 86400.0)
+                    logger.warning(f"Gemini API key #{idx + 1} unauthorized (HTTP {resp.status_code}), skipping for 24h...")
+                    break  # Skip to next key immediately
                 elif resp.status_code == 404:
                     continue
                 else:
@@ -1088,7 +1104,7 @@ def detect_language(text: str) -> str:
         return "hindi"
 
     tokens = set(re.findall(r"\b[a-zA-Z]+\b", text.lower()))
-    telugu_markers = {"ela", "unnav", "unnaru", "cheppu", "enti", "baagunnara", "bagunnara", "emiti", "chesav", "namaskaram", "meeru", "nenu", "chala"}
+    telugu_markers = {"ela", "unnav", "unnaru", "cheppu", "cheppandi", "enti", "baagunnara", "bagunnara", "bagundi", "emiti", "chesav", "namaskaram", "meeru", "nenu"}
     if tokens & telugu_markers:
         return "telugu"
 
@@ -1099,9 +1115,9 @@ def detect_language(text: str) -> str:
         "kitna", "kitne", "kitni", "milta", "milti", "milte", "h", "hn", "haan", "ha", "bhi", "toh", "to",
         "yeh", "ye", "woh", "wo", "ab", "kab", "tab", "sab", "kuch", "kuchh", "dekh", "dekho", "sun", "suno",
         "padh", "padhai", "raha", "rahe", "rahi", "hu", "hoon", "hun", "tha", "thi", "the", "gaya", "gaye",
-        "gayi", "aaya", "aaye", "aayi", "chal", "chalo", "chale", "kaun", "kon", "kyu", "kyun", "par", "pe",
+        "gayi", "aaya", "aaye", "aayi", "chal", "chala", "chalo", "chale", "kaun", "kon", "kyu", "kyun", "par", "pe",
         "se", "me", "mein", "ko", "ka", "ki", "ke", "apna", "apne", "apni", "baat", "baatein", "sach",
-        "sahi", "galat", "lagta", "lagti", "lagte", "raho", "chill", "chup", "mat"
+        "sahi", "galat", "lagta", "lagti", "lagte", "raho", "chill", "chup", "mat", "pta", "pata"
     }
     if tokens & hinglish_markers:
         return "hinglish"
