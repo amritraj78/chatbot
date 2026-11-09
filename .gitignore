@@ -8,6 +8,8 @@ cache/*
 !cache/.gitkeep
 
 # Environments & sensitive configs
+.env
+.env.*
 .venv/
 env/
 venv/
