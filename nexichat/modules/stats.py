@@ -91,6 +91,7 @@ async def getid(client: Client, message: Message):
         not getattr(reply, "empty", True)
         and not message.forward_from_chat
         and not reply.sender_chat
+        and reply.from_user
     ):
         text += f"**[ʀᴇᴘʟɪᴇᴅ ᴍᴇssᴀɢᴇ ɪᴅ:]({reply.link})** `{reply.id}`\n"
         text += f"**[ʀᴇᴘʟɪᴇᴅ ᴜsᴇʀ ɪᴅ:](tg://user?id={reply.from_user.id})** `{reply.from_user.id}`\n\n"

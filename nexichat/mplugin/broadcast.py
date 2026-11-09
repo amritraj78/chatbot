@@ -22,7 +22,7 @@ broadcast_lock = asyncio.Lock()
 async def broadcast_message(client, message):
     global IS_BROADCASTING
     bot_id = (await client.get_me()).id
-    user_id = message.from_user.id
+    user_id = message.from_user.id if message.from_user else 0
     if not await is_owner(bot_id, user_id):
         await message.reply_text("You don't have permission to use this command on this bot.")
         return

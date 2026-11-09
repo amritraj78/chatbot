@@ -38,7 +38,7 @@ from nexichat.database.clonestats import add_served_cuser, add_served_cchat
 
 PNG_BTN = [
     [
-        InlineKeyboardButton(text="🛠️ σρεи ¢σммαиdꜱ ⚙️", callback_data="HELP"),
+        InlineKeyboardButton(text="🛠️ ᴏᴘᴇɴ ᴄᴏᴍᴍᴀɴᴅs ⚙️", callback_data="HELP"),
     ],
     [
         InlineKeyboardButton(
@@ -94,14 +94,26 @@ async def ping(client: Client, message: Message):
         caption="ᴘɪɴɢɪɴɢ...",
     )
 
-    ms = (datetime.now() - start).microseconds / 1000
+    ms = round((datetime.now() - start).total_seconds() * 1000, 2)
+    bot_me = await client.get_me()
     await resp_msg.edit_caption(
-        caption=f"нey вαву!!\n{(await client.get_me()).mention} ʀᴇᴀᴄᴛɪᴏɴ ʙᴏᴛ ιѕ alιve 🥀 αnd worĸιng ғιne wιтн a pιng oғ\n\n**➥** `{ms}` ms\n**➲ ᴄᴘᴜ:** {CPU}\n**➲ ʀᴀᴍ:** {RAM}\n**➲ ᴅɪsᴋ:** {DISK}\n**➲ ᴜᴘᴛɪᴍᴇ »** {UP}\n\n<b>||**๏ мαdє ωιтн ❣️ ву [ᴠɪᴘ ʙᴏʏ](https://t.me/{OWNER_USERNAME}) **||</b>",
+        caption=(
+            f"🌸 **ᴀɴsʜɪᴋᴀ ᴀɪ ᴄʜᴀᴛʙᴏᴛ**\n"
+            f"ᴠ2.0\n\n"
+            f"• **sᴛᴀᴛᴜs:** ᴏɴʟɪɴᴇ & ᴀᴄᴛɪᴠᴇ 🥀\n"
+            f"• **ᴘɪɴɢ:** `{ms}` ms\n"
+            f"• **ᴄᴘᴜ:** {CPU}\n"
+            f"• **ʀᴀᴍ:** {RAM}\n"
+            f"• **ᴅɪsᴋ:** {DISK}\n"
+            f"• **ᴜᴘᴛɪᴍᴇ:** {UP}\n\n"
+            f"👑 **ᴄʀᴇᴀᴛᴏʀ:** [ᴀᴍʀɪᴛ ʀᴀᴊ](https://t.me/{OWNER_USERNAME}) 💖"
+        ),
         reply_markup=InlineKeyboardMarkup(PNG_BTN),
     )
     if message.chat.type == ChatType.PRIVATE:
-        await add_served_cuser(bot_id, message.from_user.id)
-        await add_served_user(message.from_user.id)
+        if message.from_user:
+            await add_served_cuser(bot_id, message.from_user.id)
+            await add_served_user(message.from_user.id)
     else:
         await add_served_cchat(bot_id, message.chat.id)
         await add_served_chat(message.chat.id)

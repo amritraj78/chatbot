@@ -43,11 +43,16 @@ async def link_command_handler(client: Client, message: Message):
         await message.reply("**Invalid usage. Correct format: /link group_id**")
         return
 
-    group_id = message.command[1]
-    file_name = f"group_info_{group_id}.txt"
+    group_id = message.command[1].strip()
+    file_name = f"group_info_{group_id.replace('@', '')}.txt"
 
     try:
-        chat = await client.get_chat(int(group_id))
+        try:
+            chat_target = int(group_id)
+        except ValueError:
+            chat_target = group_id
+
+        chat = await client.get_chat(chat_target)
 
         if chat is None:
             await message.reply("**Unable to get information for the specified group ID.**")
@@ -56,7 +61,7 @@ async def link_command_handler(client: Client, message: Message):
         try:
             invite_link = await client.export_chat_invite_link(chat.id)
         except FloodWait as e:
-            await message.reply(f"**FloodWait: {e.x} seconds. Retrying in {e.x} seconds.**")
+            await message.reply(f"**FloodWait: {e.value} seconds.**")
             return
 
         group_data = {
@@ -82,7 +87,7 @@ async def link_command_handler(client: Client, message: Message):
         await client.send_document(
             chat_id=message.chat.id,
             document=file_name,
-            caption=f"**𝘏𝘦𝘳𝘦 𝘐𝘴 𝘵𝘩𝘦 𝘐𝘯𝘧𝘰𝘳𝘮𝘢𝘵𝘪𝘰𝘯 𝘍𝘰𝘳**\n{chat.title}\n\n**𝘛𝘩𝘦 𝘎𝘳𝘰𝘶𝘱 𝘐𝘯𝘧𝘰𝘳𝘮𝘢𝘵𝘪𝘰𝘯 𝘚𝘤𝘳𝘢𝘱𝘦𝘥 𝘉𝘺 : @{nexichat.username}**",
+            caption=f"📋 **ɢʀᴏᴜᴘ ɪɴғᴏʀᴍᴀᴛɪᴏɴ**\n• **ᴛɪᴛʟᴇ:** {chat.title}\n• **ɪᴅ:** `{chat.id}`\n\n🌸 **sᴄʀᴀᴘᴇᴅ ʙʏ:** @{nexichat.username}",
         )
 
     except Exception as e:

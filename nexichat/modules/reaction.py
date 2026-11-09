@@ -267,9 +267,17 @@ async def auto_react_handler(client: Client, message: Message):
         if not chosen_emoji:
             chosen_emoji = random.choice(emojis)
 
-        # React to the message using Telegram Bot API HTTP setMessageReaction
-        token = getattr(client, "bot_token", None) or config.BOT_TOKEN
-        await send_bot_reaction(token, chat_id, message.id, chosen_emoji)
+        # React to the message using Telegram Bot API if bot, or direct MTProto if userbot
+        token = getattr(client, "bot_token", None) or getattr(client, "token", None)
+        if token:
+            await send_bot_reaction(token, chat_id, message.id, chosen_emoji)
+        elif getattr(client, "is_bot", True):
+            await send_bot_reaction(config.BOT_TOKEN, chat_id, message.id, chosen_emoji)
+        else:
+            try:
+                await client.send_reaction(chat_id, message.id, chosen_emoji)
+            except Exception as e:
+                logger.debug(f"Userbot reaction notice: {e}")
 
     except FloodWait as e:
         logger.warning(f"FloodWait of {e.value}s while reacting in chat {message.chat.id}")

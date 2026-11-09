@@ -36,7 +36,10 @@ async def useradd(client, message: Message):
         user = message.text.split(None, 1)[1]
         if "@" in user:
             user = user.replace("@", "")
-        user = await app.get_users(user)
+        try:
+            user = await app.get_users(user)
+        except Exception as e:
+            return await message.reply_text(f"❌ **User not found:** `{e}`")
         if user.id in SUDOERS:
             return await message.reply_text(f"{user.mention} ɪs ᴀʟʀᴇᴀᴅʏ ᴀ sᴜᴅᴏ ᴜsᴇʀ.")
         added = await add_sudo(user.id)
@@ -46,15 +49,18 @@ async def useradd(client, message: Message):
         else:
             await message.reply_text("ғᴀɪʟᴇᴅ")
         return
-    if message.reply_to_message.from_user.id in SUDOERS:
+    if not message.reply_to_message.from_user:
+        return await message.reply_text("❌ **Cannot get user information from this message.**")
+    target_user = message.reply_to_message.from_user
+    if target_user.id in SUDOERS:
         return await message.reply_text(
-            f"{message.reply_to_message.from_user.mention} ɪs ᴀʟʀᴇᴀᴅʏ ᴀ sᴜᴅᴏ ᴜsᴇʀ."
+            f"{target_user.mention} ɪs ᴀʟʀᴇᴀᴅʏ ᴀ sᴜᴅᴏ ᴜsᴇʀ."
         )
-    added = await add_sudo(message.reply_to_message.from_user.id)
+    added = await add_sudo(target_user.id)
     if added:
-        SUDOERS.add(message.reply_to_message.from_user.id)
+        SUDOERS.add(target_user.id)
         await message.reply_text(
-            f"ᴀᴅᴅᴇᴅ **{message.reply_to_message.from_user.mention}** ᴛᴏ sᴜᴅᴏ ᴜsᴇʀs."
+            f"ᴀᴅᴅᴇᴅ **{target_user.mention}** ᴛᴏ sᴜᴅᴏ ᴜsᴇʀs."
         )
     else:
         await message.reply_text("ғᴀɪʟᴇᴅ")
@@ -69,7 +75,10 @@ async def userdel(client, message: Message):
         user = message.text.split(None, 1)[1]
         if "@" in user:
             user = user.replace("@", "")
-        user = await app.get_users(user)
+        try:
+            user = await app.get_users(user)
+        except Exception as e:
+            return await message.reply_text(f"❌ **User not found:** `{e}`")
         if user.id not in SUDOERS:
             return await message.reply_text("ɴᴏᴛ ᴀ ᴘᴀʀᴛ ᴏꜰ ʙᴏᴛ's sᴜᴅᴏ.")
         removed = await remove_sudo(user.id)
@@ -79,6 +88,8 @@ async def userdel(client, message: Message):
             return
         await message.reply_text("sᴏᴍᴇᴛʜɪɴɢ ᴡʀᴏɴɢ ʜᴀᴘᴘᴇɴᴇᴅ")
         return
+    if not message.reply_to_message.from_user:
+        return await message.reply_text("❌ **Cannot get user information from this message.**")
     user_id = message.reply_to_message.from_user.id
     if user_id not in SUDOERS:
         return await message.reply_text("ɴᴏᴛ ᴀ ᴘᴀʀᴛ ᴏꜰ ʙᴏᴛ's sᴜᴅᴏ.")

@@ -487,6 +487,9 @@ async def setname_command(client: Client, message: Message):
             "**Example:** `/setname Vicky`"
         )
 
+    if not message.from_user:
+        return await message.reply_text("❌ **Only personal users can set a nickname.**")
+
     new_name = " ".join(message.command[1:]).strip()
     await save_user_nickname(message.from_user.id, new_name)
     await message.reply_text(f"🌸 **Maine yaad kar liya ji!** 🥰\nAb se main aapko **{new_name}** bulaungi! ✨")

@@ -18,9 +18,11 @@ Is file ka kya kaam hai?
 """
 
 import os
+import time
 import json
 import asyncio
 import logging
+from datetime import datetime
 from pyrogram import Client, filters
 from pyrogram.errors import FloodWait
 from pyrogram.types import Message
@@ -42,7 +44,7 @@ broadcast_lock = asyncio.Lock()
 async def broadcast_message(client: Client, message: Message):
     global IS_BROADCASTING
     bot_id = (await client.get_me()).id
-    user_id = message.from_user.id
+    user_id = message.from_user.id if message.from_user else 0
         
     async with broadcast_lock:
         if IS_BROADCASTING:
