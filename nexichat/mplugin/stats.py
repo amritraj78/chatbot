@@ -3,7 +3,7 @@ import logging
 from pyrogram import Client, filters
 from pyrogram.types import Message, InlineKeyboardButton, InlineKeyboardMarkup
 
-from config import OWNER_ID, SUPPORT_GRP
+from config import OWNER_ID, SUPPORT_GRP, INSTAGRAM, SNAPCHAT, OWNER_USERNAME
 from nexichat import _boot_, get_readable_time, SUDOERS
 from nexichat.database.chats import get_served_chats
 from nexichat.database.users import get_served_users
@@ -121,11 +121,11 @@ async def user_profile(client: Client, message: Message):
 👑 **ᴄʀᴇᴀᴛᴏʀ:** [ᴀᴍʀɪᴛ ʀᴀᴊ](https://t.me/Villanns) 💖"""
     btn = InlineKeyboardMarkup([
         [
-            InlineKeyboardButton("📷 ɪɴsᴛᴀɢʀᴀᴍ", url="https://instagram.com/ex_amrit"),
-            InlineKeyboardButton("👻 sɴᴀᴘᴄʜᴀᴛ", url="https://snapchat.com/add/ex_amrit"),
+            InlineKeyboardButton("📷 ɪɴsᴛᴀɢʀᴀᴍ", url=f"https://instagram.com/{INSTAGRAM}"),
+            InlineKeyboardButton("👻 sɴᴀᴘᴄʜᴀᴛ", url=f"https://snapchat.com/add/{SNAPCHAT}"),
         ],
         [
-            InlineKeyboardButton("👑 ᴄʀᴇᴀᴛᴏʀ", url="https://t.me/Villanns"),
+            InlineKeyboardButton("👑 ᴄʀᴇᴀᴛᴏʀ", url=f"https://t.me/{OWNER_USERNAME}"),
             InlineKeyboardButton("⦿ ᴄʟᴏsᴇ ⦿", callback_data="CLOSE"),
         ]
     ])

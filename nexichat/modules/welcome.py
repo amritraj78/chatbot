@@ -130,8 +130,8 @@ async def new_member_welcome(client: Client, message: Message):
                 InlineKeyboardButton("✨ Updates ✨", url=f"https://t.me/{config.UPDATE_CHNL}"),
             ],
             [
-                InlineKeyboardButton("📷 ɪɴsᴛᴀɢʀᴀᴍ", url="https://instagram.com/ex_amrit"),
-                InlineKeyboardButton("👻 sɴᴀᴘᴄʜᴀᴛ", url="https://snapchat.com/add/ex_amrit"),
+                InlineKeyboardButton("📷 ɪɴsᴛᴀɢʀᴀᴍ", url=f"https://instagram.com/{config.INSTAGRAM}"),
+                InlineKeyboardButton("👻 sɴᴀᴘᴄʜᴀᴛ", url=f"https://snapchat.com/add/{config.SNAPCHAT}"),
             ]
         ])
         text = (

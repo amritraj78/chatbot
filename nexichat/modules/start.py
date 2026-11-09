@@ -22,7 +22,7 @@ from pyrogram.enums import ChatType
 from nexichat import nexichat
 from nexichat.database.users import add_served_user
 from nexichat.database.chats import add_served_chat
-from nexichat.modules.helpers.inline import DEV_OP
+from nexichat.modules.helpers.inline import DEV_OP, get_start_buttons
 
 @nexichat.on_message(filters.command("start"))
 async def start_message(client: Client, message: Message):
@@ -48,9 +48,10 @@ async def start_message(client: Client, message: Message):
         f"• 👑 **ᴄʀᴇᴀᴛᴏʀ:** [ᴀᴍʀɪᴛ ʀᴀᴊ](https://t.me/Villanns)\n\n"
         f"ᴊᴜsᴛ ᴀᴅᴅ ᴍᴇ ᴛᴏ ʏᴏᴜʀ ɢʀᴏᴜᴘ ᴀɴᴅ ɢʀᴀɴᴛ ᴀᴅᴍɪɴ ᴘᴇʀᴍɪssɪᴏɴs!"
     )
+    bot_uname = getattr(bot_info, "username", None) or getattr(client, "username", None)
     await message.reply_text(
         text=text,
-        reply_markup=InlineKeyboardMarkup(DEV_OP),
+        reply_markup=InlineKeyboardMarkup(get_start_buttons(bot_uname)),
         disable_web_page_preview=True,
     )
 

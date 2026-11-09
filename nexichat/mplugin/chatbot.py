@@ -632,6 +632,32 @@ async def auto_chatbot_listener(client: Client, message: Message):
     user_name = saved_name or message.from_user.first_name or "Friend"
     bot_username = (bot_me.username or "").lower()
 
+    is_private = message.chat.type == ChatType.PRIVATE
+    is_reply_to_bot = (
+        message.reply_to_message
+        and message.reply_to_message.from_user
+        and message.reply_to_message.from_user.id == bot_id
+    )
+    is_mentioned = bot_username and (f"@{bot_username}" in raw_text.lower())
+
+    # Passive self-learning for human-to-human conversations in groups
+    if not is_private and message.reply_to_message and message.reply_to_message.from_user:
+        replied_u = message.reply_to_message.from_user
+        if not replied_u.is_bot and replied_u.id != bot_id and replied_u.id != user_id:
+            prompt_t = (message.reply_to_message.text or "").strip()
+            reply_t = (message.text or "").strip()
+            if prompt_t and reply_t and 2 <= len(prompt_t) <= 200 and 2 <= len(reply_t) <= 300:
+                if (
+                    not prompt_t.startswith(("/", "!", "."))
+                    and not reply_t.startswith(("/", "!", "."))
+                    and not is_abusive(prompt_t)
+                    and not is_abusive(reply_t)
+                    and not re.search(r"(https?://|t\.me/|@\w+)", prompt_t + " " + reply_t, re.IGNORECASE)
+                ):
+                    asyncio.create_task(save_chat_reply(prompt_t, "text", reply_t, client=client))
+            if not is_mentioned:
+                return
+
     # 1. Stickers
     if message.sticker:
         # Learn sticker in RAM, MongoDB, and Telegram DB!

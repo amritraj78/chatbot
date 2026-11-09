@@ -437,6 +437,75 @@ class TestAllCommandsAndButtons(unittest.TestCase):
             self.loop.run_until_complete(sentinel.storage_command(self.client, self.message))
             self.message.reply_text.assert_called()
 
+    def test_audit_fixes(self):
+        """Verify the audited fixes across the codebase."""
+        from nexichat.modules.helpers.inline import get_start_buttons as m_get_btn
+        from nexichat.mplugin.helpers.inline import get_start_buttons as p_get_btn
+        from nexichat.modules import callback as m_cb
+        from nexichat.mplugin import callback as p_cb
+        from nexichat.mplugin import invite as p_invite
+        from nexichat.modules import security as m_sec
+        from nexichat.mplugin import security as p_sec
+        import config
+
+        # 1. Dynamic start buttons
+        btns = m_get_btn("MyTestCloneBot")
+        self.assertIn("MyTestCloneBot", btns[0][0].url)
+        p_btns = p_get_btn("AnotherClone")
+        self.assertIn("AnotherClone", p_btns[0][0].url)
+
+        # 2. Unhandled callback queries do NOT swallow answer alerts
+        q_unknown = MagicMock(spec=CallbackQuery)
+        q_unknown.data = "custom_unhandled_action"
+        q_unknown.message = self.message
+        q_unknown.answer = AsyncMock()
+        q_unknown.continue_propagation = MagicMock()
+        self.loop.run_until_complete(m_cb.cb_handler(self.client, q_unknown))
+        q_unknown.answer.assert_not_called()
+        q_unknown.continue_propagation.assert_called()
+
+        q_unknown_p = MagicMock(spec=CallbackQuery)
+        q_unknown_p.data = "custom_unhandled_action"
+        q_unknown_p.message = self.message
+        q_unknown_p.answer = AsyncMock()
+        q_unknown_p.continue_propagation = MagicMock()
+        self.loop.run_until_complete(p_cb.cb_handler(self.client, q_unknown_p))
+        q_unknown_p.answer.assert_not_called()
+        q_unknown_p.continue_propagation.assert_called()
+
+        # 3. Mplugin invite /link client.me.username safety
+        self.client.me = MagicMock()
+        self.client.me.id = 12345
+        self.client.me.username = "CloneInviteBot"
+        self.client.send_document = AsyncMock()
+        self.client.export_chat_invite_link = AsyncMock(return_value="https://t.me/+abc")
+        self.client.get_chat = AsyncMock(return_value=MagicMock(
+            title="TestGroup", id=-100123, type="supergroup", description="desc", invite_link="https://t.me/+abc",
+            members_count=10, dc_id=5, has_protected_content=False, is_verified=False, is_restricted=False,
+            is_creator=True, is_scam=False, is_fake=False
+        ))
+        self.message.command = ["link", "-100123"]
+        self.message.reply = AsyncMock()
+        with patch("nexichat.mplugin.invite.is_owner", AsyncMock(return_value=True)):
+            self.loop.run_until_complete(p_invite.link_command_handler(self.client, self.message))
+        self.client.send_document.assert_called()
+
+        # 4. Security shield client.send_message delivery on delete
+        self.client.send_message = AsyncMock(return_value=MagicMock(delete=AsyncMock()))
+        msg_with_link = MagicMock(spec=Message)
+        msg_with_link.text = "Join my free group: https://t.me/spam_link"
+        msg_with_link.caption = None
+        msg_with_link.chat = self.chat
+        msg_with_link.from_user = self.user
+        msg_with_link.delete = AsyncMock()
+        with patch("nexichat.modules.security.is_antilink_enabled", AsyncMock(return_value=True)):
+            self.loop.run_until_complete(m_sec.auto_security_guard(self.client, msg_with_link))
+            msg_with_link.delete.assert_called()
+            self.client.send_message.assert_called()
+
+        # 5. Config OWNER_ID safe integer type
+        self.assertIsInstance(config.OWNER_ID, int)
+
 
 if __name__ == "__main__":
     unittest.main()

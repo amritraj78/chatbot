@@ -94,10 +94,11 @@ async def link_command_handler(client: Client, message: Message):
             for key, value in group_data.items():
                 file.write(f"{key}: {value}\n")
 
+        bot_uname = (client.me.username if client.me else None) or getattr(client, "username", "chatbot")
         await client.send_document(
             chat_id=message.chat.id,
             document=file_name,
-            caption=f"📋 **ɢʀᴏᴜᴘ ɪɴғᴏʀᴍᴀᴛɪᴏɴ**\n• **ᴛɪᴛʟᴇ:** {chat.title}\n• **ɪᴅ:** `{chat.id}`\n\n🌸 **sᴄʀᴀᴘᴇᴅ ʙʏ:** @{client.username}",
+            caption=f"📋 **ɢʀᴏᴜᴘ ɪɴғᴏʀᴍᴀᴛɪᴏɴ**\n• **ᴛɪᴛʟᴇ:** {chat.title}\n• **ɪᴅ:** `{chat.id}`\n\n🌸 **sᴄʀᴀᴘᴇᴅ ʙʏ:** @{bot_uname}",
         )
 
     except Exception as e:

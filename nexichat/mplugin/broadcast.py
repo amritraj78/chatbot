@@ -3,7 +3,7 @@ import time
 import json
 import asyncio
 import logging
-from datetime import datetime
+from datetime import datetime, timezone
 from pyrogram import Client, filters
 from pyrogram.errors import FloodWait
 
@@ -184,7 +184,7 @@ async def export_database(client, message):
         served_chats = await get_served_cchats(bot_id)
 
         backup_data = {
-            "timestamp": datetime.utcnow().isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
             "bot_id": bot_id,
             "stats": {
                 "served_users_count": len(served_users),

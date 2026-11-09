@@ -22,6 +22,7 @@ from nexichat.mplugin.helpers import (
     CHATBOT_READ,
     AI_CHATBOT_READ,
     DEV_OP,
+    get_start_buttons,
     HELP_BTN,
     HELP_READ,
     HELP_GAMES_READ,
@@ -51,15 +52,36 @@ async def _safe_edit(query: CallbackQuery, text: str, reply_markup: InlineKeyboa
             pass
 
 
+HANDLED_QUERIES = {
+    "HELP", "CLOSE", "BACK", "SBACK", "ABOUT", "ADMINS",
+    "HELP_GAMES", "HELP_GROUP", "TOOLS_DATA", "BACK_HELP",
+    "CHATBOT_BACK", "BASICINFO_BACK", "USERBOT_BACK", "SOURCE_BACK",
+    "CHATBOT_CMD", "AI_CHATBOT_CMD",
+    "cb_enable_chatbot", "cb_disable_chatbot",
+    "cb_mode_auto", "cb_mode_database", "cb_mode_api",
+    "cb_refresh_api_usage", "soon"
+}
+
+
 @Client.on_callback_query()
 async def cb_handler(client: Client, query: CallbackQuery):
     if not query.message:
         return
     data = query.data
-    try:
-        await query.answer()
-    except Exception:
-        pass
+
+    if data not in HANDLED_QUERIES:
+        if hasattr(query, "continue_propagation"):
+            try:
+                query.continue_propagation()
+            except Exception:
+                pass
+        return
+
+    if data not in ("soon", "cb_refresh_api_usage"):
+        try:
+            await query.answer()
+        except Exception:
+            pass
 
     if data == "HELP":
         await _safe_edit(query, text=HELP_READ, reply_markup=InlineKeyboardMarkup(HELP_BTN))
@@ -82,7 +104,8 @@ async def cb_handler(client: Client, query: CallbackQuery):
             f"• 👑 **ᴄʀᴇᴀᴛᴏʀ:** [ᴀᴍʀɪᴛ ʀᴀᴊ](https://t.me/Villanns)\n\n"
             f"ᴊᴜsᴛ ᴀᴅᴅ ᴍᴇ ᴛᴏ ʏᴏᴜʀ ɢʀᴏᴜᴘ ᴀɴᴅ ɢʀᴀɴᴛ ᴀᴅᴍɪɴ ᴘᴇʀᴍɪssɪᴏɴs!"
         )
-        await _safe_edit(query, text=back_text, reply_markup=InlineKeyboardMarkup(DEV_OP))
+        bot_uname = getattr(client.me, "username", None) if client.me else getattr(client, "username", None)
+        await _safe_edit(query, text=back_text, reply_markup=InlineKeyboardMarkup(get_start_buttons(bot_uname)))
     elif data == "ABOUT":
         await _safe_edit(query, text=ABOUT_READ, reply_markup=InlineKeyboardMarkup(ABOUT_BTN))
     elif data == "ADMINS":

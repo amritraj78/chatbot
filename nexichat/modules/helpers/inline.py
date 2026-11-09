@@ -27,25 +27,29 @@ START_BOT = [
     ],
 ]
 
-DEV_OP = [
-    [
-        InlineKeyboardButton(
-            text="➕ ᴀᴅᴅ ᴍᴇ ᴛᴏ ʏᴏᴜʀ ɢʀᴏᴜᴘ ➕",
-            url=f"https://t.me/{getattr(nexichat, 'username', 'Reactions_rebot')}?startgroup=true",
-        ),
-    ],
-    [
-        InlineKeyboardButton(text="📖 ʜᴇʟᴘ & ᴄᴏᴍᴍᴀɴᴅs", callback_data="HELP"),
-        InlineKeyboardButton(text="ℹ️ ᴀʙᴏᴜᴛ ᴍᴇ", callback_data="ABOUT"),
-    ],
-    [
-        InlineKeyboardButton(text="👑 ᴏᴡɴᴇʀ", url=f"https://t.me/{OWNER_USERNAME}"),
-        InlineKeyboardButton(text="💬 sᴜᴘᴘᴏʀᴛ", url=f"https://t.me/{SUPPORT_GRP}"),
-    ],
-    [
-        InlineKeyboardButton(text="📢 ᴜᴘᴅᴀᴛᴇs ᴄʜᴀɴɴᴇʟ", url=f"https://t.me/{UPDATE_CHNL}"),
-    ],
-]
+def get_start_buttons(bot_username: str = None):
+    uname = bot_username or getattr(nexichat, "username", None) or "Reactions_rebot"
+    return [
+        [
+            InlineKeyboardButton(
+                text="➕ ᴀᴅᴅ ᴍᴇ ᴛᴏ ʏᴏᴜʀ ɢʀᴏᴜᴘ ➕",
+                url=f"https://t.me/{uname}?startgroup=true",
+            ),
+        ],
+        [
+            InlineKeyboardButton(text="📖 ʜᴇʟᴘ & ᴄᴏᴍᴍᴀɴᴅs", callback_data="HELP"),
+            InlineKeyboardButton(text="ℹ️ ᴀʙᴏᴜᴛ ᴍᴇ", callback_data="ABOUT"),
+        ],
+        [
+            InlineKeyboardButton(text="👑 ᴏᴡɴᴇʀ", url=f"https://t.me/{OWNER_USERNAME}"),
+            InlineKeyboardButton(text="💬 sᴜᴘᴘᴏʀᴛ", url=f"https://t.me/{SUPPORT_GRP}"),
+        ],
+        [
+            InlineKeyboardButton(text="📢 ᴜᴘᴅᴀᴛᴇs ᴄʜᴀɴɴᴇʟ", url=f"https://t.me/{UPDATE_CHNL}"),
+        ],
+    ]
+
+DEV_OP = get_start_buttons()
 
 PNG_BTN = [
     [

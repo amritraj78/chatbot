@@ -212,8 +212,10 @@ async def auto_security_guard(client: Client, message: Message):
         if LINK_REGEX.search(raw_text):
             try:
                 await message.delete()
-                warn = await message.reply_text(
-                    f"⚠️ {message.from_user.mention}! Is group me unauthorized links allowed nahi hain ji! 🌸"
+                mention_str = message.from_user.mention if message.from_user else "User"
+                warn = await client.send_message(
+                    chat_id,
+                    f"⚠️ {mention_str}! Is group me unauthorized links allowed nahi hain ji! 🌸"
                 )
                 await asyncio.sleep(5)
                 await warn.delete()
@@ -226,8 +228,10 @@ async def auto_security_guard(client: Client, message: Message):
         if mention_count >= 5:
             try:
                 await message.delete()
-                warn = await message.reply_text(
-                    f"⚠️ {message.from_user.mention}! Mass spamming allowed nahi hai ji! 😴"
+                mention_str = message.from_user.mention if message.from_user else "User"
+                warn = await client.send_message(
+                    chat_id,
+                    f"⚠️ {mention_str}! Mass spamming allowed nahi hai ji! 😴"
                 )
                 await asyncio.sleep(5)
                 await warn.delete()

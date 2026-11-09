@@ -50,7 +50,11 @@ API_HASH = "4e984ea35f854762dcde906dce426c2d"
 # --------------------------------------------------------------
 BOT_TOKEN = getenv("BOT_TOKEN", None)
 MONGO_URL = getenv("MONGO_URL", None)
-OWNER_ID = int(getenv("OWNER_ID", "5423666218"))
+_raw_owner = getenv("OWNER_ID", "5423666218")
+try:
+    OWNER_ID = int(str(_raw_owner).strip()) if _raw_owner else 5423666218
+except (ValueError, AttributeError):
+    OWNER_ID = 5423666218
 SUPPORT_GRP = getenv("SUPPORT_GRP", "amrit_feel")
 UPDATE_CHNL = getenv("UPDATE_CHNL", "privatethink")
 DATABASE_GROUP = getenv("DATABASE_GROUP", "-1004415957871")

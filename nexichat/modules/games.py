@@ -155,7 +155,7 @@ async def toss_command(client: Client, message: Message):
     await msg.edit_text(f"🪙 **Toss Result:** `{outcome}`! 🎉")
 
 
-@nexichat.on_message(filters.command(["roll", "dice", "dart", "basket", "football", "slot", "bowling"], prefixes=["/", "!", ".", ""]) | filters.dice)
+@nexichat.on_message(filters.command(["roll", "dice", "dart", "basket", "football", "slot", "bowling"], prefixes=["/", "!", "."]) | filters.dice)
 async def interactive_dice_match(client: Client, message: Message):
     """
     Interactive Dice & Sports Minigame:

@@ -67,6 +67,12 @@ def setup_mocks():
                         self.text = args[0]
                     if not self.inline_keyboard and isinstance(args[0], list):
                         self.inline_keyboard = args[0]
+
+            def continue_propagation(self):
+                pass
+
+            def stop_propagation(self):
+                pass
         Dummy.__name__ = name
         return Dummy
 
