@@ -89,10 +89,9 @@ async def truth_command(client: Client, message: Message):
         pass
     truth = random.choice(TRUTHS)
     await message.reply_text(
-        f"╭━━━━━━━〔 🤫 **TRUTH CHALLENGE** 〕━━━━━━━╮\n\n"
-        f"  ✦ **sᴀᴡᴀʟ :** {truth}\n\n"
-        f"  *Sach sach batana padega haan ji! Jhooth nahi chalega!* 🙈\n"
-        f"╰━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╯"
+        f"🤫 **ᴛʀᴜᴛʜ ᴄʜᴀʟʟᴇɴɢᴇ**\n\n"
+        f"• **sᴀᴡᴀʟ:** {truth}\n\n"
+        f"🌸 *Sach sach batana padega haan ji! Jhooth nahi chalega!* 🙈"
     )
 
 
@@ -105,10 +104,9 @@ async def dare_command(client: Client, message: Message):
         pass
     dare = random.choice(DARES)
     await message.reply_text(
-        f"╭━━━━━━━〔 🎯 **DARE CHALLENGE** 〕━━━━━━━╮\n\n"
-        f"  ✦ **ᴄʜᴀʟʟᴇɴɢᴇ :** {dare}\n\n"
-        f"  *Darr ke bhaagna mana hai! Himmat hai toh pura karo!* 🔥\n"
-        f"╰━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╯"
+        f"🎯 **ᴅᴀʀᴇ ᴄʜᴀʟʟᴇɴɢᴇ**\n\n"
+        f"• **ᴄʜᴀʟʟᴇɴɢᴇ:** {dare}\n\n"
+        f"🔥 *Darr ke bhaagna mana hai! Himmat hai toh pura karo!*"
     )
 
 
@@ -121,10 +119,9 @@ async def flirt_command(client: Client, message: Message):
         pass
     flirt = random.choice(FLIRTS)
     await message.reply_text(
-        f"╭━━━━━━━〔 💖 **SWEET FLIRT** 〕━━━━━━━╮\n\n"
-        f"  {flirt}\n\n"
-        f"  *Hehe sharmana mat haan ji!* 🙈🌸\n"
-        f"╰━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╯"
+        f"💖 **sᴡᴇᴇᴛ ғʟɪʀᴛ**\n\n"
+        f"{flirt}\n\n"
+        f"🌸 *Hehe sharmana mat haan ji!* 🙈"
     )
 
 
@@ -138,11 +135,10 @@ async def roast_command(client: Client, message: Message):
     target = message.reply_to_message.from_user.first_name if (message.reply_to_message and message.reply_to_message.from_user) else (message.from_user.first_name if message.from_user else "Dost")
     roast = random.choice(ROASTS)
     await message.reply_text(
-        f"╭━━━━━━━〔 🔥 **FRIENDLY ROAST** 〕━━━━━━━╮\n\n"
-        f"  Arey {target}! 😂\n"
-        f"  {roast}\n\n"
-        f"  *Dil par mat lena ji, sirf mazak tha!* 😜✨\n"
-        f"╰━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╯"
+        f"🔥 **ғʀɪᴇɴᴅʟʏ ʀᴏᴀsᴛ**\n\n"
+        f"Arey {target}! 😂\n"
+        f"{roast}\n\n"
+        f"✨ *Dil par mat lena ji, sirf mazak tha!* 😜"
     )
 
 
@@ -217,11 +213,10 @@ async def interactive_dice_match(client: Client, message: Message):
             verdict = f"🤝 **Arre waah! Hum dono ka tie ho gaya!** 🌟\nRab ne bana di jodi, score barabar! 🥰"
 
         await status.edit_text(
-            f"╭━━━━━━━〔 {emoji} **MATCH RESULT** 〕━━━━━━━╮\n\n"
-            f"  👤 **{user_name} :** `{user_val}` {emoji}\n"
-            f"  ✨ **Anshika :** `{bot_val}` {emoji}\n\n"
-            f"  {verdict}\n\n"
-            f"╰━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╯"
+            f"🎲 **ᴍᴀᴛᴄʜ ʀᴇsᴜʟᴛ** {emoji}\n\n"
+            f"• **{user_name}:** `{user_val}` {emoji}\n"
+            f"• **Anshika:** `{bot_val}` {emoji}\n\n"
+            f"{verdict}"
         )
     except Exception as e:
         logger.debug(f"Dice interactive match fallback: {e}")
@@ -242,9 +237,8 @@ async def quote_command(client: Client, message: Message):
     """Get an inspirational quote."""
     quote = random.choice(QUOTES)
     await message.reply_text(
-        f"╭━━━━━━━〔 🌟 **DAILY MOTIVATION** 〕━━━━━━━╮\n\n"
-        f"  {quote}\n\n"
-        f"╰━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╯"
+        f"🌟 **ᴅᴀɪʟʏ ᴍᴏᴛɪᴠᴀᴛɪᴏɴ**\n\n"
+        f"{quote}"
     )
 
 
@@ -293,14 +287,11 @@ async def couple_command(client: Client, message: Message):
     await asyncio.sleep(0.8)
 
     text = (
-        f"╭━━━━━━━〔 💍 **COUPLE OF THE DAY** 〕━━━━━━━╮\n\n"
-        f"  ✦ **ᴅᴀᴛᴇ :** `{today_str}`\n"
-        f"  ✦ **ʟᴜᴄᴋʏ ᴄᴏᴜᴘʟᴇ :**\n"
-        f"    {user1.mention} 💕 + {user2.mention} 💕\n\n"
-        f"  ✦ **ᴄᴏᴍᴘᴀᴛɪʙɪʟɪᴛʏ :** **{compat}%** 🔥\n"
-        f"  ✦ **ᴀɴsʜɪᴋᴀ's ᴠᴇʀᴅɪᴄᴛ :**\n"
-        f"    _{verdict}_\n\n"
-        f"╰━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╯"
+        f"💍 **ᴄᴏᴜᴘʟᴇ ᴏғ ᴛʜᴇ ᴅᴀʏ**\n\n"
+        f"• **ᴅᴀᴛᴇ:** `{today_str}`\n"
+        f"• **ʟᴜᴄᴋʏ ᴄᴏᴜᴘʟᴇ:** {user1.mention} 💕 + {user2.mention} 💕\n"
+        f"• **ᴄᴏᴍᴘᴀᴛɪʙɪʟɪᴛʏ:** **{compat}%** 🔥\n"
+        f"• **ᴀɴsʜɪᴋᴀ's ᴠᴇʀᴅɪᴄᴛ:** _{verdict}_"
     )
     try:
         await status.edit_text(text)
@@ -360,12 +351,11 @@ async def propose_command(client: Client, message: Message):
     chosen_line = random.choice(proposals)
 
     text = (
-        f"╭━━━━━━━〔 💍 **LOVE PROPOSAL** 〕━━━━━━━╮\n\n"
-        f"  ✦ **ғʀᴏᴍ :** {proposer.mention}\n"
-        f"  ✦ **ᴛᴏ :** {target.mention}\n\n"
-        f"  💬 *\"{proposer.first_name} says: {chosen_line}\"*\n\n"
-        f"  🌸 *Anshika: Awww kitna romantic moment hai! {target.first_name}, jaldi reply do na!* 🥰\n\n"
-        f"╰━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╯"
+        f"💍 **ʟᴏᴠᴇ ᴘʀᴏᴘᴏsᴀʟ**\n\n"
+        f"• **ғʀᴏᴍ:** {proposer.mention}\n"
+        f"• **ᴛᴏ:** {target.mention}\n\n"
+        f"💬 *\"{proposer.first_name} says: {chosen_line}\"*\n\n"
+        f"🌸 *Anshika: Awww kitna romantic moment hai! {target.first_name}, jaldi reply do na!* 🥰"
     )
     await message.reply_text(text, reply_markup=buttons)
 
@@ -391,22 +381,18 @@ async def propose_callback_handler(client: Client, query: CallbackQuery):
 
     if action == "acc":
         text = (
-            f"╭━━━━━━━〔 🎉 **PROPOSAL ACCEPTED!** 〕━━━━━━━╮\n\n"
-            f"  ✦ **ʜᴀᴘᴘʏ ᴄᴏᴜᴘʟᴇ :**\n"
-            f"    {proposer_mention} 💕 💍 💕 {target_mention}\n\n"
-            f"  🎉 **SHE/HE SAID YES!** 🥳\n"
-            f"  {target_mention} ne {proposer_mention} ka proposal ACCEPT kar liya hai!\n\n"
-            f"  🌸 *Anshika: Mubarak ho dono ko! Ekdum Rab ne bana di jodi! Dher saara pyaar aur duayein!* 🌹✨\n\n"
-            f"╰━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╯"
+            f"🎉 **ᴘʀᴏᴘᴏsᴀʟ ᴀᴄᴄᴇᴘᴛᴇᴅ!**\n\n"
+            f"• **ʜᴀᴘᴘʏ ᴄᴏᴜᴘʟᴇ:** {proposer_mention} 💕 💍 💕 {target_mention}\n\n"
+            f"🥳 **SHE/HE SAID YES!**\n"
+            f"{target_mention} ne {proposer_mention} ka proposal ACCEPT kar liya hai!\n\n"
+            f"🌸 *Anshika: Mubarak ho dono ko! Ekdum Rab ne bana di jodi! Dher saara pyaar aur duayein!* 🌹✨"
         )
         await query.message.edit_text(text)
     else:
         text = (
-            f"╭━━━━━━━〔 💔 **PROPOSAL REJECTED** 〕━━━━━━━╮\n\n"
-            f"  ✦ **ᴜɴғᴏʀᴛᴜɴᴀᴛᴇʟʏ :**\n"
-            f"    {target_mention} ne {proposer_mention} ka proposal REJECT kar diya... 🥺\n\n"
-            f"  🥀 *Anshika: Ouch! Dil ke armaan aansuon me beh gaye... Koi baat nahi {proposer_mention}, aap bohot achhe ho! Himmat rakho!* 🌸\n\n"
-            f"╰━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╯"
+            f"💔 **ᴘʀᴏᴘᴏsᴀʟ ʀᴇᴊᴇᴄᴛᴇᴅ**\n\n"
+            f"• **ᴜɴғᴏʀᴛᴜɴᴀᴛᴇʟʏ:** {target_mention} ne {proposer_mention} ka proposal REJECT kar diya... 🥺\n\n"
+            f"🥀 *Anshika: Ouch! Dil ke armaan aansuon me beh gaye... Koi baat nahi {proposer_mention}, aap bohot achhe ho! Himmat rakho!* 🌸"
         )
         await query.message.edit_text(text)
 

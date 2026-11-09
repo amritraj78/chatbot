@@ -75,13 +75,12 @@ async def welcome_toggle_cmd(client: Client, message: Message):
     enabled = await is_welcome_enabled(chat_id)
     status_icon = "🟢 ENABLED" if enabled else "🔴 DISABLED"
     await message.reply_text(
-        f"╭━━━━━━━〔 🌸 **WELCOME SETTINGS** 〕━━━━━━━╮\n\n"
-        f"  ✦ **ɢʀᴏᴜᴘ :** {message.chat.title}\n"
-        f"  ✦ **sᴛᴀᴛᴜs :** `{status_icon}`\n\n"
-        f"**Commands:**\n"
+        f"🌸 **ᴡᴇʟᴄᴏᴍᴇ sᴇᴛᴛɪɴɢs**\n\n"
+        f"• **ɢʀᴏᴜᴘ:** {message.chat.title}\n"
+        f"• **sᴛᴀᴛᴜs:** `{status_icon}`\n\n"
+        f"⚙️ **ᴄᴏᴍᴍᴀɴᴅs:**\n"
         f"• `/welcome on` - Turn Welcome ON\n"
-        f"• `/welcome off` - Turn Welcome OFF\n"
-        f"╰━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╯"
+        f"• `/welcome off` - Turn Welcome OFF"
     )
 
 
@@ -108,11 +107,9 @@ async def new_member_welcome(client: Client, message: Message):
                 ]
             ])
             text = (
-                f"╭━━━━━━━〔 ❖ **THANK YOU FOR ADDING ME** ❖ 〕━━━━━━━╮\n\n"
-                f"  🌸 **ʜᴇʟʟᴏ {message.chat.title}!** 💖\n\n"
-                f"  ɪ ᴀᴍ **{bot_name}**, ʏᴏᴜʀ sᴍᴀʀᴛ **ᴄʟᴏɴᴇᴅ ᴀɪ ɢɪʀʟғʀɪᴇɴᴅ & ᴀᴜᴛᴏ-ʀᴇᴀᴄᴛɪᴏɴ ʙᴏᴛ**! ✨\n\n"
-                f"  ✦ **ᴄᴏᴍᴍᴀɴᴅs:** `/help`, `/chatbot on`, `/reactions on`\n"
-                f"╰━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╯"
+                f"🌸 **ʜᴇʟʟᴏ {message.chat.title}!** 💖\n\n"
+                f"ɪ ᴀᴍ **{bot_name}**, ʏᴏᴜʀ sᴍᴀʀᴛ **ᴄʟᴏɴᴇᴅ ᴀɪ ɢɪʀʟғʀɪᴇɴᴅ & ᴀᴜᴛᴏ-ʀᴇᴀᴄᴛɪᴏɴ ʙᴏᴛ**! ✨\n\n"
+                f"• **ᴄᴏᴍᴍᴀɴᴅs:** `/help`, `/chatbot on`, `/reactions on`"
             )
             return await message.reply_text(text, reply_markup=btn)
 
@@ -128,12 +125,11 @@ async def new_member_welcome(client: Client, message: Message):
             ]
         ])
         text = (
-            f"╭━━━━━━━〔 🌸 **WELCOME TO {message.chat.title}** 🌸 〕━━━━━━━╮\n\n"
-            f"  💖 **ʜᴇʏ {member.mention}! ᴡᴇʟᴄᴏᴍᴇ ʙᴀʙʏ** 🥰\n\n"
-            f"  ɪ ᴀᴍ **{bot_name}**, ʏᴏᴜʀ ᴀɪ ɢɪʀʟғʀɪᴇɴᴅ & ᴄᴏᴍᴘᴀɴɪᴏɴ! ✨\n\n"
-            f"  ✦ **ᴍᴇᴍʙᴇʀ ɪᴅ :** `{member.id}`\n"
-            f"  ✦ **ᴄʀᴇᴀᴛᴏʀ :** [ᴀᴍʀɪᴛ ʀᴀᴊ](https://t.me/{config.OWNER_USERNAME}) 👑\n"
-            f"╰━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╯"
+            f"🌸 **ᴡᴇʟᴄᴏᴍᴇ ᴛᴏ {message.chat.title}** 🌸\n\n"
+            f"💖 **ʜᴇʏ {member.mention}! ᴡᴇʟᴄᴏᴍᴇ ʙᴀʙʏ** 🥰\n\n"
+            f"ɪ ᴀᴍ **{bot_name}**, ʏᴏᴜʀ ᴀɪ ɢɪʀʟғʀɪᴇɴᴅ & ᴄᴏᴍᴘᴀɴɪᴏɴ! ✨\n\n"
+            f"• **ᴍᴇᴍʙᴇʀ ɪᴅ:** `{member.id}`\n"
+            f"• **ᴄʀᴇᴀᴛᴏʀ:** [ᴀᴍʀɪᴛ ʀᴀᴊ](https://t.me/{config.OWNER_USERNAME}) 👑"
         )
         user_photo = None
         try:

@@ -58,12 +58,11 @@ async def afk_command(client: Client, message: Message):
         pass
 
     text = (
-        f"╭━━━━━━━〔 😴 **AFK STATUS SET** 〕━━━━━━━╮\n\n"
-        f"  ✦ **ᴜsᴇʀ :** {user.mention}\n"
-        f"  ✦ **sᴛᴀᴛᴜs :** Away From Keyboard (AFK)\n"
-        f"  ✦ **ʀᴇᴀsᴏɴ :** `{reason}`\n\n"
-        f"  🌸 *Anshika: Jaldi aana ji, hum sab aapko bohot miss karenge!* ✨\n\n"
-        f"╰━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╯"
+        f"😴 **ᴀғᴋ sᴛᴀᴛᴜs sᴇᴛ**\n\n"
+        f"• **ᴜsᴇʀ:** {user.mention}\n"
+        f"• **sᴛᴀᴛᴜs:** Away From Keyboard (AFK)\n"
+        f"• **ʀᴇᴀsᴏɴ:** `{reason}`\n\n"
+        f"🌸 *Anshika: Jaldi aana ji, hum sab aapko bohot miss karenge!* ✨"
     )
     await message.reply_text(text)
 
@@ -92,11 +91,10 @@ async def afk_listener(client: Client, message: Message):
             pass
 
         text = (
-            f"╭━━━━━━━〔 🌸 **WELCOME BACK!** 〕━━━━━━━╮\n\n"
-            f"  ✦ **ᴜsᴇʀ :** {user.mention} is now back online! 🥰\n"
-            f"  ✦ **ᴀғᴋ ᴅᴜʀᴀᴛɪᴏɴ :** `{duration_str}`\n\n"
-            f"  🌸 *Anshika: Aap wapas aa gaye, sach mein bohot khushi hui ji!* 💖✨\n\n"
-            f"╰━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╯"
+            f"🌸 **ᴡᴇʟᴄᴏᴍᴇ ʙᴀᴄᴋ!**\n\n"
+            f"• **ᴜsᴇʀ:** {user.mention} ɪs ɴᴏᴡ ʙᴀᴄᴋ ᴏɴʟɪɴᴇ! 🥰\n"
+            f"• **ᴀғᴋ ᴅᴜʀᴀᴛɪᴏɴ:** `{duration_str}`\n\n"
+            f"🌸 *Anshika: Aap wapas aa gaye, sach mein bohot khushi hui ji!* 💖✨"
         )
         await message.reply_text(text)
 
@@ -114,12 +112,11 @@ async def afk_listener(client: Client, message: Message):
                     dur_str = format_duration(elapsed)
                     reason_str = replied_afk.get("reason", "Busy")
                     text = (
-                        f"╭━━━━━━━〔 💤 **AFK NOTICE** 〕━━━━━━━╮\n\n"
-                        f"  ✦ **ᴜsᴇʀ :** {replied_user.mention} is currently AFK!\n"
-                        f"  ✦ **ʀᴇᴀsᴏɴ :** `{reason_str}`\n"
-                        f"  ✦ **sɪɴᴄᴇ :** `{dur_str} ago`\n\n"
-                        f"  🌸 *Anshika: Unko thoda time do na ji, aate hi reply karenge!* 🌸\n\n"
-                        f"╰━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╯"
+                        f"💤 **ᴀғᴋ ɴᴏᴛɪᴄᴇ**\n\n"
+                        f"• **ᴜsᴇʀ:** {replied_user.mention} ɪs ᴄᴜʀʀᴇɴᴛʟʏ ᴀғᴋ!\n"
+                        f"• **ʀᴇᴀsᴏɴ:** `{reason_str}`\n"
+                        f"• **sɪɴᴄᴇ:** `{dur_str} ago`\n\n"
+                        f"🌸 *Anshika: Unko thoda time do na ji, aate hi reply karenge!* 🌸"
                     )
                     await message.reply_text(text)
 
@@ -129,6 +126,13 @@ async def afk_listener(client: Client, message: Message):
             target_user = None
             if ent.type == MessageEntityType.TEXT_MENTION and ent.user:
                 target_user = ent.user
+            elif ent.type == MessageEntityType.MENTION and message.text:
+                uname = message.text[ent.offset : ent.offset + ent.length].lstrip("@")
+                try:
+                    target_user = await client.get_users(uname)
+                except Exception:
+                    target_user = None
+
             if target_user and target_user.id != user.id and not target_user.is_bot:
                 t_afk = await get_user_afk(target_user.id)
                 if t_afk:
@@ -139,11 +143,10 @@ async def afk_listener(client: Client, message: Message):
                         dur_str = format_duration(elapsed)
                         reason_str = t_afk.get("reason", "Busy")
                         text = (
-                            f"╭━━━━━━━〔 💤 **AFK NOTICE** 〕━━━━━━━╮\n\n"
-                            f"  ✦ **ᴜsᴇʀ :** {target_user.mention} is currently AFK!\n"
-                            f"  ✦ **ʀᴇᴀsᴏɴ :** `{reason_str}`\n"
-                            f"  ✦ **sɪɴᴄᴇ :** `{dur_str} ago`\n\n"
-                            f"  🌸 *Anshika: Jaise hi aayenge, main unhe bata dungi ji!* 🌸\n\n"
-                            f"╰━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╯"
+                            f"💤 **ᴀғᴋ ɴᴏᴛɪᴄᴇ**\n\n"
+                            f"• **ᴜsᴇʀ:** {target_user.mention} ɪs ᴄᴜʀʀᴇɴᴛʟʏ ᴀғᴋ!\n"
+                            f"• **ʀᴇᴀsᴏɴ:** `{reason_str}`\n"
+                            f"• **sɪɴᴄᴇ:** `{dur_str} ago`\n\n"
+                            f"🌸 *Anshika: Jaise hi aayenge, main unhe bata dungi ji!* 🌸"
                         )
                         await message.reply_text(text)

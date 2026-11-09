@@ -447,11 +447,10 @@ async def draw_command(client: Client, message: Message):
         await message.reply_photo(
             photo=img_path,
             caption=(
-                f"╭━━━━━━━〔 🎨 **AI GENERATED ART** 〕━━━━━━━╮\n\n"
-                f"  ✦ **ᴘʀᴏᴍᴘᴛ :** `{prompt}`\n"
-                f"  ✦ **ɢᴇɴᴇʀᴀᴛᴇᴅ ʙʏ :** {client.me.mention or 'VIP AI'}\n"
-                f"  ✦ **ᴄʀᴇᴀᴛᴏʀ :** [ᴀᴍʀɪᴛ ʀᴀᴊ](https://t.me/Villanns) 👑\n\n"
-                f"╰━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╯"
+                f"🎨 **ᴀɪ ɢᴇɴᴇʀᴀᴛᴇᴅ ᴀʀᴛ**\n\n"
+                f"• **ᴘʀᴏᴍᴘᴛ:** `{prompt}`\n"
+                f"• **ɢᴇɴᴇʀᴀᴛᴇᴅ ʙʏ:** {client.me.mention or 'VIP AI'}\n"
+                f"• **ᴄʀᴇᴀᴛᴏʀ:** [ᴀᴍʀɪᴛ ʀᴀᴊ](https://t.me/Villanns) 👑"
             )
         )
         await status_msg.delete()

@@ -36,11 +36,11 @@ _last_admin_warning = 0
 @app.on_message(filters.incoming & filters.private, group=-1)
 async def must_join_channel(app: Client, msg: Message):
     global _last_admin_warning
-    if not MUST_JOIN:
+    if not MUST_JOIN or not msg.from_user:
         return
 
     # Don't restrict the bot owner
-    if msg.from_user and msg.from_user.id == int(OWNER_ID):
+    if msg.from_user.id == int(OWNER_ID):
         return
 
     try:

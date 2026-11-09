@@ -99,11 +99,11 @@ async def security_status_cmd(client: Client, message: Message):
     spam_icon = "🟢 **ACTIVE (Auto-Delete Mass Spams)**" if antispam else "🔴 **INACTIVE**"
 
     text = (
-        f"╭━━━━━━━〔 🛡️ **GROUP SECURITY SHIELD** 〕━━━━━━━╮\n\n"
-        f"  ✦ **ᴄʜᴀᴛ :** {message.chat.title}\n"
-        f"  ✦ **ᴀɴᴛɪ-ʟɪɴᴋ :** {link_icon}\n"
-        f"  ✦ **ᴀɴᴛɪ-sᴘᴀᴍ :** {spam_icon}\n\n"
-        f"**Quick Commands:**\n"
+        f"🛡️ **ɢʀᴏᴜᴘ sᴇᴄᴜʀɪᴛʏ sʜɪᴇʟᴅ**\n\n"
+        f"• **ᴄʜᴀᴛ:** {message.chat.title}\n"
+        f"• **ᴀɴᴛɪ-ʟɪɴᴋ:** {link_icon}\n"
+        f"• **ᴀɴᴛɪ-sᴘᴀᴍ:** {spam_icon}\n\n"
+        f"⚙️ **ǫᴜɪᴄᴋ ᴄᴏᴍᴍᴀɴᴅs:**\n"
         f"• `/antilink on` | `/antilink off` - Toggle link deletion\n"
         f"• `/antispam on` | `/antispam off` - Toggle spam deletion\n\n"
         f"🛡️ *Protects against scam bots, invite spam & mass forwards!*"
@@ -142,11 +142,11 @@ async def security_callback_handler(client: Client, query: CallbackQuery):
     spam_icon = "🟢 **ACTIVE (Auto-Delete Mass Spams)**" if antispam else "🔴 **INACTIVE**"
 
     text = (
-        f"╭━━━━━━━〔 🛡️ **GROUP SECURITY SHIELD** 〕━━━━━━━╮\n\n"
-        f"  ✦ **ᴄʜᴀᴛ :** {query.message.chat.title}\n"
-        f"  ✦ **ᴀɴᴛɪ-ʟɪɴᴋ :** {link_icon}\n"
-        f"  ✦ **ᴀɴᴛɪ-sᴘᴀᴍ :** {spam_icon}\n\n"
-        f"**Quick Commands:**\n"
+        f"🛡️ **ɢʀᴏᴜᴘ sᴇᴄᴜʀɪᴛʏ sʜɪᴇʟᴅ**\n\n"
+        f"• **ᴄʜᴀᴛ:** {query.message.chat.title}\n"
+        f"• **ᴀɴᴛɪ-ʟɪɴᴋ:** {link_icon}\n"
+        f"• **ᴀɴᴛɪ-sᴘᴀᴍ:** {spam_icon}\n\n"
+        f"⚙️ **ǫᴜɪᴄᴋ ᴄᴏᴍᴍᴀɴᴅs:**\n"
         f"• `/antilink on` | `/antilink off` - Toggle link deletion\n"
         f"• `/antispam on` | `/antispam off` - Toggle spam deletion\n\n"
         f"🛡️ *Protects against scam bots, invite spam & mass forwards!*"

@@ -91,10 +91,9 @@ async def tagall_command(client: Client, message: Message):
                 if len(batch) >= 5:
                     lines = [f"{emojis[i % len(emojis)]} {u.mention}" for i, u in enumerate(batch)]
                     tag_text = (
-                        f"╭━━━━━━━〔 📢 **ANSHIKA ANNOUNCEMENT** 〕━━━━━━━╮\n\n"
-                        f"  💬 **ᴍᴇssᴀɢᴇ :** {custom_text}\n\n"
-                        + "\n".join(lines) +
-                        f"\n\n╰━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╯"
+                        f"📢 **ᴀɴsʜɪᴋᴀ ᴀɴɴᴏᴜɴᴄᴇᴍᴇɴᴛ**\n\n"
+                        f"• **ᴍᴇssᴀɢᴇ:** {custom_text}\n\n"
+                        + "\n".join(lines)
                     )
                     try:
                         await client.send_message(chat_id, tag_text)
@@ -112,10 +111,9 @@ async def tagall_command(client: Client, message: Message):
         if batch and ACTIVE_TAGALL.get(chat_id):
             lines = [f"{emojis[i % len(emojis)]} {u.mention}" for i, u in enumerate(batch)]
             tag_text = (
-                f"╭━━━━━━━〔 📢 **ANSHIKA ANNOUNCEMENT** 〕━━━━━━━╮\n\n"
-                f"  💬 **ᴍᴇssᴀɢᴇ :** {custom_text}\n\n"
-                + "\n".join(lines) +
-                f"\n\n╰━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╯"
+                f"📢 **ᴀɴsʜɪᴋᴀ ᴀɴɴᴏᴜɴᴄᴇᴍᴇɴᴛ**\n\n"
+                f"• **ᴍᴇssᴀɢᴇ:** {custom_text}\n\n"
+                + "\n".join(lines)
             )
             try:
                 await client.send_message(chat_id, tag_text)

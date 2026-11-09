@@ -19,6 +19,7 @@ Is file ka kya kaam hai?
 
 import logging
 import os
+import sys
 import asyncio
 from datetime import datetime
 from pyrogram import Client, filters
@@ -39,14 +40,14 @@ cloneuserdb = mongodb.cloneuserdb
 @app.on_message(filters.command(["clone", "host", "deploy"]))
 async def clone_txt(client, message):
     if len(message.command) > 1:
-        bot_token = message.text.split("/clone", 1)[1].strip()
+        bot_token = message.command[1].strip()
         mi = await message.reply_text("Please wait while I check the bot token.")
         try:
             ai = Client(bot_token, API_ID, API_HASH, bot_token=bot_token, plugins=dict(root="nexichat/mplugin"), workers=4)
             await ai.start()
             bot = await ai.get_me()
             bot_id = bot.id
-            user_id = message.from_user.id
+            user_id = message.from_user.id if message.from_user else int(OWNER_ID)
             await save_clonebot_owner(bot_id, user_id)
             await ai.set_bot_commands([
                     BotCommand("start", "Start the bot"),
@@ -194,16 +195,15 @@ async def clone_fleet_stats_cmd(client, message):
             )
 
         fleet_text = (
-            f"╭━━━━━━━〔 🤖 **CLONED FLEET STATS** 〕━━━━━━━╮\n\n"
-            f"  ✦ **ᴛᴏᴛᴀʟ ᴄʟᴏɴᴇs :** `{total_clones}`\n"
-            f"  ✦ **ᴀᴄᴛɪᴠᴇ ɪɴ ʀᴀᴍ :** `{active_in_ram}`\n"
-            f"  ✦ **ᴄʟᴏɴᴇ ᴜsᴇʀs :** `{total_users}`\n"
-            f"  ✦ **ᴄʟᴏɴᴇ ᴄʜᴀᴛs :** `{total_chats}`\n"
-            f"  ✦ **ᴄʀᴇᴀᴛᴏʀ :** [ᴀᴍʀɪᴛ ʀᴀᴊ](https://t.me/Villanns) 👑\n\n"
-            f"╭─────────────────────────────────╮\n"
+            f"🤖 **ᴄʟᴏɴᴇᴅ ғʟᴇᴇᴛ sᴛᴀᴛs**\n\n"
+            f"• **ᴛᴏᴛᴀʟ ᴄʟᴏɴᴇs:** `{total_clones}`\n"
+            f"• **ᴀᴄᴛɪᴠᴇ ɪɴ ʀᴀᴍ:** `{active_in_ram}`\n"
+            f"• **ᴄʟᴏɴᴇ ᴜsᴇʀs:** `{total_users}`\n"
+            f"• **ᴄʟᴏɴᴇ ᴄʜᴀᴛs:** `{total_chats}`\n"
+            f"• **ᴄʀᴇᴀᴛᴏʀ:** [ᴀᴍʀɪᴛ ʀᴀᴊ](https://t.me/Villanns) 👑\n\n"
+            f"📋 **ᴄʟᴏɴᴇs ʟɪsᴛ:**\n"
             + "\n".join(lines[:15]) +
-            f"\n╰─────────────────────────────────╯\n"
-            f"💡 *All learned data auto-uploaded to Telegram DB!*"
+            f"\n\n💡 *All learned data auto-uploaded to Telegram DB!*"
         )
         await message.reply_text(fleet_text)
     except Exception as e:
@@ -251,17 +251,17 @@ async def id_clone_txt(client, message):
 
     if not session_string:
         return await message.reply_text(
-            "╭━━━━━━━〔 👤 **ID CLONE SETUP GUIDE** 〕━━━━━━━╮\n\n"
+            "👤 **ɪᴅ ᴄʟᴏɴᴇ sᴇᴛᴜᴘ ɢᴜɪᴅᴇ**\n\n"
             "🌸 **What is ID Clone?**\n"
             "ID Clone connects your personal Telegram ID as an AI Userbot!\n"
             "Your ID will automatically chat, react with emojis, and play games.\n\n"
-            "🔑 **Required Session:** `Pyrogram v2 (64-bit)`\n"
+            "• **ʀᴇǫᴜɪʀᴇᴅ sᴇssɪᴏɴ:** `Pyrogram v2 (64-bit)`\n"
             "⚠️ *Telethon or Pyrogram v1 sessions are NOT supported!*\n\n"
-            "📱 **How to get Pyrogram v2 String Session:**\n"
+            "📱 **ʜᴏᴡ ᴛᴏ ɢᴇᴛ sᴇssɪᴏɴ:**\n"
             "1. Bot: @StringSessionGeneratorRobot (Choose Pyrogram v2)\n"
             "2. Bot: @SessionGeneratorBot\n"
             "3. Termux Script: Run `python3 generate_session.py`\n\n"
-            "🚀 **Command Usage:**\n"
+            "🚀 **ᴄᴏᴍᴍᴀɴᴅ ᴜsᴀɢᴇ:**\n"
             "`/idclone <your_pyrogram_v2_string_session>`\n\n"
             "🔒 *Your session is encrypted in database & immediately deleted from chat history for your security!*"
         )
@@ -351,18 +351,17 @@ async def id_clone_txt(client, message):
 
         user_tag = f"@{me.username}" if me.username else me.first_name
         await mi.edit_text(
-            f"╭━━━━━━━〔 👤 **ID CLONE ACTIVATED** 〕━━━━━━━╮\n\n"
-            f"  🌸 **Congratulations! Your ID Clone is LIVE!** ⚡\n\n"
-            f"  ✦ **Account :** {user_tag}\n"
-            f"  ✦ **User ID :** `{me.id}`\n"
-            f"  ✦ **Persona :** Anshika AI Companion\n"
-            f"  ✦ **Auto-React :** Enabled ⚡\n"
-            f"  ✦ **Status :** 🟢 Online & Active\n\n"
-            f"╭─────────────────────────────────╮\n"
-            f"│ ➻ `/delidclone` - Stop & delete ID clone\n"
-            f"│ ➻ `/idclones` - View active ID clones\n"
-            f"│ ➻ `/reactions on/off` - Toggle reacts\n"
-            f"╰─────────────────────────────────╯\n"
+            f"👤 **ɪᴅ ᴄʟᴏɴᴇ ᴀᴄᴛɪᴠᴀᴛᴇᴅ**\n\n"
+            f"🌸 **Congratulations! Your ID Clone is LIVE!** ⚡\n\n"
+            f"• **ᴀᴄᴄᴏᴜɴᴛ:** {user_tag}\n"
+            f"• **ᴜsᴇʀ ɪᴅ:** `{me.id}`\n"
+            f"• **ᴘᴇʀsᴏɴᴀ:** Anshika AI Companion\n"
+            f"• **ᴀᴜᴛᴏ-ʀᴇᴀᴄᴛ:** Enabled ⚡\n"
+            f"• **sᴛᴀᴛᴜs:** 🟢 Online & Active\n\n"
+            f"⚙️ **ᴄᴏᴍᴍᴀɴᴅs:**\n"
+            f"• `/delidclone` - Stop & delete ID clone\n"
+            f"• `/idclones` - View active ID clones\n"
+            f"• `/reactions on/off` - Toggle reacts\n\n"
             f"💡 *Your account is now protected and chatting autonomously!*"
         )
 
@@ -448,13 +447,12 @@ async def list_id_clones(client, message):
             lines.append(f"• **{name}** ({uname})\n  🆔 `{uid}` | Status: {status}")
 
         text = (
-            f"╭━━━━━━━〔 👤 **ACTIVE ID CLONES** 〕━━━━━━━╮\n\n"
-            f"  ✦ **Total Registered:** `{len(clones_list)}`\n"
-            f"  ✦ **Active in RAM:** `{len(USER_CLONES)}`\n\n"
-            f"╭─────────────────────────────────╮\n"
+            f"👤 **ᴀᴄᴛɪᴠᴇ ɪᴅ ᴄʟᴏɴᴇs**\n\n"
+            f"• **ᴛᴏᴛᴀʟ ʀᴇɢɪsᴛᴇʀᴇᴅ:** `{len(clones_list)}`\n"
+            f"• **ᴀᴄᴛɪᴠᴇ ɪɴ ʀᴀᴍ:** `{len(USER_CLONES)}`\n\n"
+            f"📋 **ᴄʟᴏɴᴇs ʟɪsᴛ:**\n"
             + "\n".join(lines[:20]) +
-            f"\n╰─────────────────────────────────╯\n"
-            f"💡 *Use `/delidclone` to remove your ID clone.*"
+            f"\n\n💡 *Use `/delidclone` to remove your ID clone.*"
         )
         await message.reply_text(text)
     except Exception as e:
@@ -589,7 +587,8 @@ async def delete_all_cloned_bots(client, message):
         await clonebotdb.delete_many({})
         CLONES.clear()
         await a.edit_text("**All cloned bots have been deleted successfully ✅**")
-        os.system(f"kill -9 {os.getpid()} && bash start")
+        await asyncio.sleep(1)
+        os._exit(0)
     except Exception as e:
         await a.edit_text(f"**An error occurred while deleting all cloned bots.** {e}")
         logging.exception(e)
