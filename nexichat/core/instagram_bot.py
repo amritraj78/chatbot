@@ -37,10 +37,16 @@ import asyncio
 import logging
 from typing import Optional, Dict, Any, Set
 
+try:
+    from nexichat.modules.helpers.ai import generate_conversational_response
+except ImportError:
+    generate_conversational_response = None
+
 import config
-from nexichat.modules.helpers.ai import generate_conversational_response
 
 LOGGER = logging.getLogger("nexichat.instagram")
+
+
 
 
 try:
@@ -322,15 +328,20 @@ class InstagramUserbot:
                     LOGGER.info(f"📩 [Instagram DM] New message from {sender_name}: '{user_text}'")
 
                     # Generate AI response via Anshika sweet girl brain
-                    try:
-                        reply_text = await generate_conversational_response(
-                            user_text=user_text,
-                            user_name=sender_name,
-                            user_id=int(sender_id) if sender_id.isdigit() else None,
-                        )
-                    except Exception as ai_err:
-                        LOGGER.warning(f"⚠️ [Instagram] AI response error: {ai_err}")
+                    reply_text = None
+                    if generate_conversational_response is not None:
+                        try:
+                            reply_text = await generate_conversational_response(
+                                user_text=user_text,
+                                user_name=sender_name,
+                                user_id=int(sender_id) if sender_id.isdigit() else None,
+                            )
+                        except Exception as ai_err:
+                            LOGGER.warning(f"⚠️ [Instagram] AI response error: {ai_err}")
+
+                    if not reply_text:
                         reply_text = "Hii! Kaise ho aap? 😊"
+
 
                     # Natural human delay before sending reply
                     typing_delay = 0.01 if self.poll_interval < 5 else random.uniform(2.0, 4.0)
