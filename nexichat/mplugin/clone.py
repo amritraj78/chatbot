@@ -82,7 +82,7 @@ async def clone_txt(client, message):
                 f"**Bot @{bot.username} has been successfully cloned and started ✅.**\n**Remove clone by :- /delclone**\n**Check all cloned bot list by:- /cloned**"
             )
         except PeerIdInvalid as e:
-            await mi.edit_text(f"**Your bot successfully cloned👍**\n**You can check by /cloned**\n\n**But please start me (@{nexichat.username}) From owner id**")
+            await mi.edit_text(f"**Your bot successfully cloned👍**\n**You can check by /cloned**\n\n**But please start me (@{app.username}) From owner id**")
         
         except BaseException as e:
             logging.exception("Error while cloning bot.")

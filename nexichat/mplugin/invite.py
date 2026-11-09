@@ -29,12 +29,17 @@ from nexichat.mplugin.helpers import is_owner
 async def give_link_command(client, message):
     chat = message.chat.id
     bot_id = client.me.id
-    user_id = message.from_user.id
+    user_id = message.from_user.id if message.from_user else 0
     if not await is_owner(bot_id, user_id):
         await message.reply_text("You don't have permission to use this command on this bot.")
         return
-    link = await client.export_chat_invite_link(chat)
-    await message.reply_text(f"**Here's the invite link for this chat:**\n\n{link}")
+    try:
+        link = await client.export_chat_invite_link(chat)
+        await message.reply_text(f"**Here's the invite link for this chat:**\n\n{link}")
+    except FloodWait as e:
+        await message.reply_text(f"**FloodWait: {e.value} seconds.**")
+    except Exception as e:
+        await message.reply_text(f"❌ **Unable to generate invite link:** `{e}`")
 
 
 @Client.on_message(filters.command(["link", "invitelink"], prefixes=["/", "!", "%", ",", ".", "@", "#"]))

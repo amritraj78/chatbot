@@ -169,7 +169,7 @@ async def broadcast_message(client, message):
 @Client.on_message(filters.command(["exportdb", "backupdb"]))
 async def export_database(client, message):
     bot_id = (await client.get_me()).id
-    user_id = message.from_user.id
+    user_id = message.from_user.id if message.from_user else 0
     if not await is_owner(bot_id, user_id) and user_id != int(OWNER_ID):
         await message.reply_text("You don't have permission to use this command.")
         return

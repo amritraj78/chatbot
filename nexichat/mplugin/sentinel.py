@@ -20,6 +20,7 @@ import os
 import gc
 import shutil
 import time
+import asyncio
 import logging
 from typing import Dict, Tuple, Set, Any, Optional
 from pyrogram import Client, filters
@@ -280,7 +281,7 @@ async def format_storage_text(client: Optional[Client] = None, action_text: str 
 async def storage_command(client: Client, message: Message):
     """Display real-time server disk, RAM, and cache diagnostics card."""
     bot_id = client.me.id
-    user_id = message.from_user.id
+    user_id = message.from_user.id if message.from_user else 0
     if not await is_owner(bot_id, user_id) and user_id != int(OWNER_ID):
         return await message.reply_text("You don't have permission to use this command.")
 
@@ -293,7 +294,7 @@ async def storage_command(client: Client, message: Message):
 async def sentinel_callback_handler(client: Client, query: CallbackQuery):
     """Handle cache cleaning, refresh, and clean info guide."""
     bot_id = client.me.id
-    user_id = query.from_user.id
+    user_id = query.from_user.id if query.from_user else 0
     if not await is_owner(bot_id, user_id) and user_id != int(OWNER_ID):
         return await query.answer("Only the bot owner can perform this action.", show_alert=True)
 

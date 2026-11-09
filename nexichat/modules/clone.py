@@ -30,6 +30,8 @@ from config import API_HASH, API_ID, OWNER_ID
 from nexichat import nexichat as app, save_clonebot_owner
 from nexichat import db as mongodb
 
+logger = logging.getLogger(__name__)
+
 CLONES = set()
 USER_CLONES = {}
 cloneownerdb = mongodb.cloneownerdb
