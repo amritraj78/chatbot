@@ -27,6 +27,7 @@ from pyrogram.types import (
 )
 from config import OWNER_ID
 from nexichat import SUDOERS
+from nexichat.mplugin.helpers import is_owner
 from nexichat.database.reactions import (
     is_antilink_enabled,
     set_antilink_enabled,
@@ -47,7 +48,8 @@ async def is_admin_or_sudo(client: Client, message: Message) -> bool:
         return False
 
     user_id = message.from_user.id
-    if user_id in SUDOERS or user_id == int(OWNER_ID):
+    bot_id = client.me.id if client.me else (await client.get_me()).id
+    if user_id in SUDOERS or user_id == int(OWNER_ID) or await is_owner(bot_id, user_id):
         return True
 
     if message.chat.type in [ChatType.GROUP, ChatType.SUPERGROUP]:
@@ -114,8 +116,9 @@ async def security_callback_handler(client: Client, query: CallbackQuery):
         return await query.answer("Message expired or unavailable.", show_alert=True)
     chat_id = query.message.chat.id
     user_id = query.from_user.id if query.from_user else 0
+    bot_id = client.me.id if client.me else (await client.get_me()).id
 
-    if user_id not in SUDOERS and user_id != int(OWNER_ID):
+    if user_id not in SUDOERS and user_id != int(OWNER_ID) and not await is_owner(bot_id, user_id):
         try:
             member = await client.get_chat_member(chat_id, user_id)
             if member.status not in [ChatMemberStatus.OWNER, ChatMemberStatus.ADMINISTRATOR]:

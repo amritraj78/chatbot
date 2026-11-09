@@ -73,26 +73,45 @@ async def ping(client: Client, message: Message):
     bot_id = bot_me.id
     start = datetime.now()
     UP, CPU, RAM, DISK = await bot_sys_stats()
-    resp_msg = await message.reply_photo(
-        photo=random.choice(IMG),
-        caption="ᴘɪɴɢɪɴɢ...",
-    )
+    is_photo = False
+    try:
+        resp_msg = await message.reply_photo(
+            photo=random.choice(IMG),
+            caption="ᴘɪɴɢɪɴɢ...",
+        )
+        is_photo = True
+    except Exception:
+        resp_msg = await message.reply_text("ᴘɪɴɢɪɴɢ...")
 
     ms = round((datetime.now() - start).total_seconds() * 1000, 2)
-    await resp_msg.edit_caption(
-        caption=(
-            f"🌸 **ᴀɴsʜɪᴋᴀ ᴀɪ ᴄʜᴀᴛʙᴏᴛ**\n"
-            f"ᴠ2.0\n\n"
-            f"• **sᴛᴀᴛᴜs:** ᴏɴʟɪɴᴇ & ᴀᴄᴛɪᴠᴇ 🥀\n"
-            f"• **ᴘɪɴɢ:** `{ms}` ms\n"
-            f"• **ᴄᴘᴜ:** {CPU}\n"
-            f"• **ʀᴀᴍ:** {RAM}\n"
-            f"• **ᴅɪsᴋ:** {DISK}\n"
-            f"• **ᴜᴘᴛɪᴍᴇ:** {UP}\n\n"
-            f"👑 **ᴄʀᴇᴀᴛᴏʀ:** [ᴀᴍʀɪᴛ ʀᴀᴊ](https://t.me/{OWNER_USERNAME}) 💖"
-        ),
-        reply_markup=InlineKeyboardMarkup(PNG_BTN),
+    caption_text = (
+        f"🌸 **ᴀɴsʜɪᴋᴀ ᴀɪ ᴄʜᴀᴛʙᴏᴛ**\n"
+        f"ᴠ2.0\n\n"
+        f"• **sᴛᴀᴛᴜs:** ᴏɴʟɪɴᴇ & ᴀᴄᴛɪᴠᴇ 🥀\n"
+        f"• **ᴘɪɴɢ:** `{ms}` ms\n"
+        f"• **ᴄᴘᴜ:** {CPU}\n"
+        f"• **ʀᴀᴍ:** {RAM}\n"
+        f"• **ᴅɪsᴋ:** {DISK}\n"
+        f"• **ᴜᴘᴛɪᴍᴇ:** {UP}\n\n"
+        f"👑 **ᴄʀᴇᴀᴛᴏʀ:** [ᴀᴍʀɪᴛ ʀᴀᴊ](https://t.me/{OWNER_USERNAME}) 💖"
     )
+    if is_photo:
+        try:
+            await resp_msg.edit_caption(
+                caption=caption_text,
+                reply_markup=InlineKeyboardMarkup(PNG_BTN),
+            )
+        except Exception:
+            await message.reply_text(caption_text, reply_markup=InlineKeyboardMarkup(PNG_BTN))
+    else:
+        try:
+            await resp_msg.edit_text(
+                text=caption_text,
+                reply_markup=InlineKeyboardMarkup(PNG_BTN),
+                disable_web_page_preview=True,
+            )
+        except Exception:
+            await message.reply_text(caption_text, reply_markup=InlineKeyboardMarkup(PNG_BTN))
     if message.chat.type == ChatType.PRIVATE:
         if message.from_user:
             await add_served_cuser(bot_id, message.from_user.id)

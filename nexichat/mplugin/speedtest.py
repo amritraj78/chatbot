@@ -42,7 +42,11 @@ def run_speedtest():
     test.download()
     test.upload()
     results = test.results.dict()
-    share_link = test.results.share() if test.results.share() else None
+    share_link = None
+    try:
+        share_link = test.results.share()
+    except Exception:
+        share_link = None
     results["share"] = share_link
     return results
 
@@ -64,11 +68,17 @@ async def speedtest_function(client, message: Message):
             ping=result["ping"],
         )
 
-        if result["share"]:
-            await message.reply_photo(photo=result["share"], caption=output)
+        if result.get("share"):
+            try:
+                await message.reply_photo(photo=result["share"], caption=output)
+            except Exception:
+                await message.reply_text(output)
         else:
             await message.reply_text(output)
 
-        await m.delete()
+        try:
+            await m.delete()
+        except Exception:
+            pass
     except Exception as e:
         await m.edit_text(f"Error: {e}")

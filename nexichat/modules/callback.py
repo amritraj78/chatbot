@@ -78,6 +78,7 @@ HANDLED_QUERIES = {
     "CHATBOT_CMD", "AI_CHATBOT_CMD",
     "cb_enable_chatbot", "cb_disable_chatbot",
     "cb_mode_auto", "cb_mode_database", "cb_mode_api",
+    "cb_dbmode_enable", "cb_dbmode_disable",
     "cb_refresh_api_usage", "soon"
 }
 

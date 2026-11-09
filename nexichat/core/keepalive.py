@@ -159,11 +159,7 @@ async def run_koyeb_keepalive(port: int, public_url: str = None):
 
     # Auto-detect public URL from common platform environment variables if not provided
     if not public_url:
-        public_url = (
-            os.environ.get("KOYEB_PUBLIC_URL")
-            or os.environ.get("PING_URL")
-            or "https://anshika-chatbot-amrit2627-b6ab4555.apps.mistral.run"
-        )
+        public_url = os.environ.get("KOYEB_PUBLIC_URL") or os.environ.get("PING_URL")
 
     # Automatically set Telegram Menu Button to open Anshika Mini App
     bot_token = os.environ.get("BOT_TOKEN")

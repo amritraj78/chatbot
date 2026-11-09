@@ -55,20 +55,37 @@ async def must_join_channel(app: Client, msg: Message):
                     link = chat_info.invite_link or f"https://t.me/{MUST_JOIN.lstrip('@')}"
                 except Exception:
                     link = f"https://t.me/{MUST_JOIN.lstrip('@')}"
+            notice_caption = (
+                f"**👋 ʜᴇʟʟᴏ {msg.from_user.mention},**\n\n"
+                f"**ʏᴏᴜ ɴᴇᴇᴅ ᴛᴏ ᴊᴏɪɴ ᴛʜᴇ [ᴄʜᴀɴɴᴇʟ]({link}) ᴛᴏ sᴇɴᴅ ᴍᴇssᴀɢᴇs ɪɴ ᴛʜɪs ʙᴏᴛ.** 🌸"
+            )
+            join_btn = InlineKeyboardMarkup(
+                [[InlineKeyboardButton("๏ ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ ๏", url=link)]]
+            )
             try:
-                await msg.reply_photo(
-                    photo="https://envs.sh/Tn_.jpg",
-                    caption=(
-                        f"**👋 ʜᴇʟʟᴏ {msg.from_user.mention},**\n\n"
-                        f"**ʏᴏᴜ ɴᴇᴇᴅ ᴛᴏ ᴊᴏɪɴ ᴛʜᴇ [ᴄʜᴀɴɴᴇʟ]({link}) ᴛᴏ sᴇɴᴅ ᴍᴇssᴀɢᴇs ɪɴ ᴛʜɪs ʙᴏᴛ.** 🌸"
-                    ),
-                    reply_markup=InlineKeyboardMarkup(
-                        [[InlineKeyboardButton("๏ ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ ๏", url=link)]]
-                    ),
-                )
-                await msg.stop_propagation()
+                try:
+                    await msg.reply_photo(
+                        photo="https://envs.sh/Tn_.jpg",
+                        caption=notice_caption,
+                        reply_markup=join_btn,
+                    )
+                except Exception:
+                    await msg.reply_text(
+                        notice_caption,
+                        reply_markup=join_btn,
+                        disable_web_page_preview=True,
+                    )
             except ChatWriteForbidden:
                 pass
+            except Exception as ex:
+                logger.debug(f"Must-join reply notice: {ex}")
+            finally:
+                try:
+                    res = msg.stop_propagation()
+                    if asyncio.iscoroutine(res):
+                        await res
+                except Exception:
+                    pass
     except ChatAdminRequired:
         now = time.time()
         if now - _last_admin_warning > 1800:

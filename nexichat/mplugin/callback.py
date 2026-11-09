@@ -4,6 +4,7 @@ from pyrogram.types import CallbackQuery, InlineKeyboardMarkup, InlineKeyboardBu
 
 from config import OWNER_ID
 from nexichat import SUDOERS
+from nexichat.mplugin.helpers import is_owner
 from nexichat.database.chatbot import (
     set_chatbot_enabled,
     is_chatbot_enabled,
@@ -59,6 +60,7 @@ HANDLED_QUERIES = {
     "CHATBOT_CMD", "AI_CHATBOT_CMD",
     "cb_enable_chatbot", "cb_disable_chatbot",
     "cb_mode_auto", "cb_mode_database", "cb_mode_api",
+    "cb_dbmode_enable", "cb_dbmode_disable",
     "cb_refresh_api_usage", "soon"
 }
 
@@ -168,7 +170,8 @@ async def cb_handler(client: Client, query: CallbackQuery):
 
     elif data in ["cb_mode_auto", "cb_mode_database", "cb_mode_api"]:
         user_id = query.from_user.id if query.from_user else 0
-        if user_id not in SUDOERS and user_id != int(OWNER_ID):
+        bot_id = client.me.id if client.me else (await client.get_me()).id
+        if not await is_owner(bot_id, user_id) and user_id not in SUDOERS and user_id != int(OWNER_ID):
             return await query.answer("❌ Only Creator/Sudoers can change reply mode!", show_alert=True)
 
         mode_map = {
@@ -188,7 +191,8 @@ async def cb_handler(client: Client, query: CallbackQuery):
 
     elif data in ["cb_dbmode_enable", "cb_dbmode_disable"]:
         user_id = query.from_user.id if query.from_user else 0
-        if user_id not in SUDOERS and user_id != int(OWNER_ID):
+        bot_id = client.me.id if client.me else (await client.get_me()).id
+        if not await is_owner(bot_id, user_id) and user_id not in SUDOERS and user_id != int(OWNER_ID):
             return await query.answer("❌ Only Creator/Sudoers can change this!", show_alert=True)
 
         is_en = (data == "cb_dbmode_enable")
@@ -203,7 +207,8 @@ async def cb_handler(client: Client, query: CallbackQuery):
 
     elif data == "cb_refresh_api_usage":
         user_id = query.from_user.id if query.from_user else 0
-        if user_id not in SUDOERS and user_id != int(OWNER_ID):
+        bot_id = client.me.id if client.me else (await client.get_me()).id
+        if not await is_owner(bot_id, user_id) and user_id not in SUDOERS and user_id != int(OWNER_ID):
             return await query.answer("❌ Only Creator/Sudoers can view this dashboard!", show_alert=True)
         await query.answer("🔄 Live re-testing all AI APIs...", show_alert=False)
         dashboard_text = await format_api_usage_dashboard(live_check=True)

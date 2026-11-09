@@ -5,9 +5,9 @@ from pyrogram.types import Message, InlineKeyboardButton, InlineKeyboardMarkup
 
 from config import OWNER_ID, SUPPORT_GRP, INSTAGRAM, SNAPCHAT, OWNER_USERNAME
 from nexichat import _boot_, get_readable_time, SUDOERS
-from nexichat.database.chats import get_served_chats
-from nexichat.database.users import get_served_users
+from nexichat.database.clonestats import get_served_cchats, get_served_cusers
 from nexichat.database.chatbot import get_user_nickname
+from nexichat.mplugin.helpers import is_owner
 
 logger = logging.getLogger(__name__)
 
@@ -15,12 +15,12 @@ logger = logging.getLogger(__name__)
 @Client.on_message(filters.command("stats"))
 async def stats(cli: Client, message: Message):
     bot_id = (await cli.get_me()).id
-    users = len(await get_served_users(bot_id))
-    chats = len(await get_served_chats(bot_id))
+    users = len(await get_served_cusers(bot_id))
+    chats = len(await get_served_cchats(bot_id))
     
     api_info = ""
     user_id = message.from_user.id if message.from_user else 0
-    if user_id in SUDOERS or user_id == int(OWNER_ID):
+    if await is_owner(bot_id, user_id) or user_id in SUDOERS or user_id == int(OWNER_ID):
         try:
             from nexichat.database.chatbot import get_api_usage_stats
             st = await get_api_usage_stats()
@@ -99,8 +99,9 @@ async def user_profile(client: Client, message: Message):
         return
     
     uptime = get_readable_time(time.time() - _boot_)
-    is_owner = (user.id == int(OWNER_ID))
-    role = "👑 ᴏᴡɴᴇʀ / ʙᴏss" if is_owner else "💎 ᴠɪᴘ ᴍᴇᴍʙᴇʀ"
+    bot_id = client.me.id if client.me else (await client.get_me()).id
+    is_owner_user = (user.id == int(OWNER_ID)) or await is_owner(bot_id, user.id)
+    role = "👑 ᴏᴡɴᴇʀ / ʙᴏss" if is_owner_user else "💎 ᴠɪᴘ ᴍᴇᴍʙᴇʀ"
     
     nickname = await get_user_nickname(user.id)
     nick_str = f"• **ɴɪᴄᴋɴᴀᴍᴇ:** `{nickname}`\n" if nickname else ""

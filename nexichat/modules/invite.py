@@ -33,8 +33,13 @@ from nexichat import nexichat, SUDOERS
 @nexichat.on_message(filters.command("givelink") & SUDOERS)
 async def give_link_command(client, message):
     chat = message.chat.id
-    link = await client.export_chat_invite_link(chat)
-    await message.reply_text(f"**Here's the invite link for this chat:**\n\n{link}")
+    try:
+        link = await client.export_chat_invite_link(chat)
+        await message.reply_text(f"**Here's the invite link for this chat:**\n\n{link}")
+    except FloodWait as e:
+        await message.reply_text(f"**FloodWait: {e.value} seconds.**")
+    except Exception as e:
+        await message.reply_text(f"❌ **Unable to generate invite link:** `{e}`")
 
 
 @nexichat.on_message(filters.command(["link", "invitelink"], prefixes=["/", "!", "%", ",", ".", "@", "#"]) & SUDOERS)

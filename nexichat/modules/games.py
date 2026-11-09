@@ -399,6 +399,11 @@ async def propose_callback_handler(client: Client, query: CallbackQuery):
             f"🥀 *Anshika: Ouch! Dil ke armaan aansuon me beh gaye... Koi baat nahi {proposer_mention}, aap bohot achhe ho! Himmat rakho!* 🌸"
         )
     try:
+        await query.answer("🎉 Proposal accepted!" if action == "acc" else "💔 Proposal rejected...")
+    except Exception:
+        pass
+
+    try:
         await query.message.edit_text(text)
     except Exception:
         pass

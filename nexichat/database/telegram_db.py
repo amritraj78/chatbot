@@ -264,7 +264,7 @@ async def sync_database_from_telegram(client: Client):
             target_clean = str(target).replace("https://t.me/", "").replace("@", "").strip()
             if not target_clean:
                 continue
-            if target_clean.startswith("-100") or target_clean.isdigit():
+            if target_clean.startswith("-100") or (target_clean.lstrip("-").isdigit()):
                 chat_target = int(target_clean)
             else:
                 chat_target = target_clean

@@ -113,6 +113,8 @@ async def broadcast_message(client: Client, message: Message):
                             m = await client.forward_messages(
                                 chat_id, message.chat.id, [broadcast_content.id]
                             )
+                            if isinstance(m, list) and m:
+                                m = m[0]
                         else:
                             m = await client.send_message(
                                 chat_id, text=broadcast_content
@@ -126,7 +128,7 @@ async def broadcast_message(client: Client, message: Message):
                                 )
                                 pin_count += 1
                             except Exception as e:
-                                continue
+                                pass
 
                     except FloodWait as e:
                         flood_time = int(e.value)
@@ -158,6 +160,8 @@ async def broadcast_message(client: Client, message: Message):
                             m = await client.forward_messages(
                                 user_id, message.chat.id, [broadcast_content.id]
                             )
+                            if isinstance(m, list) and m:
+                                m = m[0]
                         else:
                             m = await client.send_message(
                                 user_id, text=broadcast_content

@@ -24,6 +24,7 @@ from pyrogram.types import Message
 
 from config import OWNER_ID
 from nexichat import SUDOERS
+from nexichat.mplugin.helpers import is_owner
 
 logger = logging.getLogger(__name__)
 
@@ -38,7 +39,8 @@ async def is_admin_or_sudo(client: Client, message: Message) -> bool:
         return False
 
     user_id = message.from_user.id
-    if user_id in SUDOERS or user_id == int(OWNER_ID):
+    bot_id = client.me.id if client.me else (await client.get_me()).id
+    if user_id in SUDOERS or user_id == int(OWNER_ID) or await is_owner(bot_id, user_id):
         return True
 
     if message.chat.type in [ChatType.GROUP, ChatType.SUPERGROUP]:

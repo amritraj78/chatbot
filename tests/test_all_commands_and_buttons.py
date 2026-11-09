@@ -506,6 +506,67 @@ class TestAllCommandsAndButtons(unittest.TestCase):
         # 5. Config OWNER_ID safe integer type
         self.assertIsInstance(config.OWNER_ID, int)
 
+    def test_deep_audit_fixes(self):
+        import nexichat.mplugin.stats as p_stats
+        import nexichat.modules.callback as m_cb
+        import nexichat.mplugin.callback as p_cb
+        import nexichat.modules.games as m_games
+        import nexichat.mplugin.games as p_games
+        import nexichat.modules.speedtest as m_spt
+        import nexichat.mplugin.speedtest as p_spt
+        import nexichat.modules.ping as m_ping
+        import nexichat.mplugin.ping as p_ping
+        import nexichat.modules.broadcast as m_bcast
+        import nexichat.mplugin.broadcast as p_bcast
+        import nexichat.database.telegram_db as tg_db
+
+        # 1. mplugin stats call with bot_id
+        self.message.reply_text = AsyncMock()
+        with patch("nexichat.mplugin.stats.get_served_cusers", AsyncMock(return_value=[{"user_id": 123}])), \
+             patch("nexichat.mplugin.stats.get_served_cchats", AsyncMock(return_value=[{"chat_id": 456}])):
+            self.loop.run_until_complete(p_stats.stats(self.client, self.message))
+            self.message.reply_text.assert_called()
+
+        # 2. Callback HANDLED_QUERIES contains cb_dbmode_enable/disable
+        self.assertIn("cb_dbmode_enable", m_cb.HANDLED_QUERIES)
+        self.assertIn("cb_dbmode_disable", m_cb.HANDLED_QUERIES)
+        self.assertIn("cb_dbmode_enable", p_cb.HANDLED_QUERIES)
+        self.assertIn("cb_dbmode_disable", p_cb.HANDLED_QUERIES)
+
+        # 3. Games proposal accept answers query
+        q_acc = MagicMock(spec=CallbackQuery)
+        q_acc.data = "prop_acc_987654321_123456789"
+        q_acc.from_user = self.user
+        q_acc.message = MagicMock(edit_text=AsyncMock())
+        q_acc.answer = AsyncMock()
+        self.loop.run_until_complete(m_games.propose_callback_handler(self.client, q_acc))
+        q_acc.answer.assert_called()
+
+        # 4. Speedtest single share link and photo error fallback
+        with patch("nexichat.modules.speedtest.run_speedtest", return_value={"share": "http://img.png", "client": {"isp": "Jio", "country": "IN"}, "server": {"name": "Delhi", "country": "India", "cc": "IN", "sponsor": "Airtel", "latency": 15}, "ping": 10}):
+            self.message.reply_photo = AsyncMock(side_effect=Exception("CDN Timeout"))
+            self.message.reply_text = AsyncMock(return_value=MagicMock(delete=AsyncMock(), edit_text=AsyncMock()))
+            self.loop.run_until_complete(m_spt.speedtest_function(self.client, self.message))
+            self.message.reply_text.assert_called()
+
+        # 5. Ping photo error fallback to text
+        with patch("nexichat.modules.ping.bot_sys_stats", AsyncMock(return_value=("1d", "Online", "30%", "20%"))):
+            self.message.reply_photo = AsyncMock(side_effect=Exception("CDN Blocked"))
+            resp_m = MagicMock(edit_text=AsyncMock())
+            self.message.reply_text = AsyncMock(return_value=resp_m)
+            self.loop.run_until_complete(m_ping.ping(self.client, self.message))
+            self.message.reply_text.assert_called()
+
+        # 6. Negative chat target in telegram_db
+        with patch("nexichat.database.telegram_db.get_db_chats", return_value=["-4415957871"]), \
+             patch.object(self.client, "get_chat_history") as mock_hist:
+            async def dummy_gen(*args, **kwargs):
+                if False:
+                    yield None
+            mock_hist.return_value = dummy_gen()
+            self.loop.run_until_complete(tg_db.sync_database_from_telegram(self.client))
+            mock_hist.assert_called_with(-4415957871, limit=200)
+
 
 if __name__ == "__main__":
     unittest.main()
