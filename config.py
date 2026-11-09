@@ -76,3 +76,9 @@ NVIDIA_API_KEY = getenv("NVIDIA_API_KEY", None)
 KOYEB_PUBLIC_URL = getenv("KOYEB_PUBLIC_URL", getenv("PING_URL", None))
 STORAGE_THRESHOLD = int(getenv("STORAGE_THRESHOLD", "90"))
 
+# Instagram AI Userbot Configuration
+INSTAGRAM_BOT_ENABLED = getenv("INSTAGRAM_BOT_ENABLED", "False").strip().lower() in ("true", "1", "yes")
+INSTAGRAM_USERNAME = getenv("INSTAGRAM_USERNAME", getenv("INSTAGRAM_USER", None))
+INSTAGRAM_PASSWORD = getenv("INSTAGRAM_PASSWORD", getenv("INSTAGRAM_PASS", None))
+INSTAGRAM_POLL_INTERVAL = int(getenv("INSTAGRAM_POLL_INTERVAL", "15"))
+

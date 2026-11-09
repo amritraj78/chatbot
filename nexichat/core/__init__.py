@@ -25,6 +25,12 @@ from nexichat.core.banner import (
     log_startup_banner,
     get_startup_banner
 )
+from nexichat.core.instagram_bot import (
+    start_instagram_bot,
+    stop_instagram_bot,
+    InstagramUserbot,
+    InstagramChatbotClient,
+)
 
 __all__ = [
     "validate_environment",
@@ -36,4 +42,9 @@ __all__ = [
     "run_koyeb_keepalive",
     "log_startup_banner",
     "get_startup_banner",
+    "start_instagram_bot",
+    "stop_instagram_bot",
+    "InstagramUserbot",
+    "InstagramChatbotClient",
 ]
+

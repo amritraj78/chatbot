@@ -122,7 +122,15 @@ async def anony_boot():
     except Exception as ex:
         LOGGER.warning(f"Storage sentinel monitor startup notice: {ex}")
 
-    # 7. Register Global Bot Commands in Telegram UI
+    # 7. Start Instagram AI Userbot (if configured and enabled)
+    try:
+        from nexichat.core.instagram_bot import start_instagram_bot
+        asyncio.create_task(start_instagram_bot())
+    except Exception as ex:
+        LOGGER.warning(f"Instagram userbot startup notice: {ex}")
+
+    # 8. Register Global Bot Commands in Telegram UI
+
     try:
         await nexichat.set_bot_commands(
             commands=[
@@ -175,11 +183,17 @@ async def anony_boot():
     finally:
         LOGGER.info("🛑 Gracefully stopping nexichat & releasing Pyrogram SQLite sessions...")
         try:
+            from nexichat.core.instagram_bot import stop_instagram_bot
+            await stop_instagram_bot()
+        except Exception as e:
+            LOGGER.debug(f"Instagram stop notice: {e}")
+        try:
             if getattr(nexichat, "is_connected", False):
                 await nexichat.stop()
         except Exception as e:
             LOGGER.debug(f"Stop exception notice: {e}")
         LOGGER.info("✅ All sessions safely flushed. Ready for clean Koyeb rebuild.")
+
 
 
 if __name__ == "__main__":

@@ -15,10 +15,12 @@ env/
 venv/
 ENV/
 
-# Pyrogram session files
+# Pyrogram & Instagram session files
 *.session
 *.session-journal
 *.session*
+*ig_session*.json
+
 
 # Logs & temp dumps
 *.log
