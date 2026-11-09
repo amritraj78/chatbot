@@ -329,7 +329,8 @@ async def propose_command(client: Client, message: Message):
         return await message.reply_text("Arey khud ko propose kaise karoge ji? Kisi aur ko propose karo na! 🙈😂")
 
     if target.is_bot:
-        if target.id == client.me.id:
+        bot_id = client.me.id if client.me else (await client.get_me()).id
+        if target.id == bot_id:
             return await message.reply_text(
                 f"Aww {proposer.mention}! 🙈 Main toh bohot sharma gayi! "
                 "Par main toh sabki pyari dost Anshika hoon ji! Chalo hum hamesha ke liye best friends ban jaate hain! 💖✨"

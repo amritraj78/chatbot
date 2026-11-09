@@ -101,8 +101,9 @@ async def cb_handler(client: Client, query: CallbackQuery):
         chat_id = query.message.chat.id
         if query.message.chat.type in [ChatType.GROUP, ChatType.SUPERGROUP]:
             try:
-                member = await client.get_chat_member(chat_id, query.from_user.id)
-                if member.status not in [ChatMemberStatus.OWNER, ChatMemberStatus.ADMINISTRATOR] and query.from_user.id not in SUDOERS and query.from_user.id != int(OWNER_ID):
+                user_id = query.from_user.id if query.from_user else 0
+                member = await client.get_chat_member(chat_id, user_id)
+                if member.status not in [ChatMemberStatus.OWNER, ChatMemberStatus.ADMINISTRATOR] and user_id not in SUDOERS and user_id != int(OWNER_ID):
                     return await query.answer("❌ Only admins can toggle chatbot settings!", show_alert=True)
             except Exception:
                 return await query.answer("❌ Admin verification failed.", show_alert=True)
@@ -141,7 +142,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
             pass
 
     elif data in ["cb_mode_auto", "cb_mode_database", "cb_mode_api"]:
-        user_id = query.from_user.id
+        user_id = query.from_user.id if query.from_user else 0
         if user_id not in SUDOERS and user_id != int(OWNER_ID):
             return await query.answer("❌ Only Creator/Sudoers can change reply mode!", show_alert=True)
 
@@ -161,7 +162,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
             pass
 
     elif data in ["cb_dbmode_enable", "cb_dbmode_disable"]:
-        user_id = query.from_user.id
+        user_id = query.from_user.id if query.from_user else 0
         if user_id not in SUDOERS and user_id != int(OWNER_ID):
             return await query.answer("❌ Only Creator/Sudoers can change this!", show_alert=True)
 
@@ -176,7 +177,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
             pass
 
     elif data == "cb_refresh_api_usage":
-        user_id = query.from_user.id
+        user_id = query.from_user.id if query.from_user else 0
         if user_id not in SUDOERS and user_id != int(OWNER_ID):
             return await query.answer("❌ Only Creator/Sudoers can view this dashboard!", show_alert=True)
         await query.answer("🔄 Live re-testing all AI APIs...", show_alert=False)

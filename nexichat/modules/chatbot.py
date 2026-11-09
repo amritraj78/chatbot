@@ -462,7 +462,7 @@ async def draw_command(client: Client, message: Message):
             caption=(
                 f"🎨 **ᴀɪ ɢᴇɴᴇʀᴀᴛᴇᴅ ᴀʀᴛ**\n\n"
                 f"• **ᴘʀᴏᴍᴘᴛ:** `{prompt}`\n"
-                f"• **ɢᴇɴᴇʀᴀᴛᴇᴅ ʙʏ:** {client.me.mention or 'VIP AI'}\n"
+                f"• **ɢᴇɴᴇʀᴀᴛᴇᴅ ʙʏ:** {client.me.mention if client.me else 'VIP AI'}\n"
                 f"• **ᴄʀᴇᴀᴛᴏʀ:** [ᴀᴍʀɪᴛ ʀᴀᴊ](https://t.me/Villanns) 👑"
             )
         )
@@ -644,8 +644,9 @@ async def auto_chatbot_listener(client: Client, message: Message):
 
     saved_name = await get_user_nickname(user_id)
     user_name = saved_name or message.from_user.first_name or "Friend"
-    bot_id = client.me.id
-    bot_username = (client.me.username or "").lower()
+    bot_me = client.me or (await client.get_me())
+    bot_id = bot_me.id
+    bot_username = (bot_me.username or "").lower()
 
     # In groups:
     # 1. If replied to bot or mentioned bot -> 100% reply

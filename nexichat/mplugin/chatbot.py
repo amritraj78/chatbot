@@ -449,7 +449,7 @@ async def draw_command(client: Client, message: Message):
             caption=(
                 f"🎨 **ᴀɪ ɢᴇɴᴇʀᴀᴛᴇᴅ ᴀʀᴛ**\n\n"
                 f"• **ᴘʀᴏᴍᴘᴛ:** `{prompt}`\n"
-                f"• **ɢᴇɴᴇʀᴀᴛᴇᴅ ʙʏ:** {client.me.mention or 'VIP AI'}\n"
+                f"• **ɢᴇɴᴇʀᴀᴛᴇᴅ ʙʏ:** {client.me.mention if client.me else 'VIP AI'}\n"
                 f"• **ᴄʀᴇᴀᴛᴏʀ:** [ᴀᴍʀɪᴛ ʀᴀᴊ](https://t.me/Villanns) 👑"
             )
         )
@@ -577,7 +577,8 @@ async def auto_chatbot_listener(client: Client, message: Message):
 
     user_id = message.from_user.id
     chat_id = message.chat.id
-    bot_id = client.me.id
+    bot_me = client.me or (await client.get_me())
+    bot_id = bot_me.id
     current_time = datetime.now()
 
     if message.chat.type == ChatType.PRIVATE:
