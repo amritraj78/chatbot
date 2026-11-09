@@ -28,7 +28,7 @@ from nexichat.mplugin.helpers import is_owner
 @Client.on_message(filters.command("givelink"))
 async def give_link_command(client, message):
     chat = message.chat.id
-    bot_id = client.me.id
+    bot_id = client.me.id if client.me else (await client.get_me()).id
     user_id = message.from_user.id if message.from_user else 0
     if not await is_owner(bot_id, user_id):
         await message.reply_text("You don't have permission to use this command on this bot.")
@@ -44,7 +44,7 @@ async def give_link_command(client, message):
 
 @Client.on_message(filters.command(["link", "invitelink"], prefixes=["/", "!", "%", ",", ".", "@", "#"]))
 async def link_command_handler(client: Client, message: Message):
-    bot_id = client.me.id
+    bot_id = client.me.id if client.me else (await client.get_me()).id
     user_id = message.from_user.id if message.from_user else 0
     if not await is_owner(bot_id, user_id):
         await message.reply_text("You don't have permission to use this command on this bot.")

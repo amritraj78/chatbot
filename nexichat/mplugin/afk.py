@@ -78,6 +78,11 @@ async def afk_listener(client: Client, message: Message):
     if not user:
         return
 
+    # Periodic cleanup of _afk_notified cache to prevent memory leaks
+    if len(_afk_notified) > 500:
+        cutoff = time.time() - 3600
+        _afk_notified = {uid: ts for uid, ts in _afk_notified.items() if ts > cutoff}
+
     # 1. Check if the sender was AFK
     user_afk = await get_user_afk(user.id)
     if user_afk and not (message.text and message.text.startswith(("/afk", "!afk"))):

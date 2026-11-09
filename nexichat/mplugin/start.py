@@ -22,7 +22,8 @@ from nexichat.mplugin.helpers.inline import DEV_OP
 
 @Client.on_message(filters.command("start"))
 async def start_message(client: Client, message: Message):
-    bot_id = client.me.id
+    bot_info = client.me or (await client.get_me())
+    bot_id = bot_info.id
     if message.chat.type == ChatType.PRIVATE:
         if message.from_user:
             await add_served_cuser(bot_id, message.from_user.id)
@@ -30,7 +31,6 @@ async def start_message(client: Client, message: Message):
         await add_served_cchat(bot_id, message.chat.id)
 
     first_name = message.from_user.first_name if message.from_user else "Friend"
-    bot_info = await client.get_me()
     bot_title = (bot_info.first_name or "VIP REACTION").upper()
 
     text = (

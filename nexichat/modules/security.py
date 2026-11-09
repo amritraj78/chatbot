@@ -114,8 +114,10 @@ async def security_status_cmd(client: Client, message: Message):
 @nexichat.on_callback_query(filters.regex(r"^sec_toggle_(antilink|antispam)$"))
 async def security_callback_handler(client: Client, query: CallbackQuery):
     """Handle interactive toggle buttons for security."""
+    if not query.message:
+        return await query.answer("Message expired or unavailable.", show_alert=True)
     chat_id = query.message.chat.id
-    user_id = query.from_user.id
+    user_id = query.from_user.id if query.from_user else 0
 
     if user_id not in SUDOERS and user_id != int(OWNER_ID):
         try:

@@ -72,6 +72,8 @@ async def _safe_edit(query: CallbackQuery, text: str, reply_markup: InlineKeyboa
 
 @nexichat.on_callback_query()
 async def cb_handler(client: Client, query: CallbackQuery):
+    if not query.message:
+        return
     data = query.data
     try:
         await query.answer()

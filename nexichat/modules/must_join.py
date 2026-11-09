@@ -75,10 +75,11 @@ async def must_join_channel(app: Client, msg: Message):
             _last_admin_warning = now
             logger.warning(f"Bot needs to be promoted as Admin in channel @{str(MUST_JOIN).lstrip('@')} for Force Subscribe to verify members.")
             try:
+                bot_uname = app.me.username if app.me else (getattr(app, "username", None) or "the bot")
                 await app.send_message(
                     int(OWNER_ID),
                     f"⚠️ **[MUST JOIN NOTICE]**\n\n"
-                    f"Please promote @{app.me.username} as an **Admin** in your Updates Channel (`@{str(MUST_JOIN).lstrip('@')}`) "
+                    f"Please promote @{bot_uname} as an **Admin** in your Updates Channel (`@{str(MUST_JOIN).lstrip('@')}`) "
                     f"so the bot can check if users have joined before chatting! ✨"
                 )
             except Exception:

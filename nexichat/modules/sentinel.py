@@ -334,12 +334,24 @@ async def sentinel_monitor_loop(client: Client):
 async def get_mongodb_stats() -> Dict[str, Any]:
     """Retrieve actual storage stats and live ping latency from MongoDB database."""
     try:
-        from nexichat import mongodb
-        if hasattr(mongodb, "command"):
+        from nexichat import db, mongodb
+        if hasattr(db, "command"):
             t0 = time.perf_counter()
-            await asyncio.wait_for(mongodb.command("ping"), timeout=2.0)
+            res = db.command("ping")
+            if hasattr(res, "__await__"):
+                await asyncio.wait_for(res, timeout=2.0)
             ping_ms = round((time.perf_counter() - t0) * 1000)
-            stats = await asyncio.wait_for(mongodb.command("dbstats"), timeout=2.0)
+            stats_coro = db.command("dbstats")
+            stats = await asyncio.wait_for(stats_coro, timeout=2.0) if hasattr(stats_coro, "__await__") else stats_coro
+            data_mb = round(stats.get("dataSize", 0) / (1024 * 1024), 2)
+            objects = stats.get("objects", 0)
+            return {"docs": objects, "size_mb": data_mb, "ping_ms": ping_ms, "online": True}
+        elif hasattr(mongodb, "command"):
+            loop = asyncio.get_running_loop()
+            t0 = time.perf_counter()
+            await loop.run_in_executor(None, lambda: mongodb.command("ping"))
+            ping_ms = round((time.perf_counter() - t0) * 1000)
+            stats = await loop.run_in_executor(None, lambda: mongodb.command("dbstats"))
             data_mb = round(stats.get("dataSize", 0) / (1024 * 1024), 2)
             objects = stats.get("objects", 0)
             return {"docs": objects, "size_mb": data_mb, "ping_ms": ping_ms, "online": True}
@@ -425,7 +437,9 @@ async def storage_command(client: Client, message: Message):
 @nexichat.on_callback_query(filters.regex(r"^sentinel_"))
 async def sentinel_callback_handler(client: Client, query: CallbackQuery):
     """Handle cache cleaning, refresh, and clean info guide."""
-    user_id = query.from_user.id
+    if not query.message:
+        return await query.answer("Message expired or unavailable.", show_alert=True)
+    user_id = query.from_user.id if query.from_user else 0
     if user_id != int(OWNER_ID) and user_id not in SUDOERS:
         return await query.answer("Only the bot owner or sudoers can perform this action.", show_alert=True)
 

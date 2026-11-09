@@ -1,7 +1,15 @@
+import sys
 import unittest
 from unittest.mock import AsyncMock, MagicMock, patch
 import asyncio
 import os
+
+try:
+    from tests.mock_helper import setup_mocks
+    setup_mocks()
+except ImportError:
+    import mock_helper
+    mock_helper.setup_mocks()
 
 
 class TestSentinel(unittest.TestCase):
@@ -66,8 +74,8 @@ class TestSentinel(unittest.TestCase):
         self.loop.run_until_complete(sentinel.check_and_alert_storage(mock_client))
         mock_client.send_message.assert_called()
         sent_messages = [call[0][1] for call in mock_client.send_message.call_args_list]
-        self.assertTrue(any("MILESTONE" in msg for msg in sent_messages))
-        self.assertTrue(any("AUTO-CLEAN" in msg for msg in sent_messages))
+        self.assertTrue(any("MILESTONE" in msg or "ᴍɪʟᴇsᴛᴏɴᴇ" in msg for msg in sent_messages))
+        self.assertTrue(any("AUTO-CLEAN" in msg or "ᴀᴜᴛᴏ-ᴄʟᴇᴀɴ" in msg for msg in sent_messages))
 
 
 if __name__ == "__main__":

@@ -29,6 +29,7 @@ from pyrogram.types import BotCommand
 from config import API_HASH, API_ID, OWNER_ID
 from nexichat import nexichat as app, save_clonebot_owner
 from nexichat import db as mongodb
+from nexichat.database.clonestats import get_served_cusers, get_served_cchats
 
 logger = logging.getLogger(__name__)
 

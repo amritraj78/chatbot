@@ -141,11 +141,11 @@ class InMemoryCollection:
         matched = [d for d in self._data if self._matches(d, filt)]
         return InMemoryCursor(matched)
 
-    async def insert_one(self, doc):
+    def insert_one(self, doc):
         self._data.append(dict(doc))
         return AwaitableResult(True)
 
-    async def update_one(self, filt, update, upsert=False):
+    def update_one(self, filt, update, upsert=False):
         set_vals = update.get("$set", {})
         found = False
         for d in self._data:
@@ -159,19 +159,22 @@ class InMemoryCollection:
             self._data.append(new_doc)
         return AwaitableResult(True)
 
-    async def delete_one(self, filt):
+    def delete_one(self, filt):
         for i, d in enumerate(self._data):
             if self._matches(d, filt):
                 self._data.pop(i)
                 break
         return AwaitableResult(True)
 
-    async def delete_many(self, filt=None):
+    def delete_many(self, filt=None):
         filt = filt or {}
         if not filt:
             self._data.clear()
         else:
             self._data = [d for d in self._data if not self._matches(d, filt)]
+        return AwaitableResult(True)
+
+    def create_index(self, *args, **kwargs):
         return AwaitableResult(True)
 
 class InMemoryDatabase:

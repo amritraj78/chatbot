@@ -3,19 +3,12 @@ import unittest
 import asyncio
 from unittest.mock import AsyncMock, MagicMock, patch
 
-# Mock third-party libraries if they are not installed in the test environment
-for mod_name in [
-    "dotenv", "pymongo", "motor", "motor.motor_asyncio",
-    "pyrogram", "pyrogram.enums", "pyrogram.types",
-    "pyrogram.errors", "pyrogram.errors.exceptions",
-    "pyrogram.errors.exceptions.bad_request_400",
-    "uvloop", "Abg", "flask", "speedtest", "psutil"
-]:
-    if mod_name not in sys.modules:
-        m = MagicMock()
-        m.on_message = MagicMock(return_value=lambda f: f)
-        m.on_callback_query = MagicMock(return_value=lambda f: f)
-        sys.modules[mod_name] = m
+try:
+    from tests.mock_helper import setup_mocks
+    setup_mocks()
+except ImportError:
+    import mock_helper
+    mock_helper.setup_mocks()
 
 # Make nexichat instance's on_message return a pass-through decorator
 from nexichat import nexichat
@@ -490,7 +483,7 @@ class TestReactionFeatures(unittest.TestCase):
         self.loop.run_until_complete(id_clone_txt(MagicMock(), mock_msg))
         mock_msg.reply_text.assert_called_once()
         guide_text = mock_msg.reply_text.call_args[0][0]
-        self.assertIn("ID CLONE SETUP GUIDE", guide_text)
+        self.assertTrue("ID CLONE SETUP GUIDE" in guide_text or "ɪᴅ ᴄʟᴏɴᴇ sᴇᴛᴜᴘ ɢᴜɪᴅᴇ" in guide_text)
         self.assertIn("Pyrogram v2", guide_text)
 
     def test_generate_session_script_valid(self):

@@ -162,12 +162,15 @@ async def chatbot_toggle_cmd(client: Client, message: Message):
 @nexichat.on_callback_query(filters.regex(r"^cb_(enable|disable)_chatbot$"))
 async def chatbot_callback_handler(client: Client, query: CallbackQuery):
     """Handles inline button clicks for enabling/disabling chatbot."""
+    if not query.message:
+        return await query.answer("Message expired or unavailable.", show_alert=True)
     chat_id = query.message.chat.id
+    user_id = query.from_user.id if query.from_user else 0
 
     if query.message.chat.type in [ChatType.GROUP, ChatType.SUPERGROUP]:
         try:
-            member = await client.get_chat_member(chat_id, query.from_user.id)
-            if member.status not in [ChatMemberStatus.OWNER, ChatMemberStatus.ADMINISTRATOR] and query.from_user.id not in SUDOERS and query.from_user.id != int(OWNER_ID):
+            member = await client.get_chat_member(chat_id, user_id)
+            if member.status not in [ChatMemberStatus.OWNER, ChatMemberStatus.ADMINISTRATOR] and user_id not in SUDOERS and user_id != int(OWNER_ID):
                 return await query.answer("❌ Only admins can toggle chatbot settings!", show_alert=True)
         except Exception:
             return await query.answer("❌ Admin verification failed.", show_alert=True)
@@ -244,7 +247,9 @@ async def api_usage_cmd(client: Client, message: Message):
 @nexichat.on_callback_query(filters.regex(r"^cb_refresh_api_usage$"))
 async def api_usage_callback_handler(client: Client, query: CallbackQuery):
     """Refreshes the live API usage dashboard on demand for Creator/Sudoers."""
-    user_id = query.from_user.id
+    if not query.message:
+        return await query.answer("Message expired or unavailable.", show_alert=True)
+    user_id = query.from_user.id if query.from_user else 0
     if user_id not in SUDOERS and user_id != int(OWNER_ID):
         return await query.answer("❌ Only the Creator/Sudoers can view this dashboard!", show_alert=True)
 
@@ -303,7 +308,9 @@ async def db_mode_cmd(client: Client, message: Message):
 @nexichat.on_callback_query(filters.regex(r"^cb_mode_(auto|database|api)$"))
 async def mode_callback_handler(client: Client, query: CallbackQuery):
     """Handles owner/sudo callbacks to select chatbot reply mode."""
-    user_id = query.from_user.id
+    if not query.message:
+        return await query.answer("Message expired or unavailable.", show_alert=True)
+    user_id = query.from_user.id if query.from_user else 0
     if user_id not in SUDOERS and user_id != int(OWNER_ID):
         return await query.answer("❌ Only Creator/Sudoers can change reply mode!", show_alert=True)
 
@@ -326,7 +333,9 @@ async def mode_callback_handler(client: Client, query: CallbackQuery):
 @nexichat.on_callback_query(filters.regex(r"^cb_dbmode_(enable|disable)$"))
 async def dbmode_callback_handler(client: Client, query: CallbackQuery):
     """Handles legacy callbacks to toggle Database Fallback mode."""
-    user_id = query.from_user.id
+    if not query.message:
+        return await query.answer("Message expired or unavailable.", show_alert=True)
+    user_id = query.from_user.id if query.from_user else 0
     if user_id not in SUDOERS and user_id != int(OWNER_ID):
         return await query.answer("❌ Only Creator/Sudoers can change this!", show_alert=True)
 

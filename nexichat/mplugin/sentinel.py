@@ -197,12 +197,24 @@ def get_sentinel_keyboard() -> InlineKeyboardMarkup:
 async def get_mongodb_stats() -> Dict[str, Any]:
     """Retrieve actual storage stats and live ping latency from MongoDB database."""
     try:
-        from nexichat import mongodb
-        if hasattr(mongodb, "command"):
+        from nexichat import db, mongodb
+        if hasattr(db, "command"):
             t0 = time.perf_counter()
-            await asyncio.wait_for(mongodb.command("ping"), timeout=2.0)
+            res = db.command("ping")
+            if hasattr(res, "__await__"):
+                await asyncio.wait_for(res, timeout=2.0)
             ping_ms = round((time.perf_counter() - t0) * 1000)
-            stats = await asyncio.wait_for(mongodb.command("dbstats"), timeout=2.0)
+            stats_coro = db.command("dbstats")
+            stats = await asyncio.wait_for(stats_coro, timeout=2.0) if hasattr(stats_coro, "__await__") else stats_coro
+            data_mb = round(stats.get("dataSize", 0) / (1024 * 1024), 2)
+            objects = stats.get("objects", 0)
+            return {"docs": objects, "size_mb": data_mb, "ping_ms": ping_ms, "online": True}
+        elif hasattr(mongodb, "command"):
+            loop = asyncio.get_running_loop()
+            t0 = time.perf_counter()
+            await loop.run_in_executor(None, lambda: mongodb.command("ping"))
+            ping_ms = round((time.perf_counter() - t0) * 1000)
+            stats = await loop.run_in_executor(None, lambda: mongodb.command("dbstats"))
             data_mb = round(stats.get("dataSize", 0) / (1024 * 1024), 2)
             objects = stats.get("objects", 0)
             return {"docs": objects, "size_mb": data_mb, "ping_ms": ping_ms, "online": True}
@@ -280,7 +292,7 @@ async def format_storage_text(client: Optional[Client] = None, action_text: str 
 @Client.on_message(filters.command(["storage", "disk", "mem", "memory"]))
 async def storage_command(client: Client, message: Message):
     """Display real-time server disk, RAM, and cache diagnostics card."""
-    bot_id = client.me.id
+    bot_id = client.me.id if client.me else (await client.get_me()).id
     user_id = message.from_user.id if message.from_user else 0
     if not await is_owner(bot_id, user_id) and user_id != int(OWNER_ID):
         return await message.reply_text("You don't have permission to use this command.")
@@ -293,7 +305,9 @@ async def storage_command(client: Client, message: Message):
 @Client.on_callback_query(filters.regex(r"^sentinel_"))
 async def sentinel_callback_handler(client: Client, query: CallbackQuery):
     """Handle cache cleaning, refresh, and clean info guide."""
-    bot_id = client.me.id
+    if not query.message:
+        return await query.answer("Message expired or unavailable.", show_alert=True)
+    bot_id = client.me.id if client.me else (await client.get_me()).id
     user_id = query.from_user.id if query.from_user else 0
     if not await is_owner(bot_id, user_id) and user_id != int(OWNER_ID):
         return await query.answer("Only the bot owner can perform this action.", show_alert=True)

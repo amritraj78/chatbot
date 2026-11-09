@@ -102,7 +102,7 @@ async def broadcast_message(client: Client, message: Message):
             if not flags.get("-nogroup", False):
                 sent = 0
                 pin_count = 0
-                chats = await get_served_cchats(bot_id)
+                chats = await get_served_chats()
 
                 for chat in chats:
                     chat_id = int(chat["chat_id"])
@@ -149,7 +149,7 @@ async def broadcast_message(client: Client, message: Message):
 
             if flags.get("-user", False):
                 susr = 0
-                users = await get_served_cusers(bot_id)
+                users = await get_served_users()
 
                 for user in users:
                     user_id = int(user["user_id"])

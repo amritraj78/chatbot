@@ -1,7 +1,20 @@
+import sys
 import unittest
 from unittest.mock import AsyncMock, MagicMock, patch
 import asyncio
 import os
+
+try:
+    from tests.mock_helper import setup_mocks
+    setup_mocks()
+except ImportError:
+    import mock_helper
+    mock_helper.setup_mocks()
+
+from nexichat import nexichat
+nexichat.on_message = MagicMock(return_value=lambda f: f)
+nexichat.on_callback_query = MagicMock(return_value=lambda f: f)
+from nexichat.modules import helpers
 
 
 class TestNewFeatures(unittest.TestCase):
@@ -72,12 +85,14 @@ class TestNewFeatures(unittest.TestCase):
 
         self.loop.run_until_complete(games.truth_command(MagicMock(), mock_msg))
         mock_msg.reply_text.assert_called_once()
-        self.assertIn("TRUTH", mock_msg.reply_text.call_args[0][0])
+        truth_reply = mock_msg.reply_text.call_args[0][0]
+        self.assertTrue("TRUTH" in truth_reply or "ᴛʀᴜᴛʜ" in truth_reply)
 
         mock_msg.reply_text.reset_mock()
         self.loop.run_until_complete(games.dare_command(MagicMock(), mock_msg))
         mock_msg.reply_text.assert_called_once()
-        self.assertIn("DARE", mock_msg.reply_text.call_args[0][0])
+        dare_reply = mock_msg.reply_text.call_args[0][0]
+        self.assertTrue("DARE" in dare_reply or "ᴅᴀʀᴇ" in dare_reply)
 
         mock_msg.reply_text.reset_mock()
         self.loop.run_until_complete(games.toss_command(MagicMock(), mock_msg))

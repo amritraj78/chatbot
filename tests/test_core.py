@@ -2,17 +2,12 @@ import sys
 import unittest
 from unittest.mock import MagicMock
 
-# Mock third-party libraries if they are not installed in the test environment
-for mod_name in [
-    "dotenv", "pymongo", "motor", "motor.motor_asyncio",
-    "pyrogram", "pyrogram.enums", "pyrogram.types",
-    "pyrogram.errors", "uvloop", "Abg", "speedtest", "psutil"
-]:
-    if mod_name not in sys.modules:
-        m = MagicMock()
-        m.on_message = MagicMock(return_value=lambda f: f)
-        m.on_callback_query = MagicMock(return_value=lambda f: f)
-        sys.modules[mod_name] = m
+try:
+    from tests.mock_helper import setup_mocks
+    setup_mocks()
+except ImportError:
+    import mock_helper
+    mock_helper.setup_mocks()
 
 from nexichat.core.diagnostics import (
     validate_environment,

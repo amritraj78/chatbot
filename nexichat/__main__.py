@@ -42,7 +42,7 @@ import config
 from config import OWNER_ID
 from nexichat import LOGGER, nexichat, load_clone_owners
 from nexichat.modules import ALL_MODULES
-from nexichat.modules.clone import restart_bots
+from nexichat.modules.clone import restart_bots, restart_user_clones
 from nexichat.core import (
     validate_environment,
     explain_telegram_login_error,
@@ -89,6 +89,7 @@ async def anony_boot():
             LOGGER.info(f"@{nexichat.username} Started. (Tip: Send /start from owner account {OWNER_ID} to enable private alerts).")
 
         asyncio.create_task(restart_bots())
+        asyncio.create_task(restart_user_clones())
         await load_clone_owners()
 
     except Exception as ex:

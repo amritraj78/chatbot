@@ -88,7 +88,7 @@ async def is_clone_admin_or_owner(client: Client, message: Message) -> bool:
         return False
 
     user_id = message.from_user.id
-    bot_id = client.me.id
+    bot_id = client.me.id if client.me else (await client.get_me()).id
 
     if await is_owner(bot_id, user_id):
         return True
@@ -216,7 +216,7 @@ async def clone_auto_react_handler(client: Client, message: Message):
             return
 
         chat_id = message.chat.id
-        bot_id = client.me.id
+        bot_id = client.me.id if client.me else (await client.get_me()).id
 
         if message.chat.type == ChatType.PRIVATE and message.from_user:
             await add_served_cuser(bot_id, message.from_user.id)

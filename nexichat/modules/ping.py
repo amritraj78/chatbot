@@ -86,7 +86,8 @@ async def bot_sys_stats():
 
 @nexichat.on_message(filters.command("ping"))
 async def ping(client: Client, message: Message):
-    bot_id = client.me.id
+    bot_me = client.me or (await client.get_me())
+    bot_id = bot_me.id
     start = datetime.now()
     UP, CPU, RAM, DISK = await bot_sys_stats()
     resp_msg = await message.reply_photo(
@@ -95,7 +96,6 @@ async def ping(client: Client, message: Message):
     )
 
     ms = round((datetime.now() - start).total_seconds() * 1000, 2)
-    bot_me = await client.get_me()
     await resp_msg.edit_caption(
         caption=(
             f"🌸 **ᴀɴsʜɪᴋᴀ ᴀɪ ᴄʜᴀᴛʙᴏᴛ**\n"

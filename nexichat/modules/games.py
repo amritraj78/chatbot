@@ -369,7 +369,11 @@ async def propose_callback_handler(client: Client, query: CallbackQuery):
     proposer_id = int(data_parts[2])
     target_id = int(data_parts[3])
 
-    if query.from_user.id != target_id:
+    if not query.message:
+        return await query.answer("Message expired or unavailable.", show_alert=True)
+
+    user_id = query.from_user.id if query.from_user else 0
+    if user_id != target_id:
         return await query.answer("❌ Arey ye proposal aapke liye nahi hai ji! Beech mein mat aao! 🙈", show_alert=True)
 
     try:
@@ -378,7 +382,7 @@ async def propose_callback_handler(client: Client, query: CallbackQuery):
     except Exception:
         proposer_mention = f"[User](tg://user?id={proposer_id})"
 
-    target_mention = query.from_user.mention
+    target_mention = query.from_user.mention if query.from_user else f"[User](tg://user?id={target_id})"
 
     if action == "acc":
         text = (
@@ -388,12 +392,14 @@ async def propose_callback_handler(client: Client, query: CallbackQuery):
             f"{target_mention} ne {proposer_mention} ka proposal ACCEPT kar liya hai!\n\n"
             f"🌸 *Anshika: Mubarak ho dono ko! Ekdum Rab ne bana di jodi! Dher saara pyaar aur duayein!* 🌹✨"
         )
-        await query.message.edit_text(text)
     else:
         text = (
             f"💔 **ᴘʀᴏᴘᴏsᴀʟ ʀᴇᴊᴇᴄᴛᴇᴅ**\n\n"
             f"• **ᴜɴғᴏʀᴛᴜɴᴀᴛᴇʟʏ:** {target_mention} ne {proposer_mention} ka proposal REJECT kar diya... 🥺\n\n"
             f"🥀 *Anshika: Ouch! Dil ke armaan aansuon me beh gaye... Koi baat nahi {proposer_mention}, aap bohot achhe ho! Himmat rakho!* 🌸"
         )
+    try:
         await query.message.edit_text(text)
+    except Exception:
+        pass
 

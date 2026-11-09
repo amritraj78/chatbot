@@ -2,6 +2,13 @@ import asyncio
 import unittest
 from unittest.mock import AsyncMock, MagicMock, patch
 
+try:
+    from tests.mock_helper import setup_mocks
+    setup_mocks()
+except ImportError:
+    import mock_helper
+    mock_helper.setup_mocks()
+
 from pyrogram import Client
 from pyrogram.enums import ChatType, ChatMemberStatus
 from pyrogram.types import (

@@ -264,10 +264,12 @@ async def save_chat_reply(word: str, reply_type: str, content: str, client: Opti
     if not word or not content:
         return
 
-    if is_toxic_or_canned_reply(content) or is_toxic_or_canned_reply(word):
+    if is_toxic_or_canned_reply(content):
         return
 
     word_clean = word.strip().lower()
+    if not word_clean or any(m in word_clean for m in ["as an ai", "language model"]):
+        return
     doc = {
         "word": word_clean,
         "type": reply_type,
